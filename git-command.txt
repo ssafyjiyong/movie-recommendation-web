@@ -1,0 +1,69 @@
+GIT 명령어 모음
+
+
+[[기본 작업]]
+
+새로운 저장소 생성
+$ git init
+
+
+[[가지(branch)치기 작업]]
+
+브랜치 목록
+$ git branch
+
+새 브랜치 생성 (local로 만듦)
+$ git branch <브랜치이름>
+
+브랜치 생성 & 이동
+$ git checkout -b <브랜치이름>
+
+만든 브랜치를 원격 서버에 전송
+$ git push origin <브랜치이름>
+
+master branch로 되돌아 옴
+$ git checkout master
+(VS GUI로 이동 가능)
+
+브랜치 삭제
+$ git branch -d <브랜치이름>
+(Git Hub에서 삭제 가능)
+
+현재 브랜치에 다른 브랜치의 수정사항 병합
+$ git merge <다른 브랜치이름>
+
+변경 내용 merge 전에 바뀐 내용을 비교할 수 있음
+$ git diff <브랜치이름><다른 브랜치이름>
+
+로컬의 변경 사항을 변경 전으로 되돌림
+$ git checkout -- <파일명>
+
+
+[[CLI (Command Line Interface) 명령어]]
+
+디렉토리로 이동
+$ cd
+
+루트 디렉토리 (시스템 최상위 디렉토리 확인) /
+$ cd /
+
+현재 디렉토리
+$ cd .
+
+부모 디렉토리
+$ cd ..
+
+빈 파일 생성 / (not 디렉토리 / literally 파일을 생성)
+$ touch [file_name]
+
+디렉토리 생성
+$ mkdir [dir_name]
+
+파일 또는 디렉토리 옮기기
+$ mv [file_name or dic_name][target_dir_name]
+
+파일 삭제
+$ rm [file_name]
+
+폴더 삭제
+$ rm -r [dir_name]
