@@ -30,11 +30,12 @@ class MoviePosterListSerializer(serializers.ModelSerializer):
 
 # 영화 리스트 불러오기(MovieView의 목록과 필터 기능에 사용)
 class MovieListSerializer(serializers.ModelSerializer):
-    genres = GenreSerializer(read_only=True, many=True)
+    # genres = GenreSerializer(read_only=True, many=True)
 
     class Meta:
         model = Movie
         fields = (
+            'movie_id',
             'pk',
             'title',
             'original_language',
@@ -44,7 +45,7 @@ class MovieListSerializer(serializers.ModelSerializer):
             'poster_path',
             'vote_average',
             'vote_count',
-            'populatity',
+            'popularity',
         )
 
 
