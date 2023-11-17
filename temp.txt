@@ -1,0 +1,4 @@
+movie테이블 spokenlanguage 필드 추가 고려
+
+해야되는거
+model(Movie) -> tagline, popularity 추가
