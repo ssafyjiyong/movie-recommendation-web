@@ -51,12 +51,12 @@ class MovieListSerializer(serializers.ModelSerializer):
 # 단일 영화 상세 정보(MovieDetail)
 class MovieSerializer(serializers.ModelSerializer):
     # 영화 좋아요 등 데이터 받기 위함
-    class UserSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = '__all__'
+    # class UserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = User
+    #         fields = '__all__'
 
-    user = UserSerializer(read_only=True)
+    # user = UserSerializer(read_only=True)
     
     class CommunitySerializer(serializers.ModelSerializer):
         class Meta:
@@ -70,31 +70,28 @@ class MovieSerializer(serializers.ModelSerializer):
             model = Album
             fields = '__all__'  
 
-    class LikeUserSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = ('pk',)
+    # class LikeUserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = User
+    #         fields = ('pk',)
             
-    class NormalUserSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = ('pk',)
+    # class NormalUserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = User
+    #         fields = ('pk',)
             
-    class HateUserSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = ('pk',)
+    # class HateUserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = User
+    #         fields = ('pk',)
 
-    like_users = LikeUserSerializer(read_only=True, many=True)
-    normal_users = NormalUserSerializer(read_only=True, many=True)
-    hate_users = HateUserSerializer(read_only=True, many=True)
+    # like_users = LikeUserSerializer(read_only=True, many=True)
+    # normal_users = NormalUserSerializer(read_only=True, many=True)
+    # hate_users = HateUserSerializer(read_only=True, many=True)
     genres = GenreSerializer(read_only=True, many=True)
     actors = ActorSerializer(read_only=True, many=True)
     directors = DirectorSerializer(read_only=True, many=True)
-    like_movies = UserSerializer(read_only=True, many=True)
-    normal_movies = UserSerializer(read_only=True, many=True)
-    hate_movies = UserSerializer(read_only=True, many=True)
-    collections = UserSerializer(read_only=True, many=True)
+    # collections = UserSerializer(read_only=True, many=True)
     community = CommunitySerializer(many=True)
     album = AlbumSerializer(many=True)
 
