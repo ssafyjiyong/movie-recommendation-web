@@ -34,6 +34,8 @@ class Movie(models.Model):
     release_date = models.DateField(null=True, default=datetime.date.today)
     runtime = models.IntegerField(null=True)
     poster_path = models.TextField(null=True)
+    popularity = models.FloatField(null=True)
+    tagline = models.TextField(null=True)
     vote_average = models.FloatField(null=True)
     vote_count = models.IntegerField(null=True)
     video = models.TextField(null=True)
@@ -49,3 +51,11 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Album(models.Model):
+    name = models.CharField(max_length=100, null=False)
+    image = models.TextField(null=True)
+
+    def __str__(self):
+        return self.name
