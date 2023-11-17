@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
 
+from movies.models import Movie
 # Create your models here.
 
 class Article(models.Model):
@@ -13,19 +13,18 @@ class Article(models.Model):
     movie = models.ForeignKey(
         Movie, on_delete=models.CASCADE, related_name='articles'
     )
-    rate = models.FloatField(
-        validators=[MinValueValidator(0), MaxValueValidator(10)]
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='like_articles'
     )
     title = models.CharField(max_length=100)
     content = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    like_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name='like_articles'
-    )
 
-    # def __str__(self):
-    #     return self.user
+
+class Image(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article_img = models.ImageField(blank=True)
 
 
 class Comment(models.Model):
@@ -37,6 +36,19 @@ class Comment(models.Model):
     article = models.ForeignKey(
         Article, on_delete=models.CASCADE, related_name='comments'
     )
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='like_comments'
+    )
     content = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Recomment(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='recomments'
+    )
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    content = models.CharField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
