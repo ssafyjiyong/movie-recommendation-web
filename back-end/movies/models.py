@@ -27,23 +27,24 @@ class Genre(models.Model):
 class Movie(models.Model):
     genres = models.ManyToManyField(Genre, related_name='movies')
     actors = models.ManyToManyField(Actor, related_name='movies')
+    director = models.ManyToManyField(Director, related_name='movies')
     title = models.CharField(max_length=100)
     original_language = models.CharField(max_length=20)
     overview = models.TextField()
     release_date = models.DateField(null=True, default=datetime.date.today)
     runtime = models.IntegerField(null=True)
-    
     poster_path = models.TextField(null=True)
-    poster_path = models.TextField(null=True)
-    
-    budget = models.BigIntegerField()
-    popularity = models.FloatField()
-    tagline = models.TextField(null=True)
     vote_average = models.FloatField(null=True)
     vote_count = models.IntegerField(null=True)
-    words = models.TextField(null=True)
+    video = models.TextField(null=True)
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='like_movies'
+    )
+    normal_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='normal_movies'
+    )
+    hate_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='hate_movies'
     )
 
     def __str__(self):
