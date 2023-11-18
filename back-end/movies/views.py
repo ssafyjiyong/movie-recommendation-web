@@ -20,6 +20,7 @@ SPOTIFY_API_KEY = settings.TMDB_API_KEY
 # NOMAD_DIRECTORS = get_list_or_404(Director)
 # NOMAD_GENRES = get_list_or_404(Genre)
 NOMAD_MOVIES = get_list_or_404(Movie)
+# NOMAD_MOVIES = Movie.objects.all()
 
 
 @api_view(['GET'])
