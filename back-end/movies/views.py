@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 
-from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer
+from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer, AlbumSerializer
 from .models import Actor, Album, Director, Genre, Movie
 from .spotify_config import getHeaders
 
@@ -160,26 +160,35 @@ def movie_detail(request, movie_id):
                     
                     movie.director.add(Director.objects.get(name=result['name']))
         
-        # serializer = MovieDetailSerializer(movie)
-        # return Response(serializer.data)
+        # 앨범정보
+        try:
+            album = Album.objects.get(movie_id=movie.id)
+        except:
+            url = 'https://api.spotify.com/v1/search'
+            headers = getHeaders()
+            
+            # 영화 OST 검색 쿼리 파라미터
+            params = {
+                'q': f'{movie.original_title} ost',
+                'type': 'album'
+            }
 
+            response = requests.get(url, headers=headers, params=params)
+            data = response.json()['albums']['items'][0]
 
-    # album = Album.objects.get(movie=movie)
+            fields = {
+                'movie': movie.id,
+                'name': data['name'],
+                'image': data['images'][0]['url'],
+                'url': data['external_urls']['spotify'],
+            }
+            
+            serializer = AlbumSerializer(data=fields)
 
-    # if not album:
-    url = 'https://api.spotify.com/v1/search'
-    headers = getHeaders()
-    
-    # 영화 OST 검색 쿼리 파라미터
-    params = {
-        'q': f'{movie.original_title} ost',
-        'type': 'album'
-    }
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
 
-    response = requests.get(url, headers=headers, params=params)
-    data = response.json()['albums']['items'][0]
-    
-
-    return Response(data)
+    serializer = MovieDetailSerializer(movie)
+    return Response(serializer.data)        
 
 
