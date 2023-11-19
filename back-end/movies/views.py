@@ -71,85 +71,94 @@ def movie_detail(request, movie_id):
     genres = Genre.objects.values_list('name', flat=True)
     actors = Actor.objects.values_list('name', flat=True)
     directors = Director.objects.values_list('name', flat=True)
+    album = Album.objects.values_list('name', flat=True)
 
     # detail 조회가 처음이 아닌 영화의 경우 바로 디테일 값을 리턴
-    if movie.genres != [] or movie.actors != [] or movie.director != []:
+    if movie.genres == [] or movie.actors == [] or movie.director == []:
         serializer = MovieDetailSerializer(movie)
 
         return Response(serializer.data)
     
     # 처음 조회하는 영화일 경우 장르, 배우, 감독 필드를 채워줌
 
-    # 장르
     else:
-        # 장르 정보를 불러오기 위한 요청
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}"
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {TMDB_API_KEY}"
-        }
+        # 장르
+        if movie.genres == [] or movie.runtime == None:
+        
+            # 장르 정보 및 런닝 타임을 불러오기 위한 요청
+            url = f"https://api.themoviedb.org/3/movie/{movie_id}"
+            headers = {
+                "accept": "application/json",
+                "Authorization": f"Bearer {TMDB_API_KEY}"
+            }
 
-        results = requests.get(url, headers=headers).json()['genres']
+            results = requests.get(url, headers=headers).json()
 
-        for res_genre in results:
-    
-            # 장고DB에 없는 장르일 경우 장르 테이블을 새롭게 생성
-            if res_genre['name'] not in genres:
-                fields = {
-                    'name': res_genre['name']
-                }
+            # 런닝 타임 업데이트
+            movie.runtime = results['runtime']
+            movie.save()
 
-                genre_serializer = GenreSerializer(data=fields)
-                
-                if genre_serializer.is_valid(raise_exception=True):
-                    genre_serializer.save()
-
-            # 영화의 장르 필드에 조회된 장르값을 추가(ManyToMany)
-            movie.genres.add(Genre.objects.get(name=res_genre['name']))
-
-        # 영화 출연진, 감독을 불러오기 위한 요청
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?language=ko-KR"
-
-        headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {TMDB_API_KEY}"
-        }
-
-        results_actors = requests.get(url, headers=headers).json()['cast']
-        results_directors = requests.get(url, headers=headers).json()['crew']
-
-
-        # 배우
-        for result in results_actors:
-            if result["known_for_department"] == "Acting":
-                if result['name'] not in actors:
+            # 장르 목록을 순회하며 등록
+            for res_genre in results['genres']:
+                # 장고DB에 없는 장르일 경우 장르 테이블을 새롭게 생성
+                if res_genre['name'] not in genres:
                     fields = {
-                        'name': result['name'],
-                        'profile_path': result['profile_path'], 
+                        'name': res_genre['name']
                     }
 
-                    actor_serializer = ActorSerializer(data=fields)
+                    genre_serializer = GenreSerializer(data=fields)
+                    
+                    if genre_serializer.is_valid(raise_exception=True):
+                        genre_serializer.save()
 
-                    if actor_serializer.is_valid(raise_exception=True):
-                        actor_serializer.save()
+                # 영화의 장르 필드에 조회된 장르값을 추가(ManyToMany)
+                movie.genres.add(Genre.objects.get(name=res_genre['name']))
 
-                movie.actors.add(Actor.objects.get(name=result['name']))
+        # 배우, 감독
+        if movie.actors != [] or movie.director != []:
+            # 영화 출연진, 감독을 불러오기 위한 요청
+            url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?language=ko-KR"
 
-        # 감독
-        for result in results_directors:
-            if result["job"] == "Director":
-                if result['name'] not in directors:
-                    fields = {
-                        'name': result['name'],
-                        'profile_path': result['profile_path'], 
-                    }
+            headers = {
+                "accept": "application/json",
+                "Authorization": f"Bearer {TMDB_API_KEY}"
+            }
 
-                    director_serializer = DirectorSerializer(data=fields)
+            results_actors = requests.get(url, headers=headers).json()['cast']
+            results_directors = requests.get(url, headers=headers).json()['crew']
 
-                    if director_serializer.is_valid(raise_exception=True):
-                        director_serializer.save()
-                
-                movie.director.add(Director.objects.get(name=result['name']))
+
+            # 배우
+            for result in results_actors:
+                if result["known_for_department"] == "Acting":
+                    if result['name'] not in actors:
+                        fields = {
+                            'name': result['name'],
+                            'profile_path': result['profile_path'], 
+                        }
+
+                        actor_serializer = ActorSerializer(data=fields)
+
+                        if actor_serializer.is_valid(raise_exception=True):
+                            actor_serializer.save()
+
+                    movie.actors.add(Actor.objects.get(name=result['name']))
+
+            # 감독
+            for result in results_directors:
+                if result["job"] == "Director":
+                    if result['name'] not in directors:
+                        fields = {
+                            'name': result['name'],
+                            'profile_path': result['profile_path'], 
+                        }
+
+                        director_serializer = DirectorSerializer(data=fields)
+
+                        if director_serializer.is_valid(raise_exception=True):
+                            director_serializer.save()
+                    
+                    movie.director.add(Director.objects.get(name=result['name']))
 
         serializer = MovieDetailSerializer(movie)
 
