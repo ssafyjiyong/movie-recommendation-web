@@ -71,6 +71,7 @@ def movie_detail(request, movie_id):
     genres = Genre.objects.values_list('name', flat=True)
     actors = Actor.objects.values_list('name', flat=True)
     directors = Director.objects.values_list('name', flat=True)
+    album = Album.objects.values_list('name', flat=True)
 
     # detail 조회가 처음이 아닌 영화의 경우 바로 디테일 값을 리턴
     if movie.genres == [] or movie.actors == [] or movie.director == []:
