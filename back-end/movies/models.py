@@ -22,6 +22,7 @@ class Movie(models.Model):
     director = models.ManyToManyField(Director, related_name='movies')
     movie_id = models.IntegerField(null=True)
     title = models.CharField(max_length=100)
+    original_title = models.TextField(null=True)
     original_language = models.CharField(max_length=20, null=True)
     overview = models.TextField(null=True)
     release_date = models.TextField(null=True)
@@ -44,5 +45,7 @@ class Movie(models.Model):
 
 
 class Album(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, null=False)
     image = models.TextField(null=True)
+    url = models.TextField(null=True)
