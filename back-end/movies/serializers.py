@@ -63,6 +63,12 @@ class DirectorSerializer(serializers.ModelSerializer):
         model = Director
         fields = '__all__'
 
+
+class AlbumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Album
+        fields = '__all__'
+
 # # 영화 포스터 불러오기(HOME)
 # class MoviePosterListSerializer(serializers.ModelSerializer):
 #     class Meta:
