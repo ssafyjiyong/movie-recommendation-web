@@ -7,13 +7,13 @@ from rest_framework.renderers import JSONRenderer
 
 from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer
 from .models import Actor, Album, Director, Genre, Movie
+from .spotify_config import getHeaders
 
 import requests
 
 # API 목록
 TMDB_API_KEY = settings.TMDB_API_KEY
 KOFIC_API_KEY = settings.TMDB_API_KEY
-SPOTIFY_API_KEY = settings.TMDB_API_KEY
 
 
 @api_view(['GET'])
@@ -71,7 +71,6 @@ def movie_detail(request, movie_id):
     genres = Genre.objects.values_list('name', flat=True)
     actors = Actor.objects.values_list('name', flat=True)
     directors = Director.objects.values_list('name', flat=True)
-    album = Album.objects.values_list('name', flat=True)
 
     # detail 조회가 처음이 아닌 영화의 경우 바로 디테일 값을 리턴
     if movie.genres == [] or movie.actors == [] or movie.director == []:
@@ -83,7 +82,7 @@ def movie_detail(request, movie_id):
 
     else:
         # 장르
-        if movie.genres == [] or movie.runtime == None:
+        if movie.genres == [] or movie.runtime == None or movie.original_title == None:
         
             # 장르 정보 및 런닝 타임을 불러오기 위한 요청
             url = f"https://api.themoviedb.org/3/movie/{movie_id}"
@@ -96,6 +95,7 @@ def movie_detail(request, movie_id):
 
             # 런닝 타임 업데이트
             movie.runtime = results['runtime']
+            movie.original_title = results['original_title']
             movie.save()
 
             # 장르 목록을 순회하며 등록
@@ -159,7 +159,27 @@ def movie_detail(request, movie_id):
                             director_serializer.save()
                     
                     movie.director.add(Director.objects.get(name=result['name']))
+        
+        # serializer = MovieDetailSerializer(movie)
+        # return Response(serializer.data)
 
-        serializer = MovieDetailSerializer(movie)
 
-        return Response(serializer.data)
+    # album = Album.objects.get(movie=movie)
+
+    # if not album:
+    url = 'https://api.spotify.com/v1/search'
+    headers = getHeaders()
+    
+    # 영화 OST 검색 쿼리 파라미터
+    params = {
+        'q': f'{movie.original_title} ost',
+        'type': 'album'
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()['albums']['items'][0]
+    
+
+    return Response(data)
+
+
