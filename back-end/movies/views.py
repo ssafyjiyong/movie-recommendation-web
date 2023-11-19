@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 
-from .serializers import MovieSearchSerializer, GenreSerializer, MovieDetailSerializer
+from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer
 from .models import Actor, Album, Director, Genre, Movie
 
 import requests
@@ -69,9 +69,11 @@ def movie_search(request, movie_title):
 def movie_detail(request, movie_id):
     movie = Movie.objects.get(movie_id=movie_id)
     genres = Genre.objects.values_list('name', flat=True)
+    actors = Actor.objects.values_list('name', flat=True)
+    directors = Director.objects.values_list('name', flat=True)
 
     # detail 조회가 처음이 아닌 영화의 경우 바로 디테일 값을 리턴
-    if movie.genres == [] or movie.actors == [] or movie.director == []:
+    if movie.genres != [] or movie.actors != [] or movie.director != []:
         serializer = MovieDetailSerializer(movie)
 
         return Response(serializer.data)
@@ -104,6 +106,50 @@ def movie_detail(request, movie_id):
 
             # 영화의 장르 필드에 조회된 장르값을 추가(ManyToMany)
             movie.genres.add(Genre.objects.get(name=res_genre['name']))
+
+        # 영화 출연진, 감독을 불러오기 위한 요청
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?language=ko-KR"
+
+        headers = {
+            "accept": "application/json",
+            "Authorization": f"Bearer {TMDB_API_KEY}"
+        }
+
+        results_actors = requests.get(url, headers=headers).json()['cast']
+        results_directors = requests.get(url, headers=headers).json()['crew']
+
+
+        # 배우
+        for result in results_actors:
+            if result["known_for_department"] == "Acting":
+                if result['name'] not in actors:
+                    fields = {
+                        'name': result['name'],
+                        'profile_path': result['profile_path'], 
+                    }
+
+                    actor_serializer = ActorSerializer(data=fields)
+
+                    if actor_serializer.is_valid(raise_exception=True):
+                        actor_serializer.save()
+
+                movie.actors.add(Actor.objects.get(name=result['name']))
+
+        # 감독
+        for result in results_directors:
+            if result["job"] == "Director":
+                if result['name'] not in directors:
+                    fields = {
+                        'name': result['name'],
+                        'profile_path': result['profile_path'], 
+                    }
+
+                    director_serializer = DirectorSerializer(data=fields)
+
+                    if director_serializer.is_valid(raise_exception=True):
+                        director_serializer.save()
+                
+                movie.director.add(Director.objects.get(name=result['name']))
 
         serializer = MovieDetailSerializer(movie)
 
