@@ -24,10 +24,6 @@ class MovieSearchSerializer(serializers.ModelSerializer):
             'popularity',
         )
 
-class GenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Genre
-        fields = '__all__'
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,17 +41,26 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             'vote_count',
             'popularity',
             'genres',
+            'actors',
+            'director',
         )
 
-# class ActorSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Actor
-#         fields = '__all__'
 
-# class DirectorSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Director
-#         fields = '__all__'
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = '__all__'
+
+
+class ActorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actor
+        fields = '__all__'
+
+class DirectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Director
+        fields = '__all__'
 
 # # 영화 포스터 불러오기(HOME)
 # class MoviePosterListSerializer(serializers.ModelSerializer):
