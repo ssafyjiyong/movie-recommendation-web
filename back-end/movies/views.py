@@ -105,7 +105,6 @@ def movie_detail(request, movie_id):
 
             # 런닝 타임 업데이트
             movie.runtime = results['runtime']
-            movie.original_title = results['original_title']
             movie.save()
 
             # 장르 목록을 순회하며 등록

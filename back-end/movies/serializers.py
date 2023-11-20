@@ -15,6 +15,7 @@ class MovieSearchSerializer(serializers.ModelSerializer):
             'pk',
             'title',
             'original_language',
+            'original_title',
             'overview',
             'release_date',
             'runtime',

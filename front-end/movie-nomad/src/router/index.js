@@ -30,11 +30,6 @@ const router = createRouter({
       component: MovieDetailView
     },
     {
-      path: '/communitydetail',
-      name: 'communitydetail',
-      component: CommunityDetailView
-    },
-    {
       path: '/community',
       name: 'community',
       component: CommunityView,
@@ -62,6 +57,11 @@ const router = createRouter({
           path: '/barrier',
           name: 'barrier',
           component: BarrierView
+        },
+        {
+          path: '/communitydetail/:articleId',
+          name: 'communityDetail',
+          component: CommunityDetailView
         },
       ]
     },

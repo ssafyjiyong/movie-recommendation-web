@@ -7,6 +7,7 @@ export const useArticleStore = defineStore('article', () => {
   const userStore = useUserStore()
   const token = userStore.token
   const articles = ref([])
+  const article = ref(null)
   const DJANGO_URL = 'http://127.0.0.1:8000/community';
 
   const getArticles = function () {
@@ -20,6 +21,19 @@ export const useArticleStore = defineStore('article', () => {
       })
       .catch((err) => {
         console.log(err)
+      })
+  }
+
+  const articleDetail = function (articleId) {
+    axios({
+      method: 'get',
+      url: `${DJANGO_URL}/article_detail/${articleId}/`
+    })
+      .then((res) => {
+        article.value = res.data
+      })
+      .catch((err) => {
+        window.alert(err)
       })
   }
 
@@ -45,5 +59,5 @@ export const useArticleStore = defineStore('article', () => {
       })
   }
 
-  return { getArticles, addArticles, articles }
+  return { getArticles, articleDetail, addArticles, articles, article }
 }, { persist: true })
