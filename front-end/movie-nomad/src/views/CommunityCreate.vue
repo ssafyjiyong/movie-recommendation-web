@@ -32,7 +32,10 @@
 
       <label for="movie">movie</label>
       <select name="movie" id="movie" v-model="movieid">
-        <option value="temp_movie">temp_movie</option>
+        <option 
+        v-for="movie in movieStore.allMovies" 
+        :key ="movie.pk"
+        :value="movie.pk">{{ movie.title }}</option>
       </select>
 
       <label for="title">글제목 : </label>
@@ -51,11 +54,13 @@
 
 <script setup>
 import { useArticleStore } from '@/stores/article';
+import { useMovieStore } from '@/stores/movie';
 import { useUserStore } from '@/stores/user';
 import { ref } from 'vue';
 
 const articleStore = useArticleStore()
 const userStore = useUserStore()
+const movieStore = useMovieStore()
 
 const userid = userStore.userId
 const category = ref(null)
