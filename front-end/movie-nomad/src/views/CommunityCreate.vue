@@ -55,14 +55,11 @@
 <script setup>
 import { useArticleStore } from '@/stores/article';
 import { useMovieStore } from '@/stores/movie';
-import { useUserStore } from '@/stores/user';
 import { ref } from 'vue';
 
 const articleStore = useArticleStore()
-const userStore = useUserStore()
 const movieStore = useMovieStore()
 
-const userid = userStore.userId
 const category = ref(null)
 const movieid = ref(null)
 const title = ref(null)
@@ -70,9 +67,8 @@ const content = ref(null)
 
 const addArticle = function () {
   const payload = {
-    userid: userid.value,
     category: category.value,
-    movieid: movieid.value,
+    movie: movieid.value,
     title: title.value,
     content: content.value
   }

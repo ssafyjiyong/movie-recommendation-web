@@ -100,7 +100,7 @@ const restorePlaceholder = function () {
 }
 
 const goToCommunity = function () {
-  router.push('/community')
+  router.push('/talk')
 }
 
 const qnas = ref([
