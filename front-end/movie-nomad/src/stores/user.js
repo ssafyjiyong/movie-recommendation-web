@@ -5,6 +5,7 @@ import { ref, computed } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
   const DJANGO_URL = 'http://127.0.0.1:8000/accounts';
+  const status = ref('상태메세지를 변경해보세요!')
   const token = ref(null)
   const username = ref(null)
   const userId = ref(null)
@@ -47,5 +48,5 @@ export const useUserStore = defineStore('user', () => {
       })
     }
 
-  return { signUp, logIn, token, username, userId, isLogin, nickname }
+  return { signUp, logIn, token, username, userId, isLogin, nickname, status }
 }, { persist: true })

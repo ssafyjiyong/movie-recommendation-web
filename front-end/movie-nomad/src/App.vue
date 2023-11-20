@@ -28,8 +28,8 @@ const userStore = useUserStore()
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="{ name: 'signup' }">회원가입</RouterLink></li>
             </div>
             
-            <div v-else class="d-flex align-items-center">
-              <RouterLink :to="`/profile/${userStore.userId}`">{{ userStore.nickname }}</RouterLink>
+            <div v-else class="d-flex justify-content-center align-items-center">
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="`/profile/${userStore.userId}`">{{ userStore.nickname }}</RouterLink></li>
             </div>
 
           </ul>

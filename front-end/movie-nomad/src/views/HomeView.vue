@@ -83,6 +83,7 @@ const movieKeyword = ref('')
 const searchTheMovie = function () {
   movieStore.searchMovie(movieKeyword.value)
   movieKeyword.value = ''
+  router.push('/movies')
 }
 
 const placeholderText = ref('MOVIE NOMAD')
