@@ -3,7 +3,11 @@
     <div class="cardInnerBox d-flex">
       <!-- 그림 -->
       <div class="flex-grow-1 text-center">
-        <img :src="getMoviePosterUrl(searchedMovie.poster_path)" alt="movie_poster" class="posterImage">
+        <img
+        @click="goToDetail(searchedMovie.pk)" 
+        :src="getMoviePosterUrl(searchedMovie.poster_path)" 
+        alt="movie_poster" 
+        class="posterImage">
       </div>
 
 
@@ -11,9 +15,9 @@
       <div class="col-12 col-sm-9 col-lg-10 d-flex">
 
         <!-- 제목 및 내용 -->
-        <div class="col-9">
+        <div class="col-12 col-md-9">
           <!-- 영화제목 -->
-          <div>
+          <div @click="goToDetail(searchedMovie.pk)" >
             <small class="fw-bold">{{ searchedMovie.title }}</small>
           </div>
           <hr class="my-2">
@@ -24,7 +28,7 @@
         </div>
 
         <!-- 기타정보(장르 등) -->
-        <div class="col-3">
+        <div class="flex-grow-1 ectInfo">
           <small>개봉일 : {{ searchedMovie.release_date }}</small><br>
           <small>인지도 점수 : {{ searchedMovie.popularity }}</small><br>
           <small>평점 : {{ searchedMovie.vote_average }}</small>
@@ -37,6 +41,10 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
 const props = defineProps({
   searchedMovie: Object,
 })
@@ -49,6 +57,11 @@ const getMoviePosterUrl = (posterPath) => {
     return '';
   }
 };
+
+const goToDetail = function (movieId) {
+  router.push(`/moviedetail/${movieId}`)
+}
+
 </script>
 
 <style scoped>
@@ -77,6 +90,13 @@ const getMoviePosterUrl = (posterPath) => {
 
 @media (max-width: 600px) {
   .posterImage {
+    display: none;
+  }
+}
+
+/* medium size */
+@media (max-width: 768px) {
+  .ectInfo {
     display: none;
   }
 }
