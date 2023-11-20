@@ -13,6 +13,7 @@ class Director(models.Model):
 
 
 class Genre(models.Model):
+    number = models.IntegerField(null=False)
     name = models.CharField(max_length=50, null=False)
 
 

@@ -1,18 +1,53 @@
 <template>
   <div class="container">
-    <h1>grid</h1>
+    <h1>지금 뜨는 게시글</h1>
+    <div class="popular-article">
+      <div v-for="article in articles.slice(1, 4)" :key="article.id">
+        <CommunityGridCard 
+          :article="article"
+        />
+      </div>
+    </div>
+
+    <div class="latest-article">
+      <div v-for="article in articles" :key="article.id">
+        <CommunityGridCard
+          :article="article"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import CommunityGridCard from '@/components/community/CommunityGridCard.vue';
+const props = defineProps({
+  articles: Object
+})
 
+const articles = props.articles
 </script>
 
 <style scoped>
 .container {
   max-width: 90%;
-  height: 70vh;
+  
+}
+
+.popular-article {
+  height: 172px;
   border: 1px solid black;
   border-radius: 10px;
+  background-color: #E0FDED;
+  padding-top: 13px;
+}
+
+.latest-article {
+  height: 1300px;
+  margin-top: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding-top: 13px;
+
 }
 </style>

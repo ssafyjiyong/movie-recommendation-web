@@ -4,7 +4,9 @@
   </div>
 
   
-  <CommunityGrid />
+  <CommunityGrid
+    :articles="store.articles"
+  />
 
   <button @click="goToAddArticle">글쓰기</button>
 
@@ -18,7 +20,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 const store = useArticleStore()
-const articles = ref([])
 
 const goToAddArticle = function () {
   router.push('/create/1/')
