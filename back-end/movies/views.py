@@ -19,6 +19,14 @@ User = settings.AUTH_USER_MODEL
 
 
 @api_view(['GET'])
+def movies(request):
+    movies = get_list_or_404(Movie)
+    serializer = MovieSearchSerializer(movies, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def movie_search(request, movie_title):
     # 검색 결과를 저장할 배열
     search_results = []
