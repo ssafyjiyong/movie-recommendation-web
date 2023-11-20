@@ -12,8 +12,8 @@ User = get_user_model()
 
 # Create your views here.
 @api_view(['GET'])
-def profile(request, user_pk):
-    user = get_object_or_404(User, pk=user_pk)
+def profile(request, user_name):
+    user = get_object_or_404(User, username=user_name)
 
     blog_serializer = BlogSerializer(user)
 
