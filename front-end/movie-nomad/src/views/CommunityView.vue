@@ -5,7 +5,7 @@
       <li><RouterLink to="/talk">영화토크</RouterLink></li>
       <li><RouterLink to="/toon">영화툰</RouterLink></li>
       <li><RouterLink to="/ticket">티켓나눔</RouterLink></li>
-      <li><RouterLink to="/preview">시사회정보</RouterLink></li>
+      <li><RouterLink to="/preview">영화뉴스</RouterLink></li>
       <li><RouterLink to="/barrier">베리어프리</RouterLink></li>
     </ul>
   </nav>
