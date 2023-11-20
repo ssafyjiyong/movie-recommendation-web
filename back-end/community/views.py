@@ -11,7 +11,6 @@ from .serializers import ArticleListSerializer, ArticleSerializer
 
 # Create your views here.
 @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticated])
 def articles(request):
     # 전체 게시글 목록 조회
     if request.method == 'GET':

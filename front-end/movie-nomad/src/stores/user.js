@@ -1,13 +1,21 @@
 // userStore.js
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
   const DJANGO_URL = 'http://127.0.0.1:8000/accounts';
   const token = ref(null)
   const username = ref(null)
   const userId = ref(null)
+  const nickname = ref(null)
+  const isLogin = computed(() => {
+    if (token.value === null) {
+      return false
+    } else {
+      return true
+    }
+  })
 
   const signUp = function (payload) {
     axios
@@ -33,10 +41,11 @@ export const useUserStore = defineStore('user', () => {
           .get(`http://127.0.0.1:8000/myblog/${response}/`)
           .then((res) => {
             userId.value = res.data.id
+            nickname.value = res.data.nickname
             console.log(res.data)
           })
       })
     }
 
-  return { signUp, logIn, token, userId, username }
+  return { signUp, logIn, token, username, userId, isLogin, nickname }
 }, { persist: true })
