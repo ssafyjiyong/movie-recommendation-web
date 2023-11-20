@@ -24,16 +24,16 @@ export const useArticleStore = defineStore('article', () => {
   }
 
   const addArticles = function (payload) {
-    const { userid, category, title, movieid, content } = payload
+    const { category, title, movie, content } = payload
 
     axios({
       method: 'POST',
       url: `${DJANGO_URL}/caht/`,
       headers: {
-        Authorization: `Token ${token.value}`
+        Authorization: `Token ${token}`
       },
       data: {
-        userid, category, title, movieid, content
+        category, title, movie, content
       }
     })
       .then((res) =>{
@@ -45,5 +45,5 @@ export const useArticleStore = defineStore('article', () => {
       })
   }
 
-  return { getArticles, addArticles }
+  return { getArticles, addArticles, articles }
 }, { persist: true })

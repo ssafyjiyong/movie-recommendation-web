@@ -38,5 +38,5 @@ export const useUserStore = defineStore('user', () => {
       })
     }
 
-  return { signUp, logIn }
+  return { signUp, logIn, token, userId, username }
 }, { persist: true })
