@@ -7,12 +7,12 @@ import { useUserStore } from '@/stores/user';
 
 export const useMovieStore = defineStore('movie', () => {
   const userStore = useUserStore()
+  const movieDetail = ref(null)
   const searchedMovies = ref([])
   const allMovies = ref([])
   const token = userStore.token
   const DJANGO_URL = 'http://127.0.0.1:8000/movies';
 
-  // DRF에 movies 조회 요청을 보내는 action
   const searchMovie = function (movieKeyword) {
     axios({
       method: 'get',
@@ -40,6 +40,20 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { searchMovie, getMovies, searchedMovies, allMovies }
+  const getMovieDetail = function(movieId) {
+    axios({
+      method: 'get',
+      url: `${DJANGO_URL}/movie_detail/${movieId}/`,
+    })
+      .then((res) =>{
+        movieDetail.value = res.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+  return { searchMovie, getMovies, searchedMovies, allMovies, movieDetail, getMovieDetail }
 
 }, { persist: true })

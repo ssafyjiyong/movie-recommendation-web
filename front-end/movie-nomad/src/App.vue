@@ -6,6 +6,7 @@ const userStore = useUserStore()
 
 </script>
 
+
 <template>
   <header>
     <!-- Navigation-->
@@ -24,22 +25,28 @@ const userStore = useUserStore()
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">단축키모드</li>
 
             <div v-if="!userStore.isLogin" class="d-flex">
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="{ name: 'login'}">로그인</RouterLink></li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="{ name: 'signup' }">회원가입</RouterLink></li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
+              </li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <RouterLink :to="{ name: 'signup' }">회원가입</RouterLink>
+              </li>
             </div>
-            
+
             <div v-else class="d-flex justify-content-center align-items-center">
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="`/profile/${userStore.userId}`">{{ userStore.nickname }}</RouterLink></li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <RouterLink :to="`/profile/${userStore.userId}`">{{ userStore.nickname }}</RouterLink>
+              </li>
             </div>
 
           </ul>
         </div>
       </div>
     </nav>
-    
-  <RouterView />
 
-</header>
+    <RouterView />
+
+  </header>
 
   <!-- Footer-->
   <footer class="border-top px-2 py-3">
@@ -73,7 +80,8 @@ const userStore = useUserStore()
 </template>
 
 <!-- 전역 스타일 지정 -->
-<style></style>
+<style>
+</style>
 
 <!-- 로컬 스타일 지정 -->
 <style scoped>
@@ -88,5 +96,4 @@ nav {
 
 img {
   width: 250px;
-}
-</style>
+}</style>
