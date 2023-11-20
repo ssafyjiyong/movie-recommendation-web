@@ -25,5 +25,22 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
+  // const getMovies = function () {
+  //   axios({
+  //     method: 'get',
+  //     url: `${DJANGO_URL}/movie_search/${movieKeyword}`,
+  //     // headers: {
+  //     //   Authorization: `Token ${token.value}`
+  //     // }
+  //   })
+  //     .then((res) =>{
+  //       console.log(res.data)
+  //       // searchedMovie.value = res.data
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }
+
   return { searchMovie }
 }, { persist: true })
