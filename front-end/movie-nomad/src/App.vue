@@ -18,7 +18,7 @@ import { RouterLink, RouterView } from 'vue-router'
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">English</li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">다크모드</li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">단축키모드</li>
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink to="/">로그인</RouterLink></li>
+            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="{ name: 'login'}">로그인</RouterLink></li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2"><RouterLink :to="{ name: 'signup' }">회원가입</RouterLink></li>
           </ul>
         </div>
