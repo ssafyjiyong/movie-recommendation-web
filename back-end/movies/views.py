@@ -27,6 +27,18 @@ def movies(request):
 
 
 @api_view(['GET'])
+def movie_page(request, page):
+    movies = []
+
+    for i in range(1, page * 10 + 1):
+        movie = Movie.objects.get(id=i)
+        serializer = MovieSearchSerializer(movie)
+        movies.append(serializer.data)
+    
+    return Response(movies)
+
+
+@api_view(['GET'])
 def movie_search(request, movie_title):
     # 검색 결과를 저장할 배열
     search_results = []
