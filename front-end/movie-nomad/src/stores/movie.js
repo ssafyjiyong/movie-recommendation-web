@@ -8,6 +8,7 @@ import { useUserStore } from '@/stores/user';
 export const useMovieStore = defineStore('movie', () => {
   const userStore = useUserStore()
   const searchedMovie = ref([])
+  const allMovies = ref([])
   const token = userStore.token
   const DJANGO_URL = 'http://127.0.0.1:8000/movies';
 
@@ -19,7 +20,7 @@ export const useMovieStore = defineStore('movie', () => {
     })
       .then((res) =>{
         console.log(res.data)
-        // searchedMovie.value = res.data
+        searchedMovie.value = res.data
       })
       .catch((err) => {
         console.log(err)
@@ -32,8 +33,8 @@ export const useMovieStore = defineStore('movie', () => {
       url: `${DJANGO_URL}/`,
     })
       .then((res) =>{
-        console.log(res.data)
-
+        allMovies.value = res.data
+        console.log(allMovies.value)
       })
       .catch((err) => {
         console.log(err)
