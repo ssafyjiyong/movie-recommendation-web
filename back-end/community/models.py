@@ -6,9 +6,9 @@ from movies.models import Movie
 
 class Article(models.Model):
     categories = [
-        ('수다', '수다'),
-        ('영화툰', '영화툰'),
-        ('나눔', '나눔'),
+    ('수다', '수다'),
+    ('영화툰', '영화툰'),
+    ('나눔', '나눔'),
     ]
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

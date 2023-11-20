@@ -76,7 +76,7 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue')
     },
     {
-      path: '/create',
+      path: '/create/:category',
       name: 'create',
       component: () => import('@/views/CommunityCreate.vue')
     },
