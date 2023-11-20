@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/user';
 
 
 export const useMovieStore = defineStore('movie', () => {
+  const userStore = useUserStore()
   const searchedMovie = ref([])
   const token = userStore.token
   const DJANGO_URL = 'http://127.0.0.1:8000/movies';
@@ -39,5 +40,5 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { searchMovie }
+  return { searchMovie, getMovies }
 }, { persist: true })
