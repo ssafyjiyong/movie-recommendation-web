@@ -6,12 +6,14 @@
 
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
-      <form @submit.prevent="searchTheMovie(movieKeyword)"
+      <form @submit.prevent="searchTheMovie"
         :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
-        <button v-if="!isFocused" type="submit" class="btn btn-link text-black"><i
-            class="fa-solid fa-magnifying-glass"></i></button>
-        <input type="text" v-model="movieKeyword" class="search-input" :placeholder=placeholderText
-          @focus="clearPlaceholder" @blur="restorePlaceholder">
+        <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
+          <i class="fa-solid fa-magnifying-glass"></i></button>
+        <input type="text" class="search-input" 
+        :placeholder=placeholderText 
+        :value="movieKeyword" @input="movieKeyword = $event.target.value"
+        @focus="clearPlaceholder" @blur="restorePlaceholder">
         <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
             class="fa-solid fa-magnifying-glass"></i></button>
       </form>
@@ -55,10 +57,11 @@ import { ref } from 'vue';
 import { useMovieStore } from '@/stores/movie';
 
 const movieStore = useMovieStore();
-
 const movieKeyword = ref('')
-const searchTheMovie = function (movieKeyword) {
-  movieStore.searchMovie(movieKeyword)
+
+const searchTheMovie = function () {
+  movieStore.searchMovie(movieKeyword.value)
+  movieKeyword.value = ''
 }
 
 const placeholderText = ref('MOVIE NOMAD')
