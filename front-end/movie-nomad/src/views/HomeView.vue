@@ -2,18 +2,15 @@
   <div class="position-relative">
 
     <!-- 메인 이미지 -->
-    <img class="main-background" src="@/images/main_background.jpg" alt="main-background">
+    <img class="main-background" src="@/images/main_background.gif" alt="main-background">
 
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
-      <form @submit.prevent="searchTheMovie"
-        :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
+      <form @submit.prevent="searchTheMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
         <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
           <i class="fa-solid fa-magnifying-glass"></i></button>
-        <input type="text" class="search-input" 
-        :placeholder=placeholderText 
-        :value="movieKeyword" @input="movieKeyword = $event.target.value"
-        @focus="clearPlaceholder" @blur="restorePlaceholder">
+        <input type="text" class="search-input" :placeholder=placeholderText :value="movieKeyword"
+          @input="movieKeyword = $event.target.value" @focus="clearPlaceholder" @blur="restorePlaceholder">
         <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
             class="fa-solid fa-magnifying-glass"></i></button>
       </form>
@@ -25,25 +22,47 @@
     </div>
 
     <!-- 커뮤니티 연결 버튼 fixed -->
-    <div class="d-flex justify-content-center custom-bottom">
-      <button class="rounded-btn"><span class="fw-bold">영화 이야기</span> 나누러 가기</button>
+    <div class="d-flex justify-content-center custom-bottom shake">
+      <button @click="goToCommunity" 
+      class="rounded-btn"><span class="fw-bold">영화 이야기</span> 나누러 가기</button>
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
-    <div class="posterBox">
+    <div class="posterTopBox">
+
+      <div class="posterBox1">
+        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image1.jpg" alt="image1">
+      </div>
+
+      <div class="posterBox2">
+        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image2.jpg" alt="image2">
+      </div>
+
+
+      <div class="posterBox1">
+        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image3.jpg" alt="image3">
+      </div>
 
     </div>
 
-    <!-- 자주 묻는 질문 -->
-    <div class="qnaBox d-flex-column justify-content-center">
-      <h1 class="fw-bold">자주 묻는 질문</h1>
 
-      <div class="accordion" v-for="(qna, index) in qnas" :key="index">
-        <div class="accordion-header" @click="toggle(index)">
-          <h2>{{ qna.question }}</h2>
-        </div>
-        <div class="accordion-body" v-show="qna.open">
-          <p>{{ qna.answer }}</p>
+    <!-- 자주 묻는 질문 -->
+    <div class="qnaGreenBox d-flex justify-content-center align-items-center">
+
+      <div class="qnaBox">
+        <h1 class="fw-bold text-center">자주 묻는 질문</h1>
+
+        <div class="accordion" v-for="(qna, index) in qnas" :key="index">
+          <div class="accordion-item px-4" @click="toggle(index)">
+            <div class="accordion-header d-flex justify-content-between align-items-center">
+              <div class="questionFontSize">{{ qna.question }}</div>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="accordion-body" v-show="qna.open">
+              <hr>
+              <p class="answerFont">{{ qna.answer }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -55,7 +74,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useMovieStore } from '@/stores/movie';
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
 
@@ -78,11 +99,15 @@ const restorePlaceholder = function () {
   isFocused.value = false
 }
 
+const goToCommunity = function () {
+  router.push('/community')
+}
+
 const qnas = ref([
   { question: '단축키 모드는 무엇인가요?', answer: '단축키 모드는 마우스를 사용하지 않고도 사이트를 조작할 수 있는 편리한 모드입니다. 안내 팝업창을 확인해주세요!', open: false },
-  { question: '서비스 사용료가 있나요?', answer: '해당 서비스는 무료로 제공되고 있습니다. 우측 하단에 커피 버튼을 누르시면 저희가 커피를 한 잔 할 수 있습니다 :)', open: false },
-  { question: '어떤 기기에서 사용할 수 있나요', answer: '저희 서비스는 모바일과 인터넷 모두에서 사용 가능합니다.', open: false },
-  { question: 'Team M.A.D에 대해 알려주세요.', answer: 'M.A.D는 Making A Difference의 약자로, 저희는 작은 변화로 사회에 기여하고자 합니다.', open: false }
+  { question: '서비스 사용료가 있나요?', answer: '해당 서비스는 무료로 제공되고 있습니다. 우측 하단에 커피 버튼을 누르시면 저희가 커피를 한 잔 할 수 있습니다 :) 감사합니다!', open: false },
+  { question: '어떤 기기에서 사용할 수 있나요?', answer: '저희 서비스는 모바일과 인터넷 모두에서 사용 가능합니다.', open: false },
+  { question: 'Team M.A.D에 대해 알려주세요.', answer: 'M.A.D는 Making A Difference의 약자로, 작은 변화로 사회에 기여하는 것을 목표로 하고 있습니다.', open: false }
 ])
 
 const toggle = index => {
@@ -92,15 +117,28 @@ const toggle = index => {
 </script>
 
 <style scoped>
+.accordion-item {
+  width: 80vw;
+  border-radius: 25px;
+  margin: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.accordion-body {
+  padding: 0;
+}
+
 .main-background {
   width: 100%;
-  height: 85vh;
+  height: 70vh;
   opacity: 0.85;
   object-fit: cover;
 }
 
 .custom-top {
-  top: 30vh !important;
+  top: 25vh !important;
 }
 
 .custom-bottom {
@@ -118,7 +156,7 @@ const toggle = index => {
   background-color: white;
   border-radius: 50px;
   padding: 10px;
-  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 32%, 0.2);
 }
 
 .search-form-focus {
@@ -166,7 +204,7 @@ const toggle = index => {
 }
 
 .rounded-btn {
-  padding: 10px 20px;
+  padding: 11px 20px;
   border: 0;
   border-radius: 30px;
   background-color: rgb(32, 32, 32);
@@ -174,17 +212,77 @@ const toggle = index => {
   width: 400px;
 }
 
-.posterBox {
-  height: 500px;
+.posterBox1 {
+  display: flex;
+  animation: slide1 10s linear infinite;
 }
 
-.qnaBox {
-  height: 500px;
+.posterBox2 {
+  display: flex;
+  animation: slide2 10s linear infinite;
+}
+
+.posterBox1 img, .posterBox2 img {
+  width: 200px;
+  padding: 10px 10px;
+}
+
+.posterTopBox {
+  padding: 20px 0px;
+}
+
+@keyframes slide1 {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+@keyframes slide2 {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.qnaGreenBox {
+  height: auto;
   background-color: #92DE4A;
+  padding: 30px;
+  font-family: 'Nanum Gothic', sans-serif
+}
+
+.questionFontSize {
+  font-size: large;
+  font-weight: bold;
+  color: rgb(68, 68, 68);
+}
+
+.shake {
+  animation: shake 2.05s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(0, -3px, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(0, 2px, 0);
+  }
 }
 
 @media (max-width: 565px) {
-
   .search-form-nofocus,
   .search-form-focus {
     width: 90vw;
@@ -196,8 +294,8 @@ const toggle = index => {
 }
 
 @media (max-width: 385px) {
-
   .rounded-btn {
     width: 90%;
   }
-}</style>
+}
+</style>
