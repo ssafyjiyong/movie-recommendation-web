@@ -42,4 +42,5 @@ export const useMovieStore = defineStore('movie', () => {
   }
 
   return { searchMovie, getMovies, searchedMovie, allMovies }
+
 }, { persist: true })

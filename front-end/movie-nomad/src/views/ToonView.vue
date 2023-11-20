@@ -3,14 +3,12 @@
     <h1>ToonView</h1>
   </div>
 
-  <ArticleListCard />
 
 <button @click="goToAddArticle">글쓰기</button>
 
 </template>
 
 <script setup>
-import ArticleListCard from '@/components/ArticleListCard.vue';
 import { onMounted } from 'vue';
 import { useArticleStore } from '@/stores/article';
 import { useRouter } from 'vue-router';
