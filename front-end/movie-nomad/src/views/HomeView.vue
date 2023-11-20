@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useMovieStore } from '@/stores/movie';
 import { useRouter } from 'vue-router'
 
@@ -113,6 +113,10 @@ const qnas = ref([
 const toggle = index => {
   qnas.value[index].open = !qnas.value[index].open
 }
+
+onMounted(() => {
+  movieStore.getMovies()
+});
 
 </script>
 
