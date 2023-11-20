@@ -1,15 +1,14 @@
-from django.contrib.auth import get_user_model
-from community.models import Article
-from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from django.contrib.auth import get_user_model
+
+from rest_framework import serializers
 
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import get_username_max_length
 from allauth.account.adapter import get_adapter
 
-# from .models import User
+from community.models import Article
 from movies.models import Movie
-
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -40,15 +39,9 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 User = get_user_model()
 
-# 유저 정보 불러오기(네비게이션바)
-class UserNavSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('pk', 'nickname')
 
-
-# 유저 정보 불러오기(프로필)
-class ProfileSerializer(serializers.ModelSerializer):
+# 유저 정보 불러오기(블로그)
+class BlogSerializer(serializers.ModelSerializer):
     class FollowFollowingSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
@@ -102,14 +95,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# 프로필 업데이트
-class ProfileUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('pk', 'profile_pic', 'status')
+# # 프로필 업데이트
+# class ProfileUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('pk', 'profile_pic', 'status')
 
 
-class LikeProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article
-        fields = ('pk', 'user', 'like_users')
+# class LikeProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Article
+#         fields = ('pk', 'user', 'like_users')

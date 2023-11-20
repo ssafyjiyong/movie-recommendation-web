@@ -15,6 +15,8 @@ import requests
 TMDB_API_KEY = settings.TMDB_API_KEY
 KOFIC_API_KEY = settings.TMDB_API_KEY
 
+User = settings.AUTH_USER_MODEL
+
 
 @api_view(['GET'])
 def movie_search(request, movie_title):
@@ -198,8 +200,10 @@ def movie_like(request, movie_id):
 
     if request.user in movie.like_users:
         movie.like_users.remove(request.user)
+        User.collections.remove(movie)
     else:
         movie.like_users.add(request.user)
+        User.collections.add(movie)
     
     serializer = MovieDetailSerializer(movie)
     return Response(serializer.data)

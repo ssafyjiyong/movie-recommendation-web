@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import 
+from .serializers import BlogSerializer
 
 User = get_user_model()
 
@@ -15,4 +15,6 @@ User = get_user_model()
 def profile(request, user_pk):
     user = get_object_or_404(User, pk=user_pk)
 
-    
+    blog_serializer = BlogSerializer(user)
+
+    return Response(blog_serializer.data)
