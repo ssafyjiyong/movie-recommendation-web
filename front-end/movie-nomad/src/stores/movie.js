@@ -25,5 +25,5 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { DJANGO_URL, searchMovie }
+  return { searchMovie }
 }, { persist: true })
