@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 
 export const useArticleStore = defineStore('article', () => {
-  const token = ref('f3ed47d9cce432baf740345834a3e53d3411f938')
+  const userStore = useUserStore()
+  const token = userStore.token
   const articles = ref([])
   const DJANGO_URL = 'http://127.0.0.1:8000/community';
 
@@ -11,9 +13,6 @@ export const useArticleStore = defineStore('article', () => {
     axios({
       method: 'get',
       url: `${DJANGO_URL}/caht/`,
-      headers: {
-        Authorization: `Token ${token.value}`
-      }
     })
       .then((res) =>{
         console.log(res.data)

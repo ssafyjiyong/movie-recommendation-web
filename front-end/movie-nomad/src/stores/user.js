@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', () => {
   const DJANGO_URL = 'http://127.0.0.1:8000/accounts';
   const token = ref(null)
   const username = ref(null)
+  const userId = ref(null)
 
   const signUp = function (payload) {
     axios
@@ -25,16 +26,14 @@ export const useUserStore = defineStore('user', () => {
       .then((response) => {
         token.value = response.data.key
         username.value = payload.username
-        console.log(token.value)
-        console.log(response)
         return payload.username
       })
       .then((response) => {
-        console.log(response)
         axios
           .get(`http://127.0.0.1:8000/myblog/${response}/`)
-          .then((response) => {
-            console.log(response.data)
+          .then((res) => {
+            userId.value = res.data.id
+            console.log(res.data)
           })
       })
     }
