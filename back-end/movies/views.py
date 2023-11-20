@@ -189,6 +189,43 @@ def movie_detail(request, movie_id):
                 serializer.save()
 
     serializer = MovieDetailSerializer(movie)
-    return Response(serializer.data)        
+    return Response(serializer.data)
 
 
+@api_view(['POST'])
+def movie_like(request, movie_id):
+    movie = Movie.objects.get(movie_id=movie_id)
+
+    if request.user in movie.like_users:
+        movie.like_users.remove(request.user)
+    else:
+        movie.like_users.add(request.user)
+    
+    serializer = MovieDetailSerializer(movie)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def movie_normal(request, movie_id):
+    movie = Movie.objects.get(movie_id=movie_id)
+
+    if request.user in movie.like_users:
+        movie.normal_users.remove(request.user)
+    else:
+        movie.normal_users.add(request.user)
+    
+    serializer = MovieDetailSerializer(movie)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def movie_hate(request, movie_id):
+    movie = Movie.objects.get(movie_id=movie_id)
+
+    if request.user in movie.like_users:
+        movie.hate_users.remove(request.user)
+    else:
+        movie.hate_users.add(request.user)
+    
+    serializer = MovieDetailSerializer(movie)
+    return Response(serializer.data)

@@ -3,4 +3,6 @@ from . import views
 
 
 app_name = 'profile'
-urlpatterns = []
+urlpatterns = [
+    path('<int:user_pk>/', views.profile),
+]

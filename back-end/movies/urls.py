@@ -6,4 +6,7 @@ urlpatterns = [
     # path('test/', views.test)
     path('movie_search/<str:movie_title>/', views.movie_search),
     path('movie_detail/<int:movie_id>/', views.movie_detail),
+    path('movie_detail/<int:movie_id>/like/', views.movie_like),
+    path('movie_detail/<int:movie_id>/soso/', views.movie_normal),
+    path('movie_detail/<int:movie_id>/hate/', views.movie_hate),
 ]
