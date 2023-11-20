@@ -29,7 +29,6 @@ environ.Env.read_env(
 
 # 설정한 변수를 읽어옴
 TMDB_API_KEY = env('TMDB_API_KEY')
-KOFIC_API_KEY = env('KOFIC_API_KEY')
 SPOTIFY_API_ID = env('SPOTIFY_API_ID')
 SPOTIFY_API_SECRET = env('SPOTIFY_API_SECRET')
 ###################################################################################

@@ -7,7 +7,7 @@ export const useArticleStore = defineStore('article', () => {
   const userStore = useUserStore()
   const token = userStore.token
   const articles = ref([])
-  const article = ref(null)
+  const article = ref([])
   const DJANGO_URL = 'http://127.0.0.1:8000/community';
 
   const getArticles = function () {
@@ -30,7 +30,9 @@ export const useArticleStore = defineStore('article', () => {
       url: `${DJANGO_URL}/article_detail/${articleId}/`
     })
       .then((res) => {
+        console.log(res)
         article.value = res.data
+        console.log(article.value)
       })
       .catch((err) => {
         window.alert(err)
