@@ -114,6 +114,7 @@ export const following = (token, nickname) => {
   return axios
     .post(
       `${API_URL}/myblog/${nickname}/following/`,
+      {},
       {
         headers: {
           Authorization: `Token ${token}`,

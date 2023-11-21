@@ -30,13 +30,9 @@
         </label>
       </div>
 
-      <label for="movie">movie</label>
-      <select name="movie" id="movie" v-model="movieid">
-        <option 
-        v-for="movie in movieStore.allMovies" 
-        :key ="movie.pk"
-        :value="movie.pk">{{ movie.title }}</option>
-      </select>
+      <label for="movie">movie :</label>
+      <input type="text" id="movie" v-model="movieid">
+
 
       <label for="title">글제목 : </label>
 
@@ -55,7 +51,7 @@
 <script setup>
 import { useArticleStore } from '@/stores/articleStore';
 import { useMovieStore } from '@/stores/movieStore';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const articleStore = useArticleStore()
 const movieStore = useMovieStore()
@@ -74,6 +70,10 @@ const addArticle = function () {
   }
   articleStore.createArticle(payload)
 }
+
+onMounted(() => {
+  movieStore.initializeMovies()
+});
 
 </script>
 
