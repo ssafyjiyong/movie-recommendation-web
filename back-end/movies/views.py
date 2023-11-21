@@ -68,6 +68,7 @@ def movie_search(request, movie_title):
                 'movie_id': result['id'],
                 'title': result['title'],
                 'original_language': result['original_language'],
+                'original_title': result['original_title'],
                 'overview': result['overview'],
                 'release_date': result["release_date"],
                 'poster_path': result['poster_path'],
@@ -75,13 +76,22 @@ def movie_search(request, movie_title):
                 'vote_count': result['vote_count'],
                 'video': result['video'],
                 'popularity': result['popularity'],
-                'genres': result['genre_ids'],
             }
 
-            serializer = MovieSearchSerializer(data=fields)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
+            try:
+                movie = Movie.objects.get(movie_id=result['id'])
+                serializer = MovieSearchSerializer(movie)
                 search_results.append(serializer.data)
+            except:
+                serializer = MovieSearchSerializer(data=fields)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+                    search_results.append(serializer.data)
+                
+                movie = Movie.objects.get(movie_id=result['id'])
+
+                for genre in result['genre_ids']:
+                    movie.genres.add(Genre.objects.get(number=genre))
 
     # 검색 결과 배열을 리턴
     return Response(search_results)
@@ -89,13 +99,13 @@ def movie_search(request, movie_title):
 
 @api_view(['GET'])
 def movie_detail(request, movie_id):
-    movie = Movie.objects.get(movie_id=movie_id)
+    movie = Movie.objects.get(id=movie_id)
     genres = Genre.objects.values_list('name', flat=True)
     actors = Actor.objects.values_list('name', flat=True)
     directors = Director.objects.values_list('name', flat=True)
 
     # detail 조회가 처음이 아닌 영화의 경우 바로 디테일 값을 리턴
-    if movie.genres == [] or movie.actors == [] or movie.director == []:
+    if movie.actors == [] or movie.director == []:
         serializer = MovieDetailSerializer(movie)
 
         return Response(serializer.data)
@@ -103,11 +113,9 @@ def movie_detail(request, movie_id):
     # 처음 조회하는 영화일 경우 장르, 배우, 감독 필드를 채워줌
 
     else:
-        # 장르
-        if movie.genres == [] or movie.runtime == None or movie.original_title == None:
-        
-            # 장르 정보 및 런닝 타임을 불러오기 위한 요청
-            url = f"https://api.themoviedb.org/3/movie/{movie_id}"
+        if movie.runtime == None:
+            # 런닝 타임을 불러오기 위한 요청
+            url = f"https://api.themoviedb.org/3/movie/{movie.movie_id}"
             headers = {
                 "accept": "application/json",
                 "Authorization": f"Bearer {TMDB_API_KEY}"
@@ -119,26 +127,10 @@ def movie_detail(request, movie_id):
             movie.runtime = results['runtime']
             movie.save()
 
-            # 장르 목록을 순회하며 등록
-            for res_genre in results['genres']:
-                # 장고DB에 없는 장르일 경우 장르 테이블을 새롭게 생성
-                if res_genre['name'] not in genres:
-                    fields = {
-                        'name': res_genre['name']
-                    }
-
-                    genre_serializer = GenreSerializer(data=fields)
-                    
-                    if genre_serializer.is_valid(raise_exception=True):
-                        genre_serializer.save()
-
-                # 영화의 장르 필드에 조회된 장르값을 추가(ManyToMany)
-                movie.genres.add(Genre.objects.get(name=res_genre['name']))
-
         # 배우, 감독
         if movie.actors != [] or movie.director != []:
             # 영화 출연진, 감독을 불러오기 위한 요청
-            url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?language=ko-KR"
+            url = f"https://api.themoviedb.org/3/movie/{movie.movie_id}/credits?language=ko-KR"
 
             headers = {
                 "accept": "application/json",
@@ -183,7 +175,7 @@ def movie_detail(request, movie_id):
         
         # 앨범정보
         try:
-            album = Album.objects.get(movie_id=movie.id)
+            album = Album.objects.get(id=movie.movie_id)
         except:
             url = 'https://api.spotify.com/v1/search'
             headers = getHeaders()
@@ -215,7 +207,7 @@ def movie_detail(request, movie_id):
 
 @api_view(['POST'])
 def movie_like(request, movie_id):
-    movie = Movie.objects.get(movie_id=movie_id)
+    movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.like_users:
         movie.like_users.remove(request.user)
@@ -230,7 +222,7 @@ def movie_like(request, movie_id):
 
 @api_view(['POST'])
 def movie_normal(request, movie_id):
-    movie = Movie.objects.get(movie_id=movie_id)
+    movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.like_users:
         movie.normal_users.remove(request.user)
@@ -243,7 +235,7 @@ def movie_normal(request, movie_id):
 
 @api_view(['POST'])
 def movie_hate(request, movie_id):
-    movie = Movie.objects.get(movie_id=movie_id)
+    movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.like_users:
         movie.hate_users.remove(request.user)

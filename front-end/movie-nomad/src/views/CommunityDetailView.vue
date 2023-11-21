@@ -19,13 +19,16 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import { useArticleStore } from '@/stores/article';
 
+const props = defineProps({
+  article: Object
+})
 const store = useArticleStore()
 const route = useRoute()
 
 const article = ref(store.article)
 
 onMounted(() => {
-  store.articleDetail(route.params.articleId)
+  // store.articleDetail(route.params.articleId)
 })
 
 </script>
