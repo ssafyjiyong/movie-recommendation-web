@@ -40,14 +40,17 @@ import MovieCard from '@/components/MovieCard.vue';
 import { ref, computed } from 'vue';
 import { searchMovie } from '@/apis/movieApi'
 import Pagination from '@/components/Pagination.vue';
+import { useMovieStore } from '@/stores/movieStore';
 
+const movieStore = useMovieStore()
 const movieKeyword = ref('')
-const searchedMovies = ref([])
+const searchedMovies = ref(movieStore.allMovies)
 
 const searchTheMovie = () => {
   searchMovie(movieKeyword.value)
   .then((response) => {
     if (response && response.data) {
+      console.log(response.data)
       searchedMovies.value = response.data
       movieKeyword.value = ''
       }

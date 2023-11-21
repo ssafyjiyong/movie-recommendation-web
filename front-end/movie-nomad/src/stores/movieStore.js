@@ -11,6 +11,7 @@ export const useMovieStore = defineStore('movie', () => {
       .then((response) => {
         if (response && response.data) {
           allMovies.value = response.data
+          console.log('모든 영화를 불러왔습니다ㅎㅎ')
         }
       })
       .catch((error) => {

@@ -14,9 +14,7 @@ export const useArticleStore = defineStore('article', () => {
   const initializeArticles = () => {
     getArticlesList()
       .then((response) => {
-        if (response && response.data) {
-          articles.value = response.data
-        }
+        articles.value = response.data
       })
       .catch((error) => {
         console.error('Error initializing articles:', error)
@@ -27,10 +25,8 @@ export const useArticleStore = defineStore('article', () => {
   const createArticle = (payload) => {
     return createArticleAPI(payload)
       .then((response) => {
-        if (response.status === 201) {
           articles.value.push(response.data)
           window.alert('성공적으로 글이 작성됐습니다!')
-        }
       })
       .catch((error) => {
         console.error(error)
@@ -42,7 +38,7 @@ export const useArticleStore = defineStore('article', () => {
   const deleteArticle = (articlePk) => {
     return deleteArticleAPI(articlePk)
       .then((response) => {
-        if (response.status === 200) {
+        if (response) {
           // articles 배열에서 삭제된 게시글을 찾아서 삭제
           const index = articles.value.findIndex((article) => article.pk === articlePk)
           if (index !== -1) {
@@ -63,7 +59,7 @@ export const useArticleStore = defineStore('article', () => {
   const updateArticle = (articlePk, payload) => {
     return updateArticleAPI(articlePk, payload)
       .then((response) => {
-        if (response.status === 200) {
+        if (response) {
           const article = articles.value.find((article) => article.pk === articlePk)
           if (article) {
             article.content = newContent

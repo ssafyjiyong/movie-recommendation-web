@@ -23,7 +23,6 @@ export const useUserStore = defineStore("user", () => {
 
     const signUpUser = (payload) => {
       signUp(payload).then((response) => {
-        if (response.status === 204) {
           Swal.fire({
             title: "회원가입 완료. \n 로그인 하시겠습니까?",
             icon: "success",
@@ -45,7 +44,6 @@ export const useUserStore = defineStore("user", () => {
               router.push({ name: "home" });
             }
           });
-        }
       });
     };
 
