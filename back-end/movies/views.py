@@ -48,7 +48,7 @@ def movie_search(request, movie_title):
 
     for movie in movies:
         # 검색내용의 공백 및 서버에 저장된 영화 제목의 공백을 제거하여 문자열 확인
-        if movie_title.replace(" ", "") in movie.title.replace(" ", ""):
+        if (movie_title.replace(" ", "") in movie.title.replace(" ", "")) or (movie_title.replace(" ", "") in movie.original_title.replace(" ", "")):
             serializer = MovieSearchSerializer(movie)
             search_results.append(serializer.data)
     
@@ -243,4 +243,28 @@ def movie_hate(request, movie_id):
         movie.hate_users.add(request.user)
     
     serializer = MovieDetailSerializer(movie)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def genres(request):
+    genres = Genre.objects.all()
+    serializer = GenreSerializer(genres, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def actors(request):
+    actors = Actor.objects.all()
+    serializer = ActorSerializer(actors, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def directors(request):
+    directors = Director.objects.all()
+    serializer = DirectorSerializer(directors, many=True)
+
     return Response(serializer.data)

@@ -49,7 +49,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             fields = ('pk', 'content', 'created_at',)
             read_only_fields = ('article','user',)
     
-    class ReommentSerializer(serializers.ModelSerializer):
+    class RecommentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Recomment
             fields = ('pk', 'content', 'created_at',)
@@ -61,7 +61,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             fields = ('pk', 'article_image')
 
     comments = CommentSerializer(read_only=True, many=True)
-    recomments = ReommentSerializer(read_only=True, many=True)
+    recomments = RecommentSerializer(read_only=True, many=True)
     images = ImageSerializer(read_only=True, many=True)
     like_users = LikeUserSerializer(read_only=True, many=True)
     like_user_count = serializers.IntegerField(
@@ -72,3 +72,27 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = '__all__'
         read_only_fields = ('user',)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class LikeUserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('pk',)
+
+    like_users = LikeUserSerializer(read_only=True, many=True)
+    like_user_count = serializers.IntegerField(
+        source='like_users.count', read_only=True
+    )
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ('article','user',)
+
+
+class RecommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recomment
+        fields = ('pk', 'content', 'created_at',)
+        read_only_fields = ('comment','user',)
