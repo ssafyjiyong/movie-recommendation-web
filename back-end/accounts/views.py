@@ -31,7 +31,7 @@ def following(request, user_name):
 
 
 @api_view(['PUT'])
-def update_nickname(request, user_id):
+def update_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
     if request.user == user:
