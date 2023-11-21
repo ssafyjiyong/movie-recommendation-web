@@ -5,7 +5,7 @@ from rest_framework import status
 
 from django.shortcuts import render
 
-from .models import Article
+from .models import Article, Comment
 from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer, RecommentSerializer
 
 
@@ -60,17 +60,31 @@ def article_detail(request, article_pk):
             return Response("삭제 완료")
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def comment(request, article_pk):
-    article = Article.objects.get(pk=article_pk)
-    
-    serializer = CommentSerializer(data=request.data)
-    
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(article=article, user=request.user)
-
+    if request.method == 'GET':
+        comment = Comment.objects.all()
+        serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
+
+    elif request.method == 'POST':
+        article = Article.objects.get(pk=article_pk)
+        
+        serializer = CommentSerializer(data=request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(article=article, user=request.user)
+
+            return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def comment_delete(request, article_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+
+    if comment.user == request.user:
+        comment.delete()
     
-    return Response("에러 ㅋㅋ")
+    return Response("삭제되었습니다.")
 
 

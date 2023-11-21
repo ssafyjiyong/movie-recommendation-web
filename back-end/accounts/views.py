@@ -18,3 +18,13 @@ def profile(request, user_name):
     blog_serializer = BlogSerializer(user)
 
     return Response(blog_serializer.data)
+
+
+@api_view(['POST'])
+def following(request, user_name):
+    user = get_object_or_404(User, user_name=user_name)
+
+    if request.user in user.followings:
+        user.followings.remove(request.user)
+    else:
+        user.followings.add(request.user)

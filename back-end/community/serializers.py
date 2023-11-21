@@ -75,6 +75,13 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('pk', 'nickname', 'profile_pic')
+
+    user = UserSerializer(read_only=True)
+    
     class LikeUserSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
