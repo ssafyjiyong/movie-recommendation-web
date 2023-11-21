@@ -36,7 +36,7 @@ export const useUserStore = defineStore("user", () => {
               // 네를 눌렀을 때, 자동으로 로그인되는 기능
               const loginPayload = {
                 username: payload.username,
-                password: payload.password,
+                password: payload.password1,
               };
               loginUser(loginPayload);
               router.push({ name: "home" });

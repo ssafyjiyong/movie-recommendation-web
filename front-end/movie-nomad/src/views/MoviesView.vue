@@ -1,10 +1,10 @@
 <template>
-  <div class="container d-flex justify-content-between my-3">
+  <div v-if="!loading" class="container d-flex justify-content-between my-3">
     <!-- 검색창 및 검색결과 -->
     <div class="col-9 me-3">
       <!-- 검색창 -->
       <div class="searchBox">
-        <form @submit.prevent="searchTheMovie">
+        <form @submit.prevent="movieStore.searchTheMovie(movieKeyword)">
           <input type="text" v-model="movieKeyword">
           <input type="submit">
         </form>
@@ -12,76 +12,59 @@
 
       <!-- 영화리스트 공간 -->
       <div class="movieListBox">
-          <MovieCard 
-          v-for="(searchedMovie, idx) in searchedMovies?.slice(pageStartIdx, pageStartIdx + ITEM_PER_PAGE)"
-          :key="idx"
-          :searchedMovie="searchedMovie" />
+        <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" :key="idx" :searchedMovie="searchedMovie" />
       </div>
 
-      <Pagination 
-      :list="searchedMovies" 
-      v-bind="{ ITEM_PER_PAGE, PAGE_PER_SECTION }" 
-      @change-page="onChangePage" />
-
+      <!-- 더 보기 버튼 -->
+      <button @click="loadMoreMovies">더 보기</button>
     </div>
+
 
     <!-- 필터 -->
     <div class="filterBox flex-grow-1">
       <p>필터가 들어갈 자리입니다</p>
     </div>
 
+  </div>
 
+  <div v-else>
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <span>영화 목록을 가져오는중...</span>
   </div>
 </template>
 
 
 <script setup>
 import MovieCard from '@/components/MovieCard.vue';
-import { ref, computed } from 'vue';
-import { searchMovie } from '@/apis/movieApi'
-import Pagination from '@/components/Pagination.vue';
+import { ref, onMounted } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
-const searchedMovies = ref(movieStore.allMovies)
+const loading = ref(true) // 로딩 상태 관리
 
-const searchTheMovie = () => {
-  searchMovie(movieKeyword.value)
-  .then((response) => {
-      console.log(response.data)
-      searchedMovies.value = response.data
-      movieKeyword.value = ''
-    })
-    .catch((error) => {
-      console.error('Error search the movie', error)
-    })
+// 페이지 상태 관리
+const itemsPerPage = 15
+const page = ref(1)
+
+// 페이지에 따라 영화 데이터 범위 조정(최초 첫 번째 페이지 데이터 로드)
+const paginatedMovies = ref(movieStore.searchedMovies.slice(0, 14))
+
+// 더 보기 버튼 클릭 시 페이지 상태 증가
+const loadMoreMovies = () => {
+  const start = page.value * itemsPerPage
+  const end = start + itemsPerPage
+  paginatedMovies.value = [...paginatedMovies.value, ...movieStore.searchedMovies.slice(start, end)]
+  page.value++
 }
 
-// 디버깅을 위해 위의 방식 채택
-// const searchTheMovie = function () {
-//   searchMovie(movieKeyword.value)
-//   movieKeyword.value = ''
-// }
-
-
-// 아래는 페이지네이션 관련 코드
-const articles = new Array(111);
-for (let i = 0; i < articles.length; i++) {
-  articles[i] = `Article ${i + 1}`;
-}
-
-const ITEM_PER_PAGE = ref(10);
-const PAGE_PER_SECTION = ref(5);
-let curPage = ref(1);
-
-const pageStartIdx = computed(() => {
-  return (curPage.value - 1) * ITEM_PER_PAGE.value;
+onMounted(async () => {
+  loading.value = true
+  await movieStore.initializeMovies()
+  loading.value = false
 });
-
-const onChangePage = (data) => {
-  curPage.value = data;
-};
 
 </script>
 
@@ -90,14 +73,17 @@ const onChangePage = (data) => {
 .container {
   min-height: 100vh;
 }
+
 .filterBox {
   border: 1px solid black;
   border-radius: 10px;
 }
+
 .movieListBox {
   border: 1px solid black;
   border-radius: 10px;
 }
+
 .searchBox {
   border: 1px solid black;
   margin-bottom: 10px;

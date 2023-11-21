@@ -1,12 +1,22 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getMoviesList } from '@/apis/movieApi'
+import { getMoviesList, searchMovie } from '@/apis/movieApi'
 
 export const useMovieStore = defineStore('movie', () => {
+  
   const allMovies = ref([])
-
-  // 이쪽에서 검색된 영화 컨트롤 하도록 재설계(Home이랑 Movies List)
   const searchedMovies = ref(allMovies)
+
+  const searchTheMovie = (movieKeyword) => {
+    searchMovie(movieKeyword)
+    .then((response) => {
+        console.log(response.data)
+        searchedMovies.value = response.data
+      })
+      .catch((error) => {
+        console.error('Error search the movie', error)
+      })
+  }
 
   // 모든 영화 정보
   const initializeMovies = () => {
@@ -22,5 +32,5 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { allMovies, initializeMovies }
+  return { allMovies, searchedMovies, initializeMovies, searchTheMovie }
 })
