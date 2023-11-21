@@ -2,7 +2,7 @@
   <div class="position-relative">
 
     <!-- 메인 이미지 -->
-    <img class="main-background" src="@/images/main_background.jpg" alt="main-background">
+    <img class="main-background" src="@/images/main_background.gif" alt="main-background">
 
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
