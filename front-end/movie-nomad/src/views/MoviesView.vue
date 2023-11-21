@@ -1,10 +1,10 @@
 <template>
-  <div v-if="!loading" class="container d-flex justify-content-between my-3">
+  <div class="container d-flex justify-content-between my-3">
     <!-- 검색창 및 검색결과 -->
     <div class="col-9 me-3">
       <!-- 검색창 -->
       <div class="searchBox">
-        <form @submit.prevent="movieStore.searchTheMovie(movieKeyword)">
+        <form @submit.prevent="searchMovie">
           <input type="text" v-model="movieKeyword">
           <input type="submit">
         </form>
@@ -12,7 +12,8 @@
 
       <!-- 영화리스트 공간 -->
       <div class="movieListBox">
-        <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" :key="idx" :searchedMovie="searchedMovie" />
+        <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" 
+        :key="idx" :searchedMovie="searchedMovie" />
       </div>
 
       <!-- 더 보기 버튼 -->
@@ -27,12 +28,12 @@
 
   </div>
 
-  <div v-else>
+  <!-- <div v-else>
     <div class="spinner-border text-success" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
     <span>영화 목록을 가져오는중...</span>
-  </div>
+  </div> -->
 </template>
 
 
@@ -45,6 +46,11 @@ const movieStore = useMovieStore()
 const movieKeyword = ref('')
 const loading = ref(true) // 로딩 상태 관리
 
+const searchMovie = function () {
+  movieStore.searchTheMovie(movieKeyword.value)
+  paginatedMovies.value = movieStore.searchedMovies.slice(0, itemsPerPage)
+}
+
 // 페이지 상태 관리
 const itemsPerPage = 15
 const page = ref(1)
@@ -56,15 +62,9 @@ const paginatedMovies = ref(movieStore.searchedMovies.slice(0, 14))
 const loadMoreMovies = () => {
   const start = page.value * itemsPerPage
   const end = start + itemsPerPage
-  paginatedMovies.value = [...paginatedMovies.value, ...movieStore.searchedMovies.slice(start, end)]
+  paginatedMovies.value = movieStore.searchedMovies.slice(0, end)
   page.value++
 }
-
-onMounted(async () => {
-  loading.value = true
-  await movieStore.initializeMovies()
-  loading.value = false
-});
 
 </script>
 
