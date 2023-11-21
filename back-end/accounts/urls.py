@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = 'profile'
+app_name = 'accounts'
 urlpatterns = [
     path('<str:user_name>/', views.profile),
     path('<str:nickname>/following/', views.following),
