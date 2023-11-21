@@ -94,12 +94,10 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore';
-import { useMovieStore } from '@/stores/movieStore';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const router = useRouter()
 const userStore = useUserStore()
-const movieStore = useMovieStore()
 const isDarkMode = ref(false);
 
 const enableDarkMode = () => {

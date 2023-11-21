@@ -1,6 +1,6 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getMoviesList, getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
+import { getMoviesList, searchMovie } from '@/apis/movieApi'
 
 export const useMovieStore = defineStore('movie', () => {
   // 전체 영화 정보 저장목록
@@ -11,17 +11,20 @@ export const useMovieStore = defineStore('movie', () => {
   const upcomingMovieImages = ref([])
   const nowPlayingMovieImages = ref([])
 
-  const searchedMovies = ref(allMovies)
+  const searchKeyword = ref('')
+
+  const searchedMovies = computed(() => {
+    if (searchKeyword.value) {
+      // 검색 키워드가 있을 경우 필터링
+      return allMovies.value.filter(movie => movie.title.includes(searchKeyword.value))
+    } else {
+      // 검색 키워드가 없을 경우 전체 목록 반환
+      return allMovies.value
+    }
+  })
 
   const searchTheMovie = (movieKeyword) => {
-    searchMovie(movieKeyword)
-    .then((response) => {
-        console.log(response.data)
-        searchedMovies.value = response.data
-      })
-      .catch((error) => {
-        console.error('Error search the movie', error)
-      })
+    searchKeyword.value = movieKeyword
   }
 
   // 모든 영화 정보
@@ -38,22 +41,5 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-
-  // HomeView캐러셀용 이미지 불러오기
-  const getCarouselImages = () => {
-    getPopularMovies()
-      .then((response) => {
-        if (response && response.data) {
-          response.data['results'].forEach(movie => {
-            popularMovieImages.value.push(movie['poster_path'])
-          });
-        }
-
-        return popularMovieImages.value
-      })
-      .then((res) => {
-        console.log(res)
-      })
-  }
-  return { allMovies, popularMovieImages, upcomingMovieImages, nowPlayingMovieImages, initializeMovies, getCarouselImages }
+  return { allMovies, searchedMovies, initializeMovies, searchTheMovie }
 })
