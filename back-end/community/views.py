@@ -6,7 +6,7 @@ from rest_framework import status
 from django.shortcuts import render
 
 from .models import Article
-from .serializers import ArticleListSerializer, ArticleSerializer
+from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer, RecommentSerializer
 
 
 # Create your views here.
@@ -59,5 +59,18 @@ def article_detail(request, article_pk):
             article.delete()
             return Response("삭제 완료")
 
+
+@api_view(['POST'])
+def comment(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    
+    serializer = CommentSerializer(data=request.data)
+    
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(article=article, user=request.user)
+
+        return Response(serializer.data)
+    
+    return Response("에러 ㅋㅋ")
 
 
