@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }">
+    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }" :article="article">
       <span class="article-title">{{ article.title }}</span>
     </RouterLink>
     <hr>
@@ -9,12 +9,18 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
+import { useArticleStore } from '@/stores/article';
+import { onMounted } from 'vue';
 
+const store = useArticleStore()
 const props = defineProps({
   article: Object
 })
 
-const article = props.article
+
+onMounted(() => {
+  const article = store.articleDetail(props.article.id)
+})
 
 </script>
 
