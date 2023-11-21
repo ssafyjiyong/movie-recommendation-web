@@ -29,10 +29,15 @@
 
     <!-- 영화 포스터 애니메이션 -->
     <div class="posterTopBox">
-
       <div class="posterBox1">
-        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image1.jpg" alt="image1">
+        <template v-for="index in Array(20).fill()" :key="index">
+          <img src="@/images/image1.jpg" alt="img">
+        </template>
       </div>
+      
+      <!-- <div class="posterBox1">
+        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image1.jpg" alt="image1">
+      </div> -->
 
       <div class="posterBox2">
         <img v-for="index in Array(20).fill()" :key="index" src="@/images/image2.jpg" alt="image2">
