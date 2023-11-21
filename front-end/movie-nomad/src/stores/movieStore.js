@@ -1,10 +1,16 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getMoviesList, searchMovie } from '@/apis/movieApi'
+import { getMoviesList, getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
 
 export const useMovieStore = defineStore('movie', () => {
-  
+  // 전체 영화 정보 저장목록
   const allMovies = ref([])
+
+  // 캐러셀용 이미지 저장목록
+  const popularMovieImages = ref([])
+  const upcomingMovieImages = ref([])
+  const nowPlayingMovieImages = ref([])
+
   const searchedMovies = ref(allMovies)
 
   const searchTheMovie = (movieKeyword) => {
@@ -32,5 +38,22 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { allMovies, searchedMovies, initializeMovies, searchTheMovie }
+
+  // HomeView캐러셀용 이미지 불러오기
+  const getCarouselImages = () => {
+    getPopularMovies()
+      .then((response) => {
+        if (response && response.data) {
+          response.data['results'].forEach(movie => {
+            popularMovieImages.value.push(movie['poster_path'])
+          });
+        }
+
+        return popularMovieImages.value
+      })
+      .then((res) => {
+        console.log(res)
+      })
+  }
+  return { allMovies, popularMovieImages, upcomingMovieImages, nowPlayingMovieImages, initializeMovies, getCarouselImages }
 })
