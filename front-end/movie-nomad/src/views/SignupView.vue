@@ -24,7 +24,7 @@
             placeholder="비밀번호 확인" />
         </div>
         <div class="d-grid">
-          <button @click="signUp" class="btn btn-info mt-4">회원가입</button>
+          <button @click="signUp" class="btn btn-success mt-4">회원가입</button>
         </div>
       </div>
     </div>

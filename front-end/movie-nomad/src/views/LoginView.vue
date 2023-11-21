@@ -26,7 +26,7 @@
           />
         </div>
         <div class="d-grid gap-2">
-          <button @click="logIn" class="btn btn-info mt-4">로그인</button>
+          <button @click="logIn" class="btn btn-success mt-4">로그인</button>
         </div>
       </div>
     </div>
