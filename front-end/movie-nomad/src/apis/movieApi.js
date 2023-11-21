@@ -136,6 +136,10 @@ export const hateMovieApi = (moviePk) => {
     })
 }
 
+
+// 여기서부터 커뮤니티 관련입니다---------------------------------------------------------------------------------
+
+
 // 게시글 List 전체 조회 API
 export const getArticlesList = () => {
   return axios.get(`${API_URL}/article_list/`)
@@ -220,6 +224,10 @@ export const updateArticleAPI = (articlePk, payload) => {
       throw error
     })
 }
+
+
+// 여기서부터 코멘트 관련입니다---------------------------------------------------------------------------------
+
 
 // 단일 게시글 comment List 조회
 export const getCommentList = (articlePk) => {
