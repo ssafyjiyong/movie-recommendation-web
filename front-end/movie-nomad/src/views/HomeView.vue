@@ -7,14 +7,14 @@
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
       <form @submit.prevent="searchMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
-        <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
-          <i class="fa-solid fa-magnifying-glass"></i></button>
-        <input @keypress="searchMovieForRelatedSearches" type="text" class="search-input" :placeholder=placeholderText
-          :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
-          @blur="restorePlaceholder">
-        <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
-            class="fa-solid fa-magnifying-glass"></i></button>
-      </form>
+    <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
+      <i class="fa-solid fa-magnifying-glass"></i></button>
+    <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
+      :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
+      @blur="restorePlaceholder">
+    <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
+        class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
 
       <!-- 관련 검색어 -->
       <div class="related-searches" v-if="isFocused">
@@ -75,10 +75,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
 import { getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
+import { debounce } from 'lodash';
 
 const router = useRouter()
 const movieStore = useMovieStore();
@@ -94,10 +95,10 @@ const posterUrl = 'https://image.tmdb.org/t/p/w500';
 const placeholderText = ref('MOVIE NOMAD')
 const isFocused = ref(false)
 const relatedSearches = computed(() => {
-  // 키워드 써칭하여 결과는 최대 5개만
+  // 키워드 써칭하여 결과는 최대 7개만
   return movieStore.searchedMovies
     .map(movie => movie.title)
-    .slice(0, 5)
+    .slice(0, 7)
 })
 
 const searchMovie = function () {
@@ -108,6 +109,8 @@ const searchMovie = function () {
 const searchMovieForRelatedSearches = function () {
   movieStore.searchTheMovie(movieKeyword.value)
 }
+
+const debouncedSearch = debounce(searchMovieForRelatedSearches, 300);
 
 const clearPlaceholder = function () {
   placeholderText.value = ''
