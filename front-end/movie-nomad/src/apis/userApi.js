@@ -110,14 +110,14 @@ export const userProfile = (userName) => {
 };
 
 // 팔로우, 언팔로우
-export const following = (token, userName) => {
+export const following = (token, nickname) => {
   return axios
     .post(
-      `${API_URL}/myblog/${userName}/following/`,
+      `${API_URL}/myblog/${nickname}/following/`,
       {
         headers: {
           Authorization: `Token ${token}`,
-        },
+        }
       }
     )
     .then((response) => {
