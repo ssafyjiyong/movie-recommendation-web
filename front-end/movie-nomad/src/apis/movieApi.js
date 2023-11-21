@@ -72,6 +72,16 @@ export const getMovieDetail = (moviePk) => {
   return axios.get(`${API_URL}/movies/movie_detail/${moviePk}/`)
 }
 
+// 배우 정보 조회
+export const getActorsList = (moviePk) => {
+  return axios.get(`${API_URL}/movies/actors/${moviePk}/`)
+}
+
+// 감독 정보 조회
+export const getDirectorsList = (moviePk) => {
+  return axios.get(`${API_URL}/movies/directors/${moviePk}/`)
+}
+
 
 // 영화 좋아요 API
 export const likeMovieApi = (moviePk) => {

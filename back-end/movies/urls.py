@@ -5,10 +5,10 @@ app_name = 'movies'
 urlpatterns = [
     path('movielist/', views.movies),
     path('genres/', views.genres),
-    path('actors/', views.actors),
-    path('directors/', views.directors),
-    path('<int:page>/', views.movie_page),
     path('collections/', views.collections),
+    path('<int:page>/', views.movie_page),
+    path('directors/<int:movie_id>/', views.directors),
+    path('actors/<int:movie_id>/', views.actors),
     path('collections/<int:collection_id>/', views.collections_delete),
     path('collections/<int:movie_id>/', views.movie_collections),
     path('collections/<int:user_id>/', views.user_collections),
