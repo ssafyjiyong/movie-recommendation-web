@@ -1,12 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { useUserStore } from '@/stores/user';
-
-const userStore = useUserStore()
-
-</script>
-
-
 <template>
   <header>
     <!-- Navigation-->
@@ -22,7 +13,11 @@ const userStore = useUserStore()
           <ul class="navbar-nav ms-auto text-center">
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">English</li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">다크모드</li>
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">단축키모드</li>
+            <li 
+            class="nav-item px-lg-3 py-2 py-lg-2 mx-2"
+            @click="goToMovieList" >
+             영화목록
+            </li>
 
             <div v-if="!userStore.isLogin" class="d-flex">
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
@@ -78,6 +73,21 @@ const userStore = useUserStore()
     </div>
   </footer>
 </template>
+
+
+<script setup>
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user';
+
+const router = useRouter()
+const userStore = useUserStore()
+
+const goToMovieList = function () {
+  router.push('/movies')
+}
+
+</script>
+
 
 <!-- 전역 스타일 지정 -->
 <style>
