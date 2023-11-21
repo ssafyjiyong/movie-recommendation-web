@@ -11,8 +11,18 @@ export const useMovieStore = defineStore('movie', () => {
   const upcomingMovieImages = ref([])
   const nowPlayingMovieImages = ref([])
 
-  // 이쪽에서 검색된 영화 컨트롤 하도록 재설계(Home이랑 Movies List)
   const searchedMovies = ref(allMovies)
+
+  const searchTheMovie = (movieKeyword) => {
+    searchMovie(movieKeyword)
+    .then((response) => {
+        console.log(response.data)
+        searchedMovies.value = response.data
+      })
+      .catch((error) => {
+        console.error('Error search the movie', error)
+      })
+  }
 
   // 모든 영화 정보
   const initializeMovies = () => {
@@ -27,6 +37,7 @@ export const useMovieStore = defineStore('movie', () => {
         console.error('Error getting all movies:', error)
       })
   }
+
 
   // HomeView캐러셀용 이미지 불러오기
   const getCarouselImages = () => {

@@ -6,7 +6,7 @@
 
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
-      <form @submit.prevent="searchTheMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
+      <form @submit.prevent="searchMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
         <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
           <i class="fa-solid fa-magnifying-glass"></i></button>
         <input type="text" class="search-input" :placeholder=placeholderText :value="movieKeyword"
@@ -80,22 +80,20 @@
 import { ref, onMounted } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
-import { searchMovie } from '@/apis/movieApi'
-
 
 const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
 
-const searchTheMovie = function () {
-  searchMovie(movieKeyword.value)
-  movieKeyword.value = ''
-  router.push('/movies')
-}
-
 const placeholderText = ref('MOVIE NOMAD')
 const isFocused = ref(false)
 const relatedSearches = ref(['관련 검색어 1', '관련 검색어 2', '관련 검색어 3'])
+
+const searchMovie = function () {
+  movieStore.searchTheMovie(movieKeyword.value)
+  router.push('/movies')
+}
+
 
 const clearPlaceholder = function () {
   placeholderText.value = ''
