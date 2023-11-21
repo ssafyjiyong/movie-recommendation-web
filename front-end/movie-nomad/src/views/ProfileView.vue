@@ -83,7 +83,7 @@ console.log(userStore.token)
 
 
 const follow = () => {
-  payload = {
+  const payload = {
     'token': userStore.token,
     'nickname': route.params.nickname
   }
