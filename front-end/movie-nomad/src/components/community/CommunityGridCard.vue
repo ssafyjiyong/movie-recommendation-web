@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }">
+    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }" :article="article">
       <span class="article-title">{{ article.title }}</span>
     </RouterLink>
     <hr>
@@ -9,12 +9,16 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useArticleStore } from '@/stores/article';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
+import { getArticleDetail } from '@/apis/movieApi'
 
-const store = useArticleStore()
 const props = defineProps({
   article: Object
+})
+
+
+onMounted(() => {
+  getArticleDetail(props.article.id)
 })
 
 </script>

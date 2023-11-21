@@ -73,15 +73,17 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useMovieStore } from '@/stores/movie';
+import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
+import { searchMovie } from '@/apis/movieApi'
+
 
 const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
 
 const searchTheMovie = function () {
-  movieStore.searchMovie(movieKeyword.value)
+  searchMovie(movieKeyword.value)
   movieKeyword.value = ''
   router.push('/movies')
 }
@@ -116,7 +118,7 @@ const toggle = index => {
 }
 
 onMounted(() => {
-  movieStore.getMovies()
+  movieStore.initializeMovies()
 });
 
 </script>

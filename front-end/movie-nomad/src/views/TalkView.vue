@@ -5,7 +5,7 @@
 
   
   <CommunityGrid
-    :articles="store.articles"
+    :articles="articleStore.articles"
   />
 
   <button @click="goToAddArticle">글쓰기</button>
@@ -14,12 +14,12 @@
 
 <script setup>
 import CommunityGrid from '@/components/community/CommunityGrid.vue';
-import { ref, onMounted } from 'vue';
-import { useArticleStore } from '@/stores/article';
+import { onMounted } from 'vue';
+import { useArticleStore } from '@/stores/articleStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
-const store = useArticleStore()
+const articleStore = useArticleStore()
 
 const goToAddArticle = function () {
   router.push('/create/1/')
@@ -28,7 +28,7 @@ const goToAddArticle = function () {
 
 
 onMounted(() => {
-  store.getArticles()
+  articleStore.initializeArticles()
 });
 
 </script>

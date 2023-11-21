@@ -13,13 +13,13 @@
       <!-- 영화리스트 공간 -->
       <div class="movieListBox">
           <MovieCard 
-          v-for="(searchedMovie, idx) in movieStore.searchedMovies?.slice(pageStartIdx, pageStartIdx + ITEM_PER_PAGE)"
+          v-for="(searchedMovie, idx) in searchedMovies?.slice(pageStartIdx, pageStartIdx + ITEM_PER_PAGE)"
           :key="idx"
           :searchedMovie="searchedMovie" />
       </div>
 
       <Pagination 
-      :list="movieStore.searchedMovies" 
+      :list="searchedMovies" 
       v-bind="{ ITEM_PER_PAGE, PAGE_PER_SECTION }" 
       @change-page="onChangePage" />
 
@@ -37,19 +37,34 @@
 
 <script setup>
 import MovieCard from '@/components/MovieCard.vue';
-import { useMovieStore } from '@/stores/movie';
 import { ref, computed } from 'vue';
-
+import { searchMovie } from '@/apis/movieApi'
 import Pagination from '@/components/Pagination.vue';
 
-const movieStore = useMovieStore()
 const movieKeyword = ref('')
+const searchedMovies = ref([])
 
-const searchTheMovie = function () {
-  movieStore.searchMovie(movieKeyword.value)
-  movieKeyword.value = ''
+const searchTheMovie = () => {
+  searchMovie(movieKeyword.value)
+  .then((response) => {
+    if (response && response.data) {
+      searchedMovies.value = response.data
+      movieKeyword.value = ''
+      }
+    })
+    .catch((error) => {
+      console.error('Error search the movie', error)
+    })
 }
 
+// 디버깅을 위해 위의 방식 채택
+// const searchTheMovie = function () {
+//   searchMovie(movieKeyword.value)
+//   movieKeyword.value = ''
+// }
+
+
+// 아래는 페이지네이션 관련 코드
 const articles = new Array(111);
 for (let i = 0; i < articles.length; i++) {
   articles[i] = `Article ${i + 1}`;
