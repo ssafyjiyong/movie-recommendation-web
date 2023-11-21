@@ -13,10 +13,16 @@
       <!-- 영화리스트 공간 -->
       <div class="movieListBox">
           <MovieCard 
-          v-for="searchedMovie in movieStore.searchedMovies" 
-          :key="searchedMovie.pk" 
+          v-for="(searchedMovie, idx) in movieStore.searchedMovies?.slice(pageStartIdx, pageStartIdx + ITEM_PER_PAGE)"
+          :key="idx"
           :searchedMovie="searchedMovie" />
       </div>
+
+      <Pagination 
+      :list="movieStore.searchedMovies" 
+      v-bind="{ ITEM_PER_PAGE, PAGE_PER_SECTION }" 
+      @change-page="onChangePage" />
+
     </div>
 
     <!-- 필터 -->
@@ -28,10 +34,13 @@
   </div>
 </template>
 
+
 <script setup>
 import MovieCard from '@/components/MovieCard.vue';
 import { useMovieStore } from '@/stores/movie';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+
+import Pagination from '@/components/Pagination.vue';
 
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
@@ -41,7 +50,41 @@ const searchTheMovie = function () {
   movieKeyword.value = ''
 }
 
+const articles = new Array(111);
+for (let i = 0; i < articles.length; i++) {
+  articles[i] = `Article ${i + 1}`;
+}
+
+const ITEM_PER_PAGE = ref(10);
+const PAGE_PER_SECTION = ref(5);
+let curPage = ref(1);
+
+const pageStartIdx = computed(() => {
+  return (curPage.value - 1) * ITEM_PER_PAGE.value;
+});
+
+const onChangePage = (data) => {
+  curPage.value = data;
+};
+
 </script>
+
+
+<!-- <script setup>
+import MovieCard from '@/components/MovieCard.vue';
+import { useMovieStore } from '@/stores/movie';
+import { ref } from 'vue';
+
+
+const movieStore = useMovieStore()
+const movieKeyword = ref('')
+
+const searchTheMovie = function () {
+  movieStore.searchMovie(movieKeyword.value)
+  movieKeyword.value = ''
+}
+
+</script> -->
 
 <style scoped>
 .container {

@@ -33,6 +33,8 @@ export const useMovieStore = defineStore('movie', () => {
       url: `${DJANGO_URL}/`,
     })
       .then((res) =>{
+        console.log('get all movies ok')
+        searchedMovies.value = res.data
         allMovies.value = res.data
       })
       .catch((err) => {
@@ -40,20 +42,7 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  const getMovieDetail = function(movieId) {
-    axios({
-      method: 'get',
-      url: `${DJANGO_URL}/movie_detail/${movieId}/`,
-    })
-      .then((res) =>{
-        movieDetail.value = res.data
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
 
-
-  return { searchMovie, getMovies, searchedMovies, allMovies, movieDetail, getMovieDetail }
+  return { searchMovie, getMovies, searchedMovies, allMovies, movieDetail }
 
 }, { persist: true })

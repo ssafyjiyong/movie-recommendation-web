@@ -1,11 +1,11 @@
 <template>
-  <div class="container topBox">
+  <div class="container topBox" v-if="movieDetail">
     <!-- Detail의 상단 부분 -->
     <div class="row">
       <!-- Poster -->
       <div class="radiusBox col-3">
-        <img
-        :src="getMoviePosterUrl(movieStore.movieDetail.poster_path)" 
+        <img 
+        :src="`https://image.tmdb.org/t/p/w500/${movieDetail.poster_path}`" 
         alt="movie_poster" 
         class="posterImage">
       </div>
@@ -38,35 +38,38 @@
 
     </div>
 
+    {{ movieDetail }}
+
   </div>
 </template>
 
 <script setup>
+import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router';
-import { useMovieStore } from '@/stores/movie';
-import { onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const route = useRoute()
 const router = useRouter()
-const movieStore = useMovieStore()
+const movieDetail = ref(null)
 
 const movieId = route.params.movieId
 
-const getMoviePosterUrl = (posterPath) => {
-  if (posterPath) {
-    const baseUrl = 'https://image.tmdb.org/t/p/w500';
-    return `${baseUrl}${posterPath}`;
-  } else {
-    return '';
-  }
-};
+const getMovieDetail = function () {
+  axios({
+    method: 'get',
+    url: `http://127.0.0.1:8000/movies/movie_detail/${movieId}/`,
+  })
+    .then((res) => {
+      console.log(res.data)
+      movieDetail.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
-onMounted(async () => {
-  await movieStore.getMovieDetail(movieId);
-});
-
-watch(() => movieStore.movieDetail, (newValue, oldValue) => {
-  console.log(newValue);
+onMounted(() => {
+  getMovieDetail()
 });
 
 </script>
