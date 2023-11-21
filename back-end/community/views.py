@@ -4,8 +4,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from django.shortcuts import render
+from movies.models import Movie
 
-from .models import Article, Comment
+from .models import Article, Comment, Recomment
 from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer, RecommentSerializer
 
 
@@ -26,6 +27,17 @@ def articles(request):
             serializer.save(user=request.user)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def movie_articles(request, movie_id):
+    movie = Movie.objects.get(id=movie_id)
+    articles = Article.objects.filter(movie=movie)
+    
+    serializer = ArticleListSerializer(articles, many=True)
+
+    return Response(serializer.data)
+
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -60,16 +72,30 @@ def article_detail(request, article_pk):
             return Response("삭제 완료")
 
 
+@api_view(['POST'])
+def article_like(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+
+    if request.user in article.like_users:
+        article.like_users.remove(request.user)
+    else:
+        article.like_users.add(request.user)
+
+    serializer = ArticleSerializer(article)
+
+    return Response(serializer.data)
+
+
 @api_view(['GET', 'POST'])
 def comment(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+
     if request.method == 'GET':
-        comment = Comment.objects.all()
+        comment = Comment.objects.filter(article = article)
         serializer = CommentSerializer(comment, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        article = Article.objects.get(pk=article_pk)
-        
         serializer = CommentSerializer(data=request.data)
         
         if serializer.is_valid(raise_exception=True):
@@ -88,3 +114,30 @@ def comment_delete(request, article_pk, comment_pk):
     return Response("삭제되었습니다.")
 
 
+@api_view(['GET', 'POST'])
+def recomment(request, article_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+
+    if request.method == 'GET':
+        recomments = Recomment.objects.filter(comment=comment)
+        serializer = RecommentSerializer(recomments, many=True)
+
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = RecommentSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(comment=comment)
+
+            return Response(serializer.data)
+        
+
+@api_view(['DELETE'])
+def recomment_delete(request, article_pk, comment_pk, recomment_pk):
+    recomment = Recomment.objects.get(pk=recomment_pk)
+
+    if request.user == recomment.user:
+        recomment.delete()
+
+        return Response("삭제되었습니다.")

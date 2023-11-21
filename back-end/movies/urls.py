@@ -3,11 +3,16 @@ from . import views
 
 app_name = 'movies'
 urlpatterns = [
-    path('', views.movies),
+    path('movielist/', views.movies),
     path('genres/', views.genres),
     path('actors/', views.actors),
     path('directors/', views.directors),
     path('<int:page>/', views.movie_page),
+    path('collections/', views.collections),
+    path('collections/<int:collection_id>/', views.collections_delete),
+    path('collections/<int:movie_id>/', views.movie_collections),
+    path('collections/<int:user_id>/', views.user_collections),
+    path('collections/<int:collection_id>/<int:movie_id>/', views.collections_update),
     path('movie_search/<str:movie_title>/', views.movie_search),
     path('movie_detail/<int:movie_id>/', views.movie_detail),
     path('movie_detail/<int:movie_id>/like/', views.movie_like),

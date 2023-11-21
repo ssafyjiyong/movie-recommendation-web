@@ -40,10 +40,9 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
 class User(AbstractUser):
     followings = models.ManyToManyField('self', symmetrical=False, related_name='followers')
-    collections = models.ManyToManyField(Movie, symmetrical=False, related_name='collected_movie')
     username = models.EmailField(unique=True)
     email = models.EmailField(max_length=254, blank=True, null=True)
-    status = models.TextField()
+    status = models.TextField(default='상태메시지를 변경해보세요!')
     nickname = models.CharField(max_length=150, unique=True)
     profile_pic = ProcessedImageField(
     		blank = True,
@@ -52,3 +51,4 @@ class User(AbstractUser):
         	format = 'JPEG',
         	options = {'quality':90},
     		)
+    

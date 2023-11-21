@@ -45,7 +45,7 @@ class BlogSerializer(serializers.ModelSerializer):
     class FollowFollowingSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ('pk', 'username', 'profile_pic')
+            fields = ('pk', 'nickname', 'profile_pic')
 
     # 내가 쓴 게시글 확인하기 위함
     class ArticleListSerializer(serializers.ModelSerializer):
@@ -95,12 +95,33 @@ class BlogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# # 프로필 업데이트
-# class ProfileUpdateSerializer(serializers.ModelSerializer):
+# 프로필 업데이트
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk', 'nickname', 'status', 'profile_pic')
+
+
+# # 닉네임 업데이트
+# class NicknameUpdateSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
-#         fields = ('pk', 'profile_pic', 'status')
+#         fields = ('pk', 'nickname')
 
+
+
+# # 상메 업데이트
+# class StatusUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('pk', 'status')
+
+
+# # 프사 업데이트
+# class PictureUpdateSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('pk', 'profile_pic')
 
 # class LikeProfileSerializer(serializers.ModelSerializer):
 #     class Meta:

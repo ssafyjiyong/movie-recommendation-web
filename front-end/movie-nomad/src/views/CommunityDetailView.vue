@@ -3,7 +3,7 @@
     <div class="article-area">
       <h1>{{ article.title }}</h1>
       <div id='article-info'>
-        {{ article.user['nickname'] }} | {{ article.movie }} | 마지막 수정일 : {{ article.updated_at.substr(0, 10) }}
+        {{ article.user['nickname'] }} | {{ movie }} | 마지막 수정일 : {{ article.updated_at.substr(0, 10) }}
       </div>
       <hr>
       <p>{{ article.content }}</p>
@@ -18,17 +18,21 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import { useArticleStore } from '@/stores/article';
+import { useMovieStore } from '@/stores/movie';
+import { computed } from '@vue/reactivity';
 
-const props = defineProps({
-  article: Object
-})
-const store = useArticleStore()
+const articleStore = useArticleStore()
+const movieStore = useMovieStore()
 const route = useRoute()
 
-const article = ref(store.article)
+const movie = computed(() => {
+  return movieStore.getMovies()
+})
+
+const article = ref(articleStore.article)
 
 onMounted(() => {
-  // store.articleDetail(route.params.articleId)
+  store.articleDetail(route.params.articleId)
 })
 
 </script>

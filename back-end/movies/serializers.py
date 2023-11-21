@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from movies.models import Movie, Genre, Director, Actor, Album
+from movies.models import Movie, Genre, Director, Actor, Album, Collection
 from community.models import Article
 
 
@@ -68,6 +68,19 @@ class DirectorSerializer(serializers.ModelSerializer):
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
+        fields = '__all__'
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('pk', 'nickname', 'profile_pic')
+
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = Collection
         fields = '__all__'
 
 # # 영화 포스터 불러오기(HOME)

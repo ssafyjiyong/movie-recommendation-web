@@ -30,7 +30,7 @@ export const useMovieStore = defineStore('movie', () => {
   const getMovies = function () {
     axios({
       method: 'get',
-      url: `${DJANGO_URL}/`,
+      url: `${DJANGO_URL}/movielist/`,
     })
       .then((res) =>{
         console.log('get all movies ok')
