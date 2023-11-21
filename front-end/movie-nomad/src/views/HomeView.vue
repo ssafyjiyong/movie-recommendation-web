@@ -29,7 +29,7 @@
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
-    <div class="posterTopBox" @mouseover="pauseScroll" @mouseleave="resumeScroll">
+    <div class="posterTopBox">
 
       <div ref="posterBox" class="posterBox">
         <img v-for="(image, index) in upcomingMovies" :key="index" 
@@ -180,11 +180,7 @@ onMounted(() => {
       })
       .catch((error) => {
         console.error('Error getNowPlayingMovies:', error)
-      }),
-    // 포스터 자동 슬라이딩 시작
-    posterScrollInterval = setInterval(() => {
-      posterScrollWrap.value.scrollLeft += 1;
-    }, 20);
+      })
 });
 
 </script>

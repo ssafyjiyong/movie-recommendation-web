@@ -61,7 +61,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getMovieDetail } from '@/apis/movieApi'
+import { useRoute } from 'vue-router';
 
+const route = useRoute()
 const currentMovie = ref([])
 const moviePk = route.params.movieId
 
