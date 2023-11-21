@@ -9,12 +9,14 @@
       <form @submit.prevent="searchMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
         <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
           <i class="fa-solid fa-magnifying-glass"></i></button>
-        <input type="text" class="search-input" :placeholder=placeholderText :value="movieKeyword"
-          @input="movieKeyword = $event.target.value" @focus="clearPlaceholder" @blur="restorePlaceholder">
+        <input @keypress="searchMovieForRelatedSearches" type="text" class="search-input" :placeholder=placeholderText
+          :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
+          @blur="restorePlaceholder">
         <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
             class="fa-solid fa-magnifying-glass"></i></button>
       </form>
 
+      <!-- 관련 검색어 -->
       <div class="related-searches" v-if="isFocused">
         <div class="p-2" v-for="relatedSearch in relatedSearches" :key="relatedSearch">{{ relatedSearch }}</div>
       </div>
@@ -23,29 +25,25 @@
 
     <!-- 커뮤니티 연결 버튼 fixed -->
     <div class="d-flex justify-content-center custom-bottom shake">
-      <button @click="goToCommunity" 
-      class="rounded-btn"><span class="fw-bold">영화 이야기</span> 나누러 가기</button>
+      <button @click="goToCommunity" class="rounded-btn"><span class="fw-bold">영화 이야기</span> 나누러 가기</button>
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
-    <div class="posterTopBox">
-      <div class="posterBox1">
-        <template v-for="index in Array(20).fill()" :key="index">
-          <img src="@/images/image1.jpg" alt="img">
-        </template>
-      </div>
-      
-      <!-- <div class="posterBox1">
-        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image1.jpg" alt="image1">
-      </div> -->
+    <div class="posterTopBox" @mouseover="pauseScroll" @mouseleave="resumeScroll">
 
-      <div class="posterBox2">
-        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image2.jpg" alt="image2">
+      <div ref="posterBox" class="posterBox">
+        <img v-for="(image, index) in upcomingMovies" :key="index" 
+        :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
+      <div ref="posterBox" class="posterBox">
+        <img v-for="(image, index) in nowPlayingMovies" :key="index" 
+        :src="`${posterUrl}/${image.poster_path}`" alt="index">
+      </div>
 
-      <div class="posterBox1">
-        <img v-for="index in Array(20).fill()" :key="index" src="@/images/image3.jpg" alt="image3">
+      <div ref="posterBox" class="posterBox">
+        <img v-for="(image, index) in popularMovies" :key="index" 
+        :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
     </div>
@@ -77,23 +75,42 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import _ from 'lodash'
+import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
+import { getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
 
 const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
 
+// 포스터 관련 변수
+const popularMovies = ref([])
+const upcomingMovies = ref([])
+const nowPlayingMovies = ref([])
+const posterUrl = 'https://image.tmdb.org/t/p/w500';
+let posterScrollInterval;
+const posterBox = ref([]);
+
+// 검색창 관련 변수
 const placeholderText = ref('MOVIE NOMAD')
 const isFocused = ref(false)
-const relatedSearches = ref(['관련 검색어 1', '관련 검색어 2', '관련 검색어 3'])
+const relatedSearches = computed(() => {
+  // 키워드 써칭하여 결과는 최대 5개만
+  return movieStore.searchedMovies
+    .map(movie => movie.title)
+    .slice(0, 5)
+})
 
 const searchMovie = function () {
   movieStore.searchTheMovie(movieKeyword.value)
   router.push('/movies')
 }
 
+const searchMovieForRelatedSearches = function () {
+  movieStore.searchTheMovie(movieKeyword.value)
+}
 
 const clearPlaceholder = function () {
   placeholderText.value = ''
@@ -109,6 +126,7 @@ const goToCommunity = function () {
   router.push('/talk')
 }
 
+// QnA 관련 스크립트
 const qnas = ref([
   { question: '단축키 모드는 무엇인가요?', answer: '단축키 모드는 마우스를 사용하지 않고도 사이트를 조작할 수 있는 편리한 모드입니다. 안내 팝업창을 확인해주세요!', open: false },
   { question: '서비스 사용료가 있나요?', answer: '해당 서비스는 무료로 제공되고 있습니다. 우측 하단에 커피 버튼을 누르시면 저희가 커피를 한 잔 할 수 있습니다 :) 감사합니다!', open: false },
@@ -120,8 +138,53 @@ const toggle = index => {
   qnas.value[index].open = !qnas.value[index].open
 }
 
+// 포스터 자동으로 움직이는 관련 스크립트
+// 좌우 스크롤 버튼
+function pauseScroll() {
+  clearInterval(posterScrollInterval);
+}
+
+function resumeScroll() {
+  // 일정 간격으로 슬라이딩 재개
+  posterScrollInterval = setInterval(() => {
+    posterBox.value.forEach(box => { // 각 posterBox에 대해 슬라이딩 효과 적용
+      if (box.scrollWidth - box.scrollLeft <= box.clientWidth) {
+        box.scrollLeft = 0;
+      } else {
+        box.scrollLeft += 1;
+      }
+    });
+  }, 20);
+}
+
 onMounted(() => {
-  movieStore.initializeMovies()
+  movieStore.initializeMovies(),
+    getPopularMovies()
+      .then((response) => {
+        popularMovies.value = response.data.results
+        console.log(popularMovies.value)
+      })
+      .catch((error) => {
+        console.error('Error getPopularMovies:', error)
+      }),
+    getUpcomingMovies()
+      .then((response) => {
+        upcomingMovies.value = response.data.results
+      })
+      .catch((error) => {
+        console.error('Error getUpcomingMovies:', error)
+      }),
+    getNowPlayingMovies()
+      .then((response) => {
+        nowPlayingMovies.value = response.data.results
+      })
+      .catch((error) => {
+        console.error('Error getNowPlayingMovies:', error)
+      }),
+    // 포스터 자동 슬라이딩 시작
+    posterScrollInterval = setInterval(() => {
+      posterScrollWrap.value.scrollLeft += 1;
+    }, 20);
 });
 
 </script>
@@ -145,6 +208,7 @@ onMounted(() => {
   height: 70vh;
   opacity: 0.85;
   object-fit: cover;
+  margin-bottom: 3vh;
 }
 
 .custom-top {
@@ -222,43 +286,18 @@ onMounted(() => {
   width: 400px;
 }
 
-.posterBox1 {
+.posterBox {
   display: flex;
-  animation: slide1 10s linear infinite;
 }
 
-.posterBox2 {
-  display: flex;
-  animation: slide2 10s linear infinite;
-}
 
-.posterBox1 img, .posterBox2 img {
-  width: 200px;
-  padding: 10px 10px;
+.posterBox img {
+  width: 20vh;
+  padding: 10px;
 }
 
 .posterTopBox {
-  padding: 20px 0px;
-}
-
-@keyframes slide1 {
-  0% {
-    transform: translateX(0%);
-  }
-
-  100% {
-    transform: translateX(-200%);
-  }
-}
-
-@keyframes slide2 {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
+  max-width: 80vw;
 }
 
 .qnaGreenBox {
@@ -281,6 +320,7 @@ onMounted(() => {
 }
 
 @keyframes shake {
+
   10%,
   90% {
     transform: translate3d(0, -3px, 0);
@@ -293,6 +333,7 @@ onMounted(() => {
 }
 
 @media (max-width: 565px) {
+
   .search-form-nofocus,
   .search-form-focus {
     width: 90vw;

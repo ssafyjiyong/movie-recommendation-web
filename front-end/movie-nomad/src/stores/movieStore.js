@@ -6,11 +6,6 @@ export const useMovieStore = defineStore('movie', () => {
   // 전체 영화 정보 저장목록
   const allMovies = ref([])
 
-  // 캐러셀용 이미지 저장목록
-  const popularMovieImages = ref([])
-  const upcomingMovieImages = ref([])
-  const nowPlayingMovieImages = ref([])
-
   const searchKeyword = ref('')
 
   const searchedMovies = computed(() => {
