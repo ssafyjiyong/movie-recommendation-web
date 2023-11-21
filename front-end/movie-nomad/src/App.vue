@@ -3,16 +3,32 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-md navbar-light" id="mainNav">
       <div class="container-fluid px-2 px-lg-3">
-        <RouterLink to="/"><img src="@/images/logo_with_bg.png" alt="logo_image"></RouterLink>
+        <div v-if="!isDarkMode">
+        <RouterLink to="/"><img src="@/images/logo_without_bg.png" alt="logo_image"></RouterLink>
+        </div>
+        <div v-else>
+        <RouterLink to="/"><img src="@/images/logo_without_bg_dark.png" alt="logo_image"></RouterLink>
+        </div>
         <button class="navbar-toggler border border-0" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
           aria-label="Toggle navigation">
           <i class="fas fa-bars fa-xl py-3"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ms-auto text-center">
+          <ul class="navbar-nav ms-auto text-center align-items-center">
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">English</li>
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">다크모드</li>
+            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+              <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
+                <!-- 다크모드일 경우 아이콘 -->
+                <div v-if="isDarkMode">
+                  <i class="fa-regular fa-lightbulb"></i>
+                </div>
+                <!-- 일반모드 아이콘 -->
+                <div v-else>
+                  <i class="fa-solid fa-lightbulb"></i>
+                </div>
+              </button>
+            </li>
             <li 
             class="nav-item px-lg-3 py-2 py-lg-2 mx-2"
             @click="goToMovieList" >
@@ -76,21 +92,61 @@
 
 
 <script setup>
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user';
+import { ref, onMounted, onUnmounted } from 'vue';
 
-const router = useRouter()
 const userStore = useUserStore()
 
-const goToMovieList = function () {
-  router.push('/movies')
-}
+const isDarkMode = ref(false);
+
+const enableDarkMode = () => {
+  document.body.classList.add('dark');
+  isDarkMode.value = true;
+};
+
+const disableDarkMode = () => {
+  document.body.classList.remove('dark');
+  isDarkMode.value = false;
+};
+
+const toggleDarkMode = () => {
+  if (isDarkMode.value) {
+    disableDarkMode();
+  } else {
+    enableDarkMode();
+  }
+};
+
+onMounted(() => {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    enableDarkMode();
+  }
+});
+
+onUnmounted(() => {
+  disableDarkMode();
+});
 
 </script>
 
 
 <!-- 전역 스타일 지정 -->
 <style>
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+}
+
+body.dark {
+  --bg-color: #272727;
+  --text-color: #ffffff;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 </style>
 
 <!-- 로컬 스타일 지정 -->

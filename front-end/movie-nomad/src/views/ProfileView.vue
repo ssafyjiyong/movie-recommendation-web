@@ -5,7 +5,10 @@
       <!-- 프로필 사진과 이름, 닉네임 -->
       <div class="text-center">
         <img src="@/images/main_background.gif" alt="profile_img" class="profileImage">
-        <p>{{ userStore.nickname }}</p>
+        <div class="d-flex justify-content-center">
+          <span>{{ userStore.nickname }}</span>
+          <button>팔로우</button>
+        </div>
       </div>
 
       <!-- 팔로우 현황 -->

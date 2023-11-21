@@ -70,22 +70,6 @@ const onChangePage = (data) => {
 </script>
 
 
-<!-- <script setup>
-import MovieCard from '@/components/MovieCard.vue';
-import { useMovieStore } from '@/stores/movie';
-import { ref } from 'vue';
-
-
-const movieStore = useMovieStore()
-const movieKeyword = ref('')
-
-const searchTheMovie = function () {
-  movieStore.searchMovie(movieKeyword.value)
-  movieKeyword.value = ''
-}
-
-</script> -->
-
 <style scoped>
 .container {
   min-height: 100vh;
