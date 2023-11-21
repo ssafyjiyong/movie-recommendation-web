@@ -89,6 +89,13 @@ export const whoIsCurrentUser = (token) => {
     });
 };
 
+
+// 현재 사용자 닉네임 조회
+export const getCurrentUserInfo = (username) => {
+  return axios
+    .get(`http://127.0.0.1:8000/myblog/${username}/`)
+}
+
 // 특정 유저 정보 조회
 export const userProfile = (userName) => {
   return axios
@@ -106,8 +113,7 @@ export const userProfile = (userName) => {
 export const following = (token, userName) => {
   return axios
     .post(
-      `${API_URL}/profile/${userName}/following/`,
-      {},
+      `${API_URL}/myblog/${userName}/following/`,
       {
         headers: {
           Authorization: `Token ${token}`,

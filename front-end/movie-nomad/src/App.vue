@@ -4,10 +4,10 @@
     <nav class="navbar navbar-expand-md navbar-light" id="mainNav">
       <div class="container-fluid px-2 px-lg-3">
         <div v-if="!isDarkMode">
-        <RouterLink to="/"><img src="@/images/logo_without_bg.png" alt="logo_image"></RouterLink>
+          <RouterLink to="/"><img src="@/images/logo_without_bg.png" alt="logo_image"></RouterLink>
         </div>
         <div v-else>
-        <RouterLink to="/"><img src="@/images/logo_without_bg_dark.png" alt="logo_image"></RouterLink>
+          <RouterLink to="/"><img src="@/images/logo_without_bg_dark.png" alt="logo_image"></RouterLink>
         </div>
         <button class="navbar-toggler border border-0" type="button" data-bs-toggle="collapse"
           data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -29,10 +29,8 @@
                 </div>
               </button>
             </li>
-            <li 
-            class="nav-item px-lg-3 py-2 py-lg-2 mx-2"
-            @click="goToMovieList" >
-             영화목록
+            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
+              영화목록
             </li>
 
             <div v-if="!userStore.isLogin" class="d-flex">
@@ -45,11 +43,14 @@
             </div>
 
             <div v-else class="d-flex justify-content-center align-items-center">
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="`/profile/${userStore.userId}`">{{ userStore.nickname }}</RouterLink>
+              <li  class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <RouterLink :to="{ name: 'profile', params: { nickname: userStore.userInfo.nickname } }">{{
+                  userStore.userInfo.nickname }}</RouterLink>
+              </li>
+              <li  class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <a @click="logout">로그아웃</a>
               </li>
             </div>
-
           </ul>
         </div>
       </div>
@@ -99,6 +100,13 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const router = useRouter()
 const userStore = useUserStore()
 const isDarkMode = ref(false);
+
+
+
+const logout = () => {
+  userStore.logout()
+  location.reload
+}
 
 const enableDarkMode = () => {
   document.body.classList.add('dark');
@@ -166,4 +174,5 @@ nav {
 
 img {
   width: 250px;
-}</style>
+}
+</style>

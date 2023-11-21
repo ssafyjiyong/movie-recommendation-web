@@ -1,18 +1,19 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useRouter } from "vue-router";
-import { signUp, whoIsCurrentUser, logIn } from "@/apis/userApi";
+import { signUp, whoIsCurrentUser, logIn, getCurrentUserInfo } from "@/apis/userApi";
 import Swal from "sweetalert2";
 
 export const useUserStore = defineStore("user", () => {
     const router = useRouter();
     const token = ref(window.localStorage.getItem("token") || "");
     const isLogin = ref(false);
+    const userInfo = ref(null)
     const userData = ref({
       pk: null,
       username: "",
     });
-    const profile = ref({});
+    // const profile = ref({});
     const status = ref('상태메세지를 변경해보세요!')
     const nickname = ref(null)
 
@@ -46,6 +47,8 @@ export const useUserStore = defineStore("user", () => {
           });
       });
     };
+
+
 
     const loginUser = (payload) => {
       logIn(payload)
@@ -82,6 +85,12 @@ export const useUserStore = defineStore("user", () => {
             window.localStorage.setItem("userPk", res.data.pk);
             router.push({ name: "home" });
           })
+          .then(() => {
+            getCurrentUserInfo(userData.value['username'])
+            .then((res) => {
+              userInfo.value = res.data
+            })
+          })
           .catch((err) => {
             console.error(err);
           });
@@ -104,7 +113,7 @@ export const useUserStore = defineStore("user", () => {
       token,
       isLogin,
       userData,
-      profile,
+      userInfo,
       setCurrentUser,
       signUpUser,
       loginUser,

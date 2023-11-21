@@ -7,7 +7,7 @@
         <img src="@/images/main_background.gif" alt="profile_img" class="profileImage">
         <div class="d-flex justify-content-center">
           <span>{{ userStore.nickname }}</span>
-          <button>팔로우</button>
+          <button @click="follow">팔로우</button>
         </div>
       </div>
 
@@ -71,9 +71,18 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
+import { onMounted } from 'vue';
+import { following } from '../apis/userApi';
+import { useRoute } from 'vue-router';
 
 const userStore = useUserStore()
+const route = useRoute()
 
+console.log(route.params.nickname)
+
+const follow = () => {
+  following(userStore.token, route.params.nickname)
+}
 </script>
 
 <style scoped>

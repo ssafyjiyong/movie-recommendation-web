@@ -21,13 +21,15 @@ def profile(request, user_name):
 
 
 @api_view(['POST'])
-def following(request, user_name):
-    user = get_object_or_404(User, user_name=user_name)
+def following(request, nickname):
+    user = get_object_or_404(User, nickname=nickname)
 
-    if request.user in user.followings:
-        user.followings.remove(request.user)
-    else:
-        user.followings.add(request.user)
+    if request.user != user:
+        if request.user in user.followers.all():
+            user.followers.remove(request.user)
+        else:
+            user.followers.add(request.user)
+        return Response("팔로우 또는 취소 성공")
 
 
 @api_view(['PUT'])
