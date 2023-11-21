@@ -216,16 +216,23 @@ def genres(request):
 
 
 @api_view(['GET'])
-def actors(request):
+def actors(request, movie_id):
+    result = []
+    movie = Movie.objects.get(id=movie_id)
     actors = Actor.objects.all()
-    serializer = ActorSerializer(actors, many=True)
 
-    return Response(serializer.data)
+    for actor in actors:
+        if actor in movie.actors.all():
+            serializer = ActorSerializer(actor)
+            result.append(serializer.data)
+
+    return Response(result)
 
 
 @api_view(['GET'])
-def directors(request):
-    directors = Director.objects.all()
+def directors(request, movie_id):
+    movie = Movie.objects.get(id=movie_id)
+    directors = Director.objects.get(movie=movie)
     serializer = DirectorSerializer(directors, many=True)
 
     return Response(serializer.data)
@@ -235,41 +242,54 @@ def directors(request):
 def movie_like(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
 
-    if request.user in movie.like_users:
+    if request.user in movie.normal_users.all():
+        movie.normal_users.remove(request.user)
+        movie.like_users.add(request.user)
+    elif request.user in movie.hate_users.all():
+        movie.hate_users.remove(request.user)
+        movie.like_users.add(request.user)
+    elif request.user in movie.like_users.all():
         movie.like_users.remove(request.user)
-        User.collections.remove(movie)
     else:
         movie.like_users.add(request.user)
-        User.collections.add(movie)
     
-    serializer = MovieDetailSerializer(movie)
-    return Response(serializer.data)
+    return Response("성공")
 
 
 @api_view(['POST'])
 def movie_normal(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
 
-    if request.user in movie.like_users:
+    if request.user in movie.normal_users.all():
         movie.normal_users.remove(request.user)
+    elif request.user in movie.hate_users.all():
+        movie.hate_users.remove(request.user)
+        movie.normal_users.add(request.user)
+    elif request.user in movie.like_users.all():
+        movie.like_users.remove(request.user)
+        movie.normal_users.add(request.user)
     else:
         movie.normal_users.add(request.user)
-    
-    serializer = MovieDetailSerializer(movie)
-    return Response(serializer.data)
+
+    return Response("성공")
 
 
 @api_view(['POST'])
 def movie_hate(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
 
-    if request.user in movie.like_users:
+    if request.user in movie.normal_users.all():
+        movie.normal_users.remove(request.user)
+        movie.hate_users.add(request.user)
+    elif request.user in movie.hate_users.all():
         movie.hate_users.remove(request.user)
+    elif request.user in movie.like_users.all():
+        movie.like_users.remove(request.user)
+        movie.hate_users.add(request.user)
     else:
         movie.hate_users.add(request.user)
-    
-    serializer = MovieDetailSerializer(movie)
-    return Response(serializer.data)
+
+    return Response("성공")
 
 
 # 콜렉션 생성
@@ -298,7 +318,7 @@ def user_collections(request, user_id):
 def movie_collections(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
     collections = Collection.objects.filter(movie=movie)
-    serializer = Collectionserializer(collections, many=True)
+    serializer = CollectionSerializer(collections, many=True)
     return Response(serializer.data)
 
 
@@ -318,8 +338,8 @@ def collections_update(request, collection_id, movie_id):
     collection = Collection.objects.get(id=collection_id)
     movie = Movie.objects.get(id=movie_id)
 
-    if request.user == collection.user:
-        if movie in collection.movie:
+    if request.user == collection.user.all():
+        if movie in collection.movie.all():
             collection.movie.remove(movie)
         else:
             collection.movie.add(movie)
