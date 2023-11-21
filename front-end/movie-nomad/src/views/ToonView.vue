@@ -9,20 +9,13 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useArticleStore } from '@/stores/article';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
-const store = useArticleStore()
 
 const goToAddArticle = function () {
   router.push('/create/2/')
 }
-
-onMounted(() => {
-  store.getArticles()
-});
 
 </script>
 

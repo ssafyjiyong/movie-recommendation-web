@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="article-area">
-      <h1>{{ article.title }}</h1>
+      <h1>{{ currentArticle.title }}</h1>
       <div id='article-info'>
-        {{ article.user['nickname'] }} | {{ article.movie }} | 마지막 수정일 : {{ article.updated_at.substr(0, 10) }}
+        {{ currentArticle.user['nickname'] }} | {{ currentArticle.movie }} | 마지막 수정일 : {{ currentArticle.updated_at.substr(0, 10) }}
       </div>
       <hr>
-      <p>{{ article.content }}</p>
+      <p>{{ currentArticle.content }}</p>
     </div>
     <div class="comment-area">
       <h1>comment</h1>
@@ -17,19 +17,32 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
-import { useArticleStore } from '@/stores/article';
+import { getArticleDetail } from '@/apis/movieApi'
 
 const props = defineProps({
   article: Object
 })
-const store = useArticleStore()
-const route = useRoute()
 
-const article = ref(store.article)
+const currentArticle = ref('')
+const route = useRoute()
+const articlePk = route.params.articleId
+
+
+const initializeArticleDetail = (articlePk) => {
+  getArticleDetail(articlePk)
+  .then((response) => {
+    if (response && response.data) {
+        currentArticle.value = response.data
+      }
+    })
+    .catch((error) => {
+      console.error('Error initializing article detail:', error)
+    })
+}
 
 onMounted(() => {
-  // store.articleDetail(route.params.articleId)
-})
+  initializeArticleDetail(articlePk)
+});
 
 </script>
 

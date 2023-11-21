@@ -53,8 +53,8 @@
 </template>
 
 <script setup>
-import { useArticleStore } from '@/stores/article';
-import { useMovieStore } from '@/stores/movie';
+import { useArticleStore } from '@/stores/articleStore';
+import { useMovieStore } from '@/stores/movieStore';
 import { ref } from 'vue';
 
 const articleStore = useArticleStore()
@@ -72,7 +72,7 @@ const addArticle = function () {
     title: title.value,
     content: content.value
   }
-  articleStore.addArticles(payload)
+  articleStore.createArticle(payload)
 }
 
 </script>

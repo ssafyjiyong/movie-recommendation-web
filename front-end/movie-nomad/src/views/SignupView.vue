@@ -1,69 +1,97 @@
-<template>
-  <div>
-    <h1>SignupView</h1>
+<!-- 닉네임 추가해야됨 -->
 
-    <form class="signup-form" @submit.prevent="signup">
-      <div>
-        <label for="username">E-Mail : </label>
-        <input v-model="username" type="text" id="username">
+
+<template>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="text-center mb-4">회원가입</h2>
+        <div class="mb-3">
+          <label for="nickname" class="form-label">닉네임</label>
+          <input v-model="nickname" type="text" class="form-control" id="nickname" placeholder="본인을 상징하는 닉네임을 정해주세요!" />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">이메일</label>
+          <input v-model="username" type="email" class="form-control" id="email" placeholder="name@example.com" />
+        </div>
+        <div class="mb-4">
+          <label for="password1" class="form-label">비밀번호</label>
+          <input v-model="password1" type="password" class="form-control" id="password1" placeholder="비밀번호" />
+        </div>
+        <div class="mb-4">
+          <label for="password2" class="form-label">비밀번호 확인</label>
+          <input v-model="password2" @keyup.enter="signUp" type="password" class="form-control" id="password2"
+            placeholder="비밀번호 확인" />
+        </div>
+        <div class="d-grid">
+          <button @click="signUp" class="btn btn-info mt-4">회원가입</button>
+        </div>
       </div>
-      <div>
-        <label for="nickname">NickName : </label>
-        <input v-model="nickname" type="text" id="nickname">
-      </div>
-      <div>
-        <label for="password1">Password : </label>
-        <input v-model="password1" type="text" id="password1">
-      </div>
-      <div>
-        <label for="password2">Password Check : </label>
-        <input v-model="password2" type="text" id="password2">
-      </div>
-      <div v-show="passwordCheck">
-        비밀번호가 일치하지 않습니다.
-      </div>
-      <input type="submit" value="signup">
-    </form>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { ref } from "vue";
+import { useUserStore } from "@/stores/userStore";
+import Swal from "sweetalert2";
 
-const store = useUserStore()
-const username = ref('')
-const nickname = ref('')
-const password1 = ref('')
-const password2 = ref('')
+// 회원 가입
+const nickname = ref(null);
+const username = ref(null);
+const password1 = ref(null);
+const password2 = ref(null);
+const userStore = useUserStore();
 
-const signup = (payload) => {
-  payload = {
-    'username': username.value,
-    'nickname': nickname.value,
-    'password1': password1.value,
-    'password2': password2.value,
+const alertMessage = (msg) => {
+  const result = Swal.fire({
+    title: `${msg}`,
+    icon: "error",
+    confirmButtonColor: "#682cd48c",
+    confirmButtonText: "확인",
+  });
+};
+
+const signUp = () => {
+  if (!nickname.value) {
+    alertMessage("닉네임을 정해해주세요");
+    return;
   }
 
-  store.signUp(payload)
-}
-
-const passwordCheck = computed(() => {
-  if (password1.value == password2.value || password2.value == '') {
-    return false
-  } else {
-    return true
+  if (!username.value) {
+    alertMessage("아이디를 입력해주세요");
+    return;
   }
-})
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(username.value)) {
+    alertMessage("아이디는 이메일 형식이어야 합니다");
+    return;
+  }
+
+  if (!password1.value) {
+    alertMessage("비밀번호를 입력해주세요");
+    return;
+  }
+  if (password1.value.length < 8) {
+    alertMessage("비밀번호가 너무 짧습니다. \n 8자리 이상 입력해주세요.");
+    return;
+  }
+
+  if (password1.value !== password2.value) {
+    alertMessage("비밀번호가 일치하지 않습니다");
+    return;
+  }
+
+  const payload = {
+    nickname: nickname.value,
+    username: username.value,
+    password1: password1.value,
+    password2: password2.value,
+  };
+
+  userStore.signUpUser(payload);
+};
 </script>
 
-<style scoped>
-.signup-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.signup-form input {
-  width: 30%;
-}
-</style>
+<style></style>

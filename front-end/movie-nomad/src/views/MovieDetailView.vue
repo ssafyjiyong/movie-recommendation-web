@@ -1,18 +1,18 @@
 <template>
-  <div class="container topBox" v-if="movieDetail">
+  <div class="container topBox" v-if="currentMovie">
     <!-- Detail의 상단 부분 -->
     <div class="row">
       <!-- Poster -->
       <div class="radiusBox col-3 p-1">
-        <img :src="`https://image.tmdb.org/t/p/w500/${movieDetail.poster_path}`" alt="movie_poster" class="posterImage">
+        <img :src="`https://image.tmdb.org/t/p/w500/${currentMovie.poster_path}`" alt="movie_poster" class="posterImage">
         <div class="d-flex flex-column">
-          <small>개봉일: {{ movieDetail.release_date }}</small>
-          <small>러닝타임 : {{ movieDetail.runtime }}분</small>
-          <small>장르: {{ movieDetail.genres }}</small>
-          <small>평점: {{ movieDetail.vote_average }}</small>
-          <small>({{ movieDetail.vote_count }}개의 평가)</small>
-          <small>인지도: {{ movieDetail.popularity }}</small>
-          <small>감독: {{ movieDetail.director }}</small>
+          <small>개봉일: {{ currentMovie.release_date }}</small>
+          <small>러닝타임 : {{ currentMovie.runtime }}분</small>
+          <small>장르: {{ currentMovie.genres }}</small>
+          <small>평점: {{ currentMovie.vote_average }}</small>
+          <small>({{ currentMovie.vote_count }}개의 평가)</small>
+          <small>인지도: {{ currentMovie.popularity }}</small>
+          <small>감독: {{ currentMovie.director }}</small>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
         </div>
         <!-- 영화 내용  -->
         <div class="radiusBox">
-          <p>{{ movieDetail.overview }}</p>
+          <p>{{ currentMovie.overview }}</p>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
     <!-- 감독 및 배우 정보 -->
     <div class="radiusBox">
       <h3>출연진</h3>
-      <p>{{ movieDetail.actors }}</p>
+      <p>{{ currentMovie.actors }}</p>
     </div>
 
     <!-- 컬렉션 정보 -->
@@ -59,32 +59,26 @@
 </template>
 
 <script setup>
-import axios from 'axios'
-import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
+import { getMovieDetail } from '@/apis/movieApi'
 
-const route = useRoute()
-const router = useRouter()
-const movieDetail = ref(null)
+const currentMovie = ref([])
+const moviePk = route.params.movieId
 
-const movieId = route.params.movieId
-
-const getMovieDetail = function () {
-  axios({
-    method: 'get',
-    url: `http://127.0.0.1:8000/movies/movie_detail/${movieId}/`,
-  })
-    .then((res) => {
-      console.log(res.data)
-      movieDetail.value = res.data
+const initializecurrentMovie = (moviePk) => {
+  getMovieDetail(moviePk)
+  .then((response) => {
+    if (response && response.data) {
+      currentMovie.value = response.data
+      }
     })
-    .catch((err) => {
-      console.log(err)
+    .catch((error) => {
+      console.error('Error initializing movie detail:', error)
     })
 }
 
 onMounted(() => {
-  getMovieDetail()
+  initializecurrentMovie(moviePk)
 });
 
 </script>

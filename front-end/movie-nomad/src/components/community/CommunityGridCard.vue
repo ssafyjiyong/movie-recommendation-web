@@ -9,17 +9,16 @@
 
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useArticleStore } from '@/stores/article';
 import { onMounted } from 'vue';
+import { getArticleDetail } from '@/apis/movieApi'
 
-const store = useArticleStore()
 const props = defineProps({
   article: Object
 })
 
 
 onMounted(() => {
-  const article = store.articleDetail(props.article.id)
+  getArticleDetail(props.article.id)
 })
 
 </script>

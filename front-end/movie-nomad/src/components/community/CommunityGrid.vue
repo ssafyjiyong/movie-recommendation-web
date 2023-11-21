@@ -26,6 +26,7 @@ const props = defineProps({
 })
 
 const articles = props.articles
+
 </script>
 
 <style scoped>
