@@ -99,6 +99,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class RecommentSerializer(serializers.ModelSerializer):
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('pk', 'nickname', 'profile_pic')
+
+    user = UserSerializer(read_only=True)
+    
     class Meta:
         model = Recomment
         fields = ('pk', 'content', 'created_at',)

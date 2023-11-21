@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_list_or_404
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 
-from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer, AlbumSerializer
-from .models import Actor, Album, Director, Genre, Movie
+from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer, AlbumSerializer, CollectionSerializer
+from .models import Actor, Album, Director, Genre, Movie, Collection
 from .spotify_config import getHeaders
 
 import requests
@@ -205,6 +206,31 @@ def movie_detail(request, movie_id):
     return Response(serializer.data)
 
 
+
+@api_view(['GET'])
+def genres(request):
+    genres = Genre.objects.all()
+    serializer = GenreSerializer(genres, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def actors(request):
+    actors = Actor.objects.all()
+    serializer = ActorSerializer(actors, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def directors(request):
+    directors = Director.objects.all()
+    serializer = DirectorSerializer(directors, many=True)
+
+    return Response(serializer.data)
+
+
 @api_view(['POST'])
 def movie_like(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
@@ -246,25 +272,57 @@ def movie_hate(request, movie_id):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
-def genres(request):
-    genres = Genre.objects.all()
-    serializer = GenreSerializer(genres, many=True)
+# 콜렉션 생성
+@api_view(['POST'])
+def collections(request):
+    serializer = CollectionSerializer()
 
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user)
+
+        return Response(serializer.data)
+
+
+
+# 유저 기준 콜렉션 목록
+@api_view(['GET'])
+def user_collections(request, user_id):
+    user = get_user_model(id=user_id)
+    collections = Collection.objects.filter(user=user)
+    serializer = CollectionSerializer(collections, many=True)
     return Response(serializer.data)
 
 
+# 영화 기준 콜렉션 목록
 @api_view(['GET'])
-def actors(request):
-    actors = Actor.objects.all()
-    serializer = ActorSerializer(actors, many=True)
-
+def movie_collections(request, movie_id):
+    movie = Movie.objects.get(id=movie_id)
+    collections = Collection.objects.filter(movie=movie)
+    serializer = Collectionserializer(collections, many=True)
     return Response(serializer.data)
 
 
-@api_view(['GET'])
-def directors(request):
-    directors = Director.objects.all()
-    serializer = DirectorSerializer(directors, many=True)
+# 콜렉션 삭제
+@api_view(['DELETE'])
+def collections_delete(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
 
-    return Response(serializer.data)
+    if request.user == collection.user:
+        collection.delete()
+        return Response("콜렉션이 삭제되었습니다.")
+
+
+# 콜렉션에 영화 추가 및 제거
+@api_view(['POST'])
+def collections_update(request, collection_id, movie_id):
+    collection = Collection.objects.get(id=collection_id)
+    movie = Movie.objects.get(id=movie_id)
+
+    if request.user == collection.user:
+        if movie in collection.movie:
+            collection.movie.remove(movie)
+        else:
+            collection.movie.add(movie)
+        
+        serializer = CollectionSerializer(collection)
+        return Response(serializer.data)

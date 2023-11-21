@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import BlogSerializer
+from .serializers import BlogSerializer, ProfileUpdateSerializer
 
 User = get_user_model()
 
@@ -28,3 +28,18 @@ def following(request, user_name):
         user.followings.remove(request.user)
     else:
         user.followings.add(request.user)
+
+
+@api_view(['PUT'])
+def update_nickname(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.user == user:
+        serializer = ProfileUpdateSerializer(
+            instance=request.user, data=request.data
+        )
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            return Response(serializer.data)
