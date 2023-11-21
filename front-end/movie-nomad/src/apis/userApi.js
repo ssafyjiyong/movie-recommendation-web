@@ -115,7 +115,17 @@ export const following = ({ token, nickname }) => {
     Authorization: `Token ${token}`
   }
   return axios
-    .post(`${API_URL}/myblog/${nickname}/following/`, {}, { headers })
+
+    .post(
+      `${API_URL}/myblog/${nickname}/following/`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        }
+      }
+    )
+
     .then((response) => {
       return response;
     })

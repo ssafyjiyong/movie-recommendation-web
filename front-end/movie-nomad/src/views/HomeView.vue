@@ -18,7 +18,13 @@
 
       <!-- 관련 검색어 -->
       <div class="related-searches" v-if="isFocused">
-        <div class="p-2" v-for="relatedSearch in relatedSearches" :key="relatedSearch">{{ relatedSearch }}</div>
+        <div class="p-2"
+        v-for="relatedSearch in relatedSearches" 
+        :key="relatedSearch.pk">
+        <div @click="goToDetail(relatedSearch.pk)">
+          {{ relatedSearch.title }}
+        </div>
+      </div>
       </div>
 
     </div>
@@ -96,9 +102,7 @@ const placeholderText = ref('MOVIE NOMAD')
 const isFocused = ref(false)
 const relatedSearches = computed(() => {
   // 키워드 써칭하여 결과는 최대 7개만
-  return movieStore.searchedMovies
-    .map(movie => movie.title)
-    .slice(0, 7)
+  return movieStore.searchedMovies.slice(0, 7)
 })
 
 const searchMovie = function () {
@@ -110,7 +114,11 @@ const searchMovieForRelatedSearches = function () {
   movieStore.searchTheMovie(movieKeyword.value)
 }
 
-const debouncedSearch = debounce(searchMovieForRelatedSearches, 300);
+const debouncedSearch = debounce(searchMovieForRelatedSearches, 100);
+
+const goToDetail = function (moviePk) {
+  router.push(`moviedetail/${moviePk}/`)
+}
 
 const clearPlaceholder = function () {
   placeholderText.value = ''
@@ -118,13 +126,16 @@ const clearPlaceholder = function () {
 }
 
 const restorePlaceholder = function () {
-  placeholderText.value = 'MOVIE NOMAD'
-  isFocused.value = false
+  setTimeout(() => {
+    placeholderText.value = 'MOVIE NOMAD'
+    isFocused.value = false
+  }, 200)
 }
 
 const goToCommunity = function () {
   router.push('/talk')
 }
+
 
 // QnA 관련 스크립트
 const qnas = ref([
@@ -146,21 +157,21 @@ onMounted(() => {
       })
       .catch((error) => {
         console.error('Error getPopularMovies:', error)
-      }),
+      });
     getUpcomingMovies()
       .then((response) => {
         upcomingMovies.value = response.data.results
       })
       .catch((error) => {
         console.error('Error getUpcomingMovies:', error)
-      }),
+      });
     getNowPlayingMovies()
       .then((response) => {
         nowPlayingMovies.value = response.data.results
       })
       .catch((error) => {
         console.error('Error getNowPlayingMovies:', error)
-      })
+      });
 });
 
 </script>

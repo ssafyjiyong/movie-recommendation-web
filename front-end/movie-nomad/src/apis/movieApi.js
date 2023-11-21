@@ -79,6 +79,7 @@ export const likeMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/like/`,
+      {},
       {
         headers: {
           Authorization: `Token ${token}`
@@ -100,6 +101,7 @@ export const sosoMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/soso/`,
+      {},
       {
         headers: {
           Authorization: `Token ${token}`
@@ -121,6 +123,7 @@ export const hateMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/hate/`,
+      {},
       {
         headers: {
           Authorization: `Token ${token}`
@@ -142,13 +145,13 @@ export const hateMovieApi = (moviePk) => {
 
 // 게시글 List 전체 조회 API
 export const getArticlesList = () => {
-  return axios.get(`${API_URL}/article_list/`)
+  return axios.get(`${API_URL}/community/article_list/`)
 }
 
 // 영화 디테일 페이지 해당 영화 article List 조회
 export const thisMovieArticles = (moviePk) => {
   return axios
-    .get(`${API_URL}/article_list/${moviePk}/`)
+    .get(`${API_URL}/community/article_list/${moviePk}/`)
     .then((response) => {
       return response
     })
@@ -161,7 +164,7 @@ export const thisMovieArticles = (moviePk) => {
 // 단일 게시글 조회
 export const getArticleDetail = (articlePk) => {
   return axios
-    .get(`${API_URL}/article_detail/${articlePk}/`)
+    .get(`${API_URL}/community/article_detail/${articlePk}/`)
     .then((response) => {
       return response
     })
@@ -175,7 +178,7 @@ export const getArticleDetail = (articlePk) => {
 export const createArticleAPI = (payload) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .post(`${API_URL}/article_list/${moviePk}/`, payload, {
+    .post(`${API_URL}/community/article_list/`, payload, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -193,7 +196,7 @@ export const createArticleAPI = (payload) => {
 export const deleteArticleAPI = (articlePk) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .delete(`${API_URL}/article_detail/${articlePk}/`, {
+    .delete(`${API_URL}/community/article_detail/${articlePk}/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -211,7 +214,7 @@ export const deleteArticleAPI = (articlePk) => {
 export const updateArticleAPI = (articlePk, payload) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .put(`${API_URL}/article_detail/${articlePk}/`, payload, {
+    .put(`${API_URL}/community/article_detail/${articlePk}/`, payload, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -225,6 +228,28 @@ export const updateArticleAPI = (articlePk, payload) => {
     })
 }
 
+// 단일 게시글 좋아요 API
+export const likeArticleApi = (articlePk) => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .post(
+      `${API_URL}/community/article_detail/${articlePk}/article_like/`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      }
+    )
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.error('API 요청 중 에러가 발생했습니다:', error)
+      throw error
+    })
+}
+
 
 // 여기서부터 코멘트 관련입니다---------------------------------------------------------------------------------
 
@@ -232,7 +257,7 @@ export const updateArticleAPI = (articlePk, payload) => {
 // 단일 게시글 comment List 조회
 export const getCommentList = (articlePk) => {
   return axios
-    .get(`${API_URL}/article_detail/${articlePk}/comment/`)
+    .get(`${API_URL}/community/article_detail/${articlePk}/comment/`)
     .then((response) => {
       return response
     })
@@ -247,7 +272,7 @@ export const getCommentList = (articlePk) => {
 export const createCommentAPI = (articlePk, payload) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .post(`${API_URL}/article_detail/${articlePk}/comment/`, payload, {
+    .post(`${API_URL}/community/article_detail/${articlePk}/comment/`, payload, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -265,7 +290,7 @@ export const createCommentAPI = (articlePk, payload) => {
 export const deleteCommentAPI = (articlePk, commentPk) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .delete(`${API_URL}/article_detail/${articlePk}/comment/${commentPk}`, {
+    .delete(`${API_URL}/community/article_detail/${articlePk}/comment/${commentPk}`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -275,28 +300,6 @@ export const deleteCommentAPI = (articlePk, commentPk) => {
     })
     .catch((error) => {
       console.error('comment 삭제, API 요청 중 에러가 발생했습니다:', error)
-      throw error
-    })
-}
-
-// 단일 게시글 좋아요 API
-export const likeArticleApi = (articlePk) => {
-  const token = window.localStorage.getItem('token')
-  return axios
-    .post(
-      `${API_URL}/article_detail/${articlePk}/article_like/`,
-      {},
-      {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      }
-    )
-    .then((response) => {
-      return response
-    })
-    .catch((error) => {
-      console.error('API 요청 중 에러가 발생했습니다:', error)
       throw error
     })
 }
