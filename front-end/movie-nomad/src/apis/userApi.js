@@ -110,7 +110,7 @@ export const userProfile = (userName) => {
 };
 
 // 팔로우, 언팔로우
-export const following = (token, nickname) => {
+export const following = ({ token, nickname }) => {
   return axios
     .post(
       `${API_URL}/myblog/${nickname}/following/`,

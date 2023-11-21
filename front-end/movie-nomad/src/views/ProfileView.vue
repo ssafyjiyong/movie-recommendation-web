@@ -79,9 +79,15 @@ const userStore = useUserStore()
 const route = useRoute()
 
 console.log(route.params.nickname)
+console.log(userStore.token)
+
 
 const follow = () => {
-  following(userStore.token, route.params.nickname)
+  payload = {
+    'token': userStore.token,
+    'nickname': route.params.nickname
+  }
+  following(payload)
 }
 </script>
 
