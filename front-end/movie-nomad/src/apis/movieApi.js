@@ -69,7 +69,7 @@ export const searchMovie = (movieKeyword) => {
 
 // 단일 영화 상세 조회 API
 export const getMovieDetail = (moviePk) => {
-  return axios.get(`${API_URL}/movies/${moviePk}/`)
+  return axios.get(`${API_URL}/movies/movie_detail/${moviePk}/`)
 }
 
 
