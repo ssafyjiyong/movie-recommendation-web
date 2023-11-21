@@ -64,7 +64,7 @@ export const getMoviesList = () => {
 
 // 영화 검색 API
 export const searchMovie = (movieKeyword) => {
-  return axios.get(`${API_URL}/movie_search/${movieKeyword}/`)
+  return axios.get(`${API_URL}/movies/movie_search/${movieKeyword}/`)
 }
 
 // 단일 영화 상세 조회 API
@@ -79,7 +79,6 @@ export const likeMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/like/`,
-      {},
       {
         headers: {
           Authorization: `Token ${token}`
@@ -101,7 +100,6 @@ export const sosoMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/soso/`,
-      {},
       {
         headers: {
           Authorization: `Token ${token}`
@@ -123,7 +121,6 @@ export const hateMovieApi = (moviePk) => {
   return axios
     .post(
       `${API_URL}/movies/movie_detail/${moviePk}/hate/`,
-      {},
       {
         headers: {
           Authorization: `Token ${token}`

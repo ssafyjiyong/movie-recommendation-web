@@ -49,11 +49,9 @@ const searchedMovies = ref(movieStore.allMovies)
 const searchTheMovie = () => {
   searchMovie(movieKeyword.value)
   .then((response) => {
-    if (response && response.data) {
       console.log(response.data)
       searchedMovies.value = response.data
       movieKeyword.value = ''
-      }
     })
     .catch((error) => {
       console.error('Error search the movie', error)

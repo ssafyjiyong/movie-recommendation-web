@@ -5,6 +5,9 @@ import { getMoviesList } from '@/apis/movieApi'
 export const useMovieStore = defineStore('movie', () => {
   const allMovies = ref([])
 
+  // 이쪽에서 검색된 영화 컨트롤 하도록 재설계(Home이랑 Movies List)
+  const searchedMovies = ref(allMovies)
+
   // 모든 영화 정보
   const initializeMovies = () => {
     getMoviesList()
