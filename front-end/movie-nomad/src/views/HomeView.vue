@@ -29,19 +29,19 @@
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
-    <div class="posterTopBox" @mouseover="pauseScroll" @mouseleave="resumeScroll">
+    <div class="posterTopBox">
 
-      <div ref="posterBox" class="posterBox">
+      <div class="posterBox">
         <img v-for="(image, index) in upcomingMovies" :key="index" 
         :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
-      <div ref="posterBox" class="posterBox">
+      <div class="posterBox">
         <img v-for="(image, index) in nowPlayingMovies" :key="index" 
         :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
-      <div ref="posterBox" class="posterBox">
+      <div class="posterBox">
         <img v-for="(image, index) in popularMovies" :key="index" 
         :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
@@ -75,7 +75,6 @@
 </template>
 
 <script setup>
-import _ from 'lodash'
 import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
@@ -90,8 +89,6 @@ const popularMovies = ref([])
 const upcomingMovies = ref([])
 const nowPlayingMovies = ref([])
 const posterUrl = 'https://image.tmdb.org/t/p/w500';
-let posterScrollInterval;
-const posterBox = ref([]);
 
 // 검색창 관련 변수
 const placeholderText = ref('MOVIE NOMAD')
@@ -138,31 +135,11 @@ const toggle = index => {
   qnas.value[index].open = !qnas.value[index].open
 }
 
-// 포스터 자동으로 움직이는 관련 스크립트
-// 좌우 스크롤 버튼
-function pauseScroll() {
-  clearInterval(posterScrollInterval);
-}
-
-function resumeScroll() {
-  // 일정 간격으로 슬라이딩 재개
-  posterScrollInterval = setInterval(() => {
-    posterBox.value.forEach(box => { // 각 posterBox에 대해 슬라이딩 효과 적용
-      if (box.scrollWidth - box.scrollLeft <= box.clientWidth) {
-        box.scrollLeft = 0;
-      } else {
-        box.scrollLeft += 1;
-      }
-    });
-  }, 20);
-}
-
 onMounted(() => {
   movieStore.initializeMovies(),
     getPopularMovies()
       .then((response) => {
         popularMovies.value = response.data.results
-        console.log(popularMovies.value)
       })
       .catch((error) => {
         console.error('Error getPopularMovies:', error)
@@ -180,11 +157,7 @@ onMounted(() => {
       })
       .catch((error) => {
         console.error('Error getNowPlayingMovies:', error)
-      }),
-    // 포스터 자동 슬라이딩 시작
-    posterScrollInterval = setInterval(() => {
-      posterScrollWrap.value.scrollLeft += 1;
-    }, 20);
+      })
 });
 
 </script>

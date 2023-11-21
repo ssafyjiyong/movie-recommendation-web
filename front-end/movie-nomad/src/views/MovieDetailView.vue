@@ -4,7 +4,16 @@
     <div class="row">
       <!-- Poster -->
       <div class="radiusBox col-3 p-1">
-        <img :src="`https://image.tmdb.org/t/p/w500/${currentMovie.poster_path}`" alt="movie_poster" class="posterImage">
+        <div v-if="!imagloading">
+          <img :src="imageFromStore" alt="movie_poster" class="posterImage">
+        </div>
+
+        <div v-else>
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
         <div class="d-flex flex-column">
           <small>개봉일: {{ currentMovie.release_date }}</small>
           <small>러닝타임 : {{ currentMovie.runtime }}분</small>
@@ -61,15 +70,22 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getMovieDetail } from '@/apis/movieApi'
+import { useRoute } from 'vue-router';
 
+const route = useRoute()
 const currentMovie = ref([])
 const moviePk = route.params.movieId
+
+const imagloading = ref(true)
+const imageFromStore = ref('')
 
 const initializecurrentMovie = (moviePk) => {
   getMovieDetail(moviePk)
   .then((response) => {
     if (response && response.data) {
       currentMovie.value = response.data
+      imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
+      imagloading.value = false
       }
     })
     .catch((error) => {
