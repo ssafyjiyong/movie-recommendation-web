@@ -81,8 +81,7 @@ class CollectionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Collection
-        fields = ('pk', 'name', 'user',)
-        read_only_fields = ('movie',)
+        fields = ('pk', 'name', 'user', 'movie',)
 
 # # 영화 포스터 불러오기(HOME)
 # class MoviePosterListSerializer(serializers.ModelSerializer):

@@ -379,13 +379,17 @@ def movie_collections(request, movie_id):
 
 
 # 콜렉션 삭제
-@api_view(['DELETE'])
+@api_view(['GET', 'DELETE'])
 def collections_delete(request, collection_id):
     collection = Collection.objects.get(id=collection_id)
 
-    if request.user == collection.user:
-        collection.delete()
-        return Response("콜렉션이 삭제되었습니다.")
+    if request.method == 'GET':
+        serializer = CollectionSerializer(collection)
+        return Response(serializer.data)
+    else:
+        if request.user == collection.user:
+            collection.delete()
+            return Response("콜렉션이 삭제되었습니다.")
 
 
 # 콜렉션에 영화 추가 및 제거
@@ -402,3 +406,10 @@ def collections_update(request, collection_id, movie_id):
         
         serializer = CollectionSerializer(collection)
         return Response(serializer.data)
+    
+
+# 총 영화 감상 시간
+@api_view(['GET'])
+def total_watch(request, nickname):
+    user = get_user_model(nickname=nickname)
+    
