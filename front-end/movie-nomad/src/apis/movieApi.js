@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 const API_URL = 'http://127.0.0.1:8000'
-const TMDB_URL_POPULAR = 'https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1'
-const TMDB_URL_UPCOMING = 'https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1'
-const TMDB_URL_NOWPLAYING = 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1'
+const TMDB_URL_POPULAR = 'https://api.themoviedb.org/3/movie/top_rated?language=ko-KR&page=1'
+const TMDB_URL_UPCOMING = 'https://api.themoviedb.org/3/movie/upcoming?language=ko-KR&page=1'
+const TMDB_URL_NOWPLAYING = 'https://api.themoviedb.org/3/movie/now_playing?language=ko-KR&page=1'
 const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 // POPULAR 영화 API
