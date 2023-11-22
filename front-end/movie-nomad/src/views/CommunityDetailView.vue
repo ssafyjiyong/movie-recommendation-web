@@ -2,7 +2,7 @@
   <div class="container" v-if="!loading">
     <div class="article-area">
       <h1>{{ currentArticle.title }}</h1>
-      <div id='article-info'>
+      <div id='article-info' v-if="currentArticle.user">
         {{ currentArticle.user['nickname'] }} | {{ currentArticle.movie }} | 마지막 수정일 : {{
           currentArticle.updated_at.substr(0, 10) }}
       </div>
