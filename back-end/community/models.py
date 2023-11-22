@@ -6,9 +6,9 @@ from movies.models import Movie
 
 class Article(models.Model):
     categories = [
-    ('수다', '수다'),
-    ('영화툰', '영화툰'),
-    ('나눔', '나눔'),
+    ('talk', 'talk'),
+    ('toon', 'toon'),
+    ('ticket', 'ticket'),
     ]
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -21,7 +21,7 @@ class Article(models.Model):
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='like_articles'
     )
-    category = models.CharField(max_length=3, choices=categories)
+    category = models.CharField(max_length=10, choices=categories)
     title = models.CharField(max_length=100)
     content = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)

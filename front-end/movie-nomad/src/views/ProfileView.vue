@@ -4,7 +4,7 @@
     <div class="col-4">
       <!-- 프로필 사진과 이름, 닉네임 -->
       <div class="text-center">
-        <img src="@/images/main_background.gif" alt="profile_img" class="profileImage">
+        <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage">
         <div class="d-flex justify-content-center">
           <span>{{ userStore.nickname }}</span>
           <button @click="follow">팔로우</button>
@@ -47,11 +47,7 @@
             <small>Collection</small>
           </div>
           <div class="text-center">
-            <img 
-            src="@/images/image1.jpg" 
-            alt="collection_img" 
-            class="collectionImage" 
-            v-for="index in Array(4).fill()">
+            <img src="@/images/image1.jpg" alt="collection_img" class="collectionImage" v-for="index in Array(4).fill()">
           </div>
         </div>
 

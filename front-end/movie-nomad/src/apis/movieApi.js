@@ -106,6 +106,26 @@ export const thisMovieOST = (moviePk) => {
   return axios.get(`${API_URL}/movies/movie_detail/${moviePk}/album/`)
 }
 
+// 영화 컬렉션 목록 불러오기
+export const userCollection = () => {
+  return axios.get(`${API_URL}/movies/collections/`)
+}
+
+// 영화 컬렉션 생성하기
+export const createCollection = () => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .post(
+      `${API_URL}/movies/collections/`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      }
+    )
+}
+
 
 // 영화 좋아요 API
 export const likeMovieApi = (moviePk) => {

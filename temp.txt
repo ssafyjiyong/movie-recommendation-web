@@ -4,3 +4,5 @@ movie테이블 spokenlanguage 필드 추가 고려
 model(Movie) -> tagline, popularity 추가 (완료)
 
 해야되는거 검색 했을 때 장르도 한번에 필드에 입력되게 하기
+
+개발자 도구 막기

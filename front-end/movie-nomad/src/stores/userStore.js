@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
     });
     // const profile = ref({});
     const status = ref('상태메세지를 변경해보세요!')
-    const nickname = ref(null)
+    const nickname = ref("")
 
     const setCurrentUser = (user) => {
       userData.value.pk = user.pk;
@@ -89,6 +89,10 @@ export const useUserStore = defineStore("user", () => {
             getCurrentUserInfo(userData.value['username'])
             .then((res) => {
               userInfo.value = res.data
+              return userInfo
+            })
+            .then((res) => {
+              nickname.value = userInfo.value['nickname']
             })
           })
           .catch((err) => {
@@ -104,6 +108,8 @@ export const useUserStore = defineStore("user", () => {
         pk: null,
         username: "",
       };
+      nickname.value = "";
+      userInfo.value = null;
       window.localStorage.removeItem("token");
       window.localStorage.removeItem("userPk");
       router.push({ name: "home" });
