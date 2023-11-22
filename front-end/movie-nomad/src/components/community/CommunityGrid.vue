@@ -21,11 +21,10 @@
 
 <script setup>
 import CommunityGridCard from '@/components/community/CommunityGridCard.vue';
+
 defineProps({
   articles: Array
 })
-
-
 </script>
 
 <style scoped>

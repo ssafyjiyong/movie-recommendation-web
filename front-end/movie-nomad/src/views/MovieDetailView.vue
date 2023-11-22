@@ -40,10 +40,11 @@
     <!-- 관련 OST 정보 -->
     <div class="radiusBox d-flex justify-content-between align-items-center">
       <h3>이 영화와 관련된 OST를 들어보실래요?</h3>
-      <div >
+      <div>
         <img class="album-jacket" :src="album['image']" alt="">
       </div>
-      <button class="btn btn-link text-black" @click="spotify"><i class="fa-solid fa-headphones-simple fa-2x"></i></button>
+      <button class="btn btn-link text-black" @click="spotify"><i
+          class="fa-solid fa-headphones-simple fa-2x"></i></button>
     </div>
 
     <!-- 감독 및 배우 정보 -->
@@ -57,34 +58,26 @@
     <!-- 컬렉션 정보 -->
     <div class="radiusBox">
       <h3>이 영화를 좋아하는 메이트</h3>
-      <MovieMate
-        v-for="mate in movieMates"
-        :key="mate.id"
-        :mate="mate"
-      />
+      <MovieMate v-for="mate in movieMates" :key="mate.id" :mate="mate" />
     </div>
 
     <!-- 게시글 정보 -->
     <div class="radiusBox">
       <h3>관련게시글</h3>
       <hr>
-      <CommunityGridCard
-        v-for="article in articles"
-        :key="article.id"
-        :article="article"
-      >
-      {{ article.title }}
+      <CommunityGridCard v-for="article in articles" :key="article.id" :article="article">
+        {{ article.title }}
       </CommunityGridCard>
     </div>
 
   </div>
 
   <div v-else class="d-flex justify-content-center align-items-center m-5">
-          <div class="spinner-border text-success d-inline" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <h3 class="m-3">{{ randomMessage }}</h3>
-        </div>
+    <div class="spinner-border text-success d-inline" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h3 class="m-3">{{ randomMessage }}</h3>
+  </div>
 </template>
 
 <script setup>
@@ -96,7 +89,7 @@ import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMov
 import { useRoute } from 'vue-router';
 import { useMovieStore } from '@/stores/movieStore';
 
-const movieStore =  useMovieStore()
+const movieStore = useMovieStore()
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 const route = useRoute()
@@ -150,13 +143,13 @@ const initializecurrentMovie = (moviePk) => {
             // console.log(response.data)
             album.value = response.data
           })
-  imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
-  loading.value = false
-}
+        imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
+        loading.value = false
+      }
     })
-    .catch ((error) => {
-  console.error('Error initializing movie detail:', error)
-})
+    .catch((error) => {
+      console.error('Error initializing movie detail:', error)
+    })
 }
 
 const likeMovie = () => {

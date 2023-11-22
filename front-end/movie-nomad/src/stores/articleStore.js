@@ -6,6 +6,8 @@ import {
   deleteArticleAPI,
   updateArticleAPI
 } from '@/apis/movieApi'
+import Swal from "sweetalert2";
+import router from '../router';
 
 export const useArticleStore = defineStore('article', () => {
   const articles = ref([])
@@ -25,8 +27,14 @@ export const useArticleStore = defineStore('article', () => {
   const createArticle = (payload) => {
     return createArticleAPI(payload)
       .then((response) => {
-          articles.value.push(response.data)
-          window.alert('성공적으로 글이 작성됐습니다!')
+        Swal.fire({
+          title: "글 작성 완료!",
+          icon: "success",
+          confirmButtonColor: "#682cd48c",
+          confirmButtonText: "확인",
+        });
+        articles.value.push(response.data);
+        router.push(response.data.ca)
       })
       .catch((error) => {
         console.error(error)
