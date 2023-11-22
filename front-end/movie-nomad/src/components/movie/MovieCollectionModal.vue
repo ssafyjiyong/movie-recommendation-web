@@ -8,7 +8,11 @@
         </div>
         <div class="modal-body">
           <ul>
-            <li v-for="collection in myCollection" :key="collection.id">{{ collection.name }}</li>
+            <MovieCollectionModalList 
+              v-for="collection in myCollection" 
+              :key="collection.id"
+              :items="[collection, moviePk]"
+            />
           </ul>
         </div>
         <div class="modal-footer">
@@ -24,6 +28,7 @@
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { userCollection } from '@/apis/movieApi';
+import MovieCollectionModalList from '@/components/movie/MovieCollectionModalList.vue'
 
 const userStore = useUserStore()
 const myCollection = ref([])
@@ -35,10 +40,10 @@ defineProps({
 onMounted(() => {
   userCollection(userStore.userData['pk'])
   .then((response) => {
-    console.log(userStore.nickname)
+    // console.log(userStore.nickname)
     response.data.forEach(collection => {
       if (collection['user']['nickname'] === userStore.nickname) {
-        console.log(response.data)
+        // console.log(response.data)
         myCollection.value.push(collection)
       }
     });

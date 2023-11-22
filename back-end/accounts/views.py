@@ -45,3 +45,11 @@ def update_profile(request, user_id):
             serializer.save()
 
             return Response(serializer.data)
+        
+
+@api_view(['GET'])
+def blog(request, user_name):
+    user = get_object_or_404(User, nickname=user_name)
+    serializer = BlogSerializer(user)
+
+    return Response(serializer.data)
