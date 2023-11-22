@@ -96,12 +96,15 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore';
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useArticleStore } from '@/stores/articleStore';
+import { useMovieStore } from '@/stores/movieStore';
+
+const movieStore = useMovieStore()
+const articleStore = useArticleStore()
 
 const router = useRouter()
 const userStore = useUserStore()
 const isDarkMode = ref(false);
-
-
 
 const logout = () => {
   userStore.logout()
@@ -133,7 +136,7 @@ const goToMovieList = function () {
 onMounted(() => {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     enableDarkMode();
-  }
+  };
 });
 
 onUnmounted(() => {
