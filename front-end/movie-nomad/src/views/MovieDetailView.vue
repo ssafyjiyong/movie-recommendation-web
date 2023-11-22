@@ -29,9 +29,12 @@
       <div class="col-9">
         <!-- 좋아요 및 컬렉션 추가 버튼 등 -->
         <div class="radiusBox d-flex justify-content-around">
-          <button class="btn btn-link text-black p-1" @click="likeMovie"><i class="fa-regular fa-thumbs-up"></i>좋아요</button>
-          <button class="btn btn-link text-black p-1" @click="sosoMovie"><i class="fa-solid fa-face-meh"></i>그저그래요</button>
-          <button class="btn btn-link text-black p-1" @click="hateMovie"><i class="fa-regular fa-thumbs-down"></i>별로예요</button>
+          <button class="btn btn-link text-black p-1" @click="likeMovie"><i
+              class="fa-regular fa-thumbs-up"></i>좋아요</button>
+          <button class="btn btn-link text-black p-1" @click="sosoMovie"><i
+              class="fa-solid fa-face-meh"></i>그저그래요</button>
+          <button class="btn btn-link text-black p-1" @click="hateMovie"><i
+              class="fa-regular fa-thumbs-down"></i>별로예요</button>
           <button class="btn btn-link text-black p-1"><i class="fa-regular fa-bookmark"></i>저장</button>
           <button class="btn btn-link text-black p-1"><i class="fa-regular fa-pen-to-square"></i>게시글작성</button>
         </div>
@@ -52,11 +55,7 @@
     <div class="radiusBox">
       <h3>출연진</h3>
       <div class="actors">
-        <MovieCredit 
-          v-for="actor in actors"
-          :key="actor.id"
-          :actor="actor"
-        />
+        <MovieCredit v-for="actor in actors" :key="actor.id" :actor="actor" />
       </div>
     </div>
 
@@ -76,7 +75,7 @@
 <script setup>
 import MovieCredit from '@/components/movie/MovieCredit.vue'
 import { ref, onMounted } from 'vue';
-import { getMovieDetail, getActorsList, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
+import { getMovieDetail, getActorsList, getDirectorsList, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
@@ -88,16 +87,24 @@ const imageFromStore = ref('')
 
 const initializecurrentMovie = (moviePk) => {
   getMovieDetail(moviePk)
-  .then((response) => {
-    if (response && response.data) {
-      currentMovie.value = response.data
-      imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
-      imagloading.value = false
-      }
+    .then((response) => {
+      if (response && response.data) {
+        currentMovie.value = response.data
+        getActorsList(moviePk)
+          .then(response => {
+            actors.value = response.data.splice(0, 5)
+          })
+        getDirectorsList(moviePk)
+          .then(() => {
+            director.value = response.data
+          })
+  imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
+  imagloading.value = false
+}
     })
-    .catch((error) => {
-      console.error('Error initializing movie detail:', error)
-    })
+    .catch ((error) => {
+  console.error('Error initializing movie detail:', error)
+})
 }
 
 const actors = ref([])
@@ -114,13 +121,8 @@ const hateMovie = () => {
   hateMovieApi(moviePk)
 }
 
-
-onMounted(async () => {
+onMounted(() => {
   initializecurrentMovie(moviePk)
-  await getActorsList(moviePk)
-  .then(response => {
-    actors.value = response.data.splice(0, 5)
-  })
 });
 
 </script>
