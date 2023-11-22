@@ -96,6 +96,8 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 }
 
+
+
 # 커스텀 유저 모델
 AUTH_USER_MODEL = 'accounts.User'
 

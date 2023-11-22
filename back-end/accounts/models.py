@@ -51,4 +51,4 @@ class User(AbstractUser):
         	format = 'JPEG',
         	options = {'quality':90},
     		)
-    
+    USERNAME_FIELD = 'username'    

@@ -21,4 +21,5 @@ urlpatterns = [
     path('movie_detail/<int:movie_id>/like/', views.movie_like),
     path('movie_detail/<int:movie_id>/soso/', views.movie_normal),
     path('movie_detail/<int:movie_id>/hate/', views.movie_hate),
+    path('runtime/<str:nickname>/', views.total_watch),
 ]
