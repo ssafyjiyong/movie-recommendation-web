@@ -161,7 +161,7 @@ const goToMovieList = function () {
 }
 
 const goToArticleList = function () {
-  router.push('/community')
+  router.push('/talk')
 }
 
 onMounted(() => {

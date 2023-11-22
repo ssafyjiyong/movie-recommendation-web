@@ -1,29 +1,38 @@
 <template>
-  <div class="d-flex justify-content-center">
-    <div class="d-flex flex-column theTopBox">
+  <div class="topTopBox">
+    <div class="theTopBox">
+      <div class="d-flex justify-content-between">
       <div class="m-3">
         <i class="fa-solid fa-comment-dots fa-lg mx-2"></i><span class="fw-bold textColor">영화토크</span>
       </div>
+      <div>
+          <button class="btn btn-custom btn-sm fw-bold mt-3 me-3" @click="goToAddArticle">글쓰기</button>
+        </div>
+      </div>
 
-        <div class="topArticleBox">
-          <div class="latest-article">
-            <div v-for="article in displayedarticles" :key="article.id">
-              <div class="articleBox d-flex justify-content-between">
-                <div>{{ article.id }}</div>
-                <div>{{ article.title }}</div>
-                <div>{{ article.user.nickname }}</div>
-                <div>{{ formatDate(article.created_at) }}</div>
-              </div>
+      <div class="topArticleBox">
+        <div class="latest-article">
+          <div class="articleBox d-flex text-center justify-content-between">
+            <div class="col-1 py-3">글번호</div>
+            <div class="col-7 py-3">글제목</div>
+            <div class="col-2 py-3">작성자</div>
+            <div class="col-2 py-3">작성일</div>
+          </div>
+          <hr class="m-0">
+          <div v-for="(searchedArticle, idx) in paginatedArticles" :key="idx">
+            <div class="d-flex text-center justify-content-between">
+              <div class="col-1 py-2">{{ searchedArticle.id }}</div>
+              <div class="col-7 py-2">{{ searchedArticle.title }}</div>
+              <div class="col-2 py-2">{{ searchedArticle.user.nickname }}</div>
+              <div class="col-2 py-2">{{ formatDate(searchedArticle.created_at) }}</div>
             </div>
-            <button @click="goToAddArticle">글쓰기</button>
+            <hr class="m-0">
           </div>
         </div>
-
-      <!-- 페이지네이션 -->
-      <div>
-        <button v-for="n in pageCount" :key="n" @click="changePage(n)">
-          {{ n }}
-        </button>
+        <!-- 더 보기 버튼 -->
+        <div class="d-flex justify-content-center m-3">
+          <button class="btn btn-custom fw-bold" @click="loadMoreArticles">댓글 더 보기</button>
+        </div>
       </div>
 
     </div>
@@ -41,20 +50,26 @@ defineProps({
 
 const router = useRouter()
 const allArticles = ref([])
-const currentPage = ref(1)
-const articlesPerPage = 15
 
-const displayedarticles = computed(() => {
-  const start = (currentPage.value - 1) * articlesPerPage;
-  const end = start + articlesPerPage;
-  return allArticles.value.slice(start, end);
-});
 
-const pageCount = computed(() => Math.ceil(allArticles.value.length / articlesPerPage));
+// 페이지 상태 관리
+const itemsPerPage = 20
+const page = ref(1)
 
-const changePage = (page) => {
-  currentPage.value = page;
-};
+// 페이지에 따라 데이터 범위 조정(최초 첫 번째 페이지 데이터 로드)
+const paginatedArticles = computed(() => {
+  return allArticles.value.slice(0, end.value)
+})
+
+const start = ref(0)
+const end = ref(14)
+// 더 보기 버튼 클릭 시 페이지 상태 증가
+const loadMoreArticles = () => {
+  start.value = page.value * itemsPerPage
+  end.value = start.value + itemsPerPage
+  page.value++
+}
+
 
 const goToAddArticle = function () {
   router.push('/create/1/')
@@ -76,20 +91,43 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.topArticleBox,
+.topTopBox {
+  display: flex;
+  justify-content: center;
+}
+
+.topArticleBox {
+  width: 800px;
+}
+
 .theTopBox {
   width: 800px;
+  display: flex;
+  flex-direction: column;
 }
 
 .textColor {
   color: rgb(37, 37, 37);
 }
 
-.latest-article {
-  height: 80vh;
-  border: 1px solid black;
+.btn-custom {
+  background-color: #83C442;
+  color: white;
 }
 
-.articleBox {
-  border: 1px solid black;
-}</style>
+.latest-article {
+  min-height: 10vh;
+  border: 1px solid #BFBFBF;
+  border-start-start-radius: 10px;
+  border-start-end-radius: 10px;
+}
+
+@media only screen and (max-width: 820px) {
+
+  .theTopBox,
+  .topTopBox {
+    display: block;
+    margin: auto 5px;
+  }
+}
+</style>
