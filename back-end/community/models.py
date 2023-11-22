@@ -9,6 +9,7 @@ class Article(models.Model):
     ('talk', 'talk'),
     ('toon', 'toon'),
     ('ticket', 'ticket'),
+
     ]
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

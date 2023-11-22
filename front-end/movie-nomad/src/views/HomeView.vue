@@ -7,49 +7,54 @@
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
       <form @submit.prevent="searchMovie" :class='isFocused ? "search-form-focus" : "search-form-nofocus"'>
-    <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
-      <i class="fa-solid fa-magnifying-glass"></i></button>
-    <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
-      :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
-      @blur="restorePlaceholder">
-    <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
-        class="fa-solid fa-magnifying-glass"></i></button>
-  </form>
+        <button v-if="!isFocused" type="submit" class="btn btn-link text-black">
+          <i class="fa-solid fa-magnifying-glass"></i></button>
+        <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
+          :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
+          @blur="restorePlaceholder">
+        <button v-if="isFocused" type="submit" class="btn btn-link text-black"><i
+            class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
 
       <!-- 관련 검색어 -->
       <div class="related-searches" v-if="isFocused">
-        <div class="p-2"
-        v-for="relatedSearch in relatedSearches" 
-        :key="relatedSearch.pk">
-        <div @click="goToDetail(relatedSearch.pk)">
-          {{ relatedSearch.title }}
+        <div class="p-2" v-for="relatedSearch in relatedSearches" :key="relatedSearch.pk">
+          <div @click="goToDetail(relatedSearch.pk)">
+            {{ relatedSearch.title }}
+          </div>
         </div>
-      </div>
       </div>
 
     </div>
 
     <!-- 커뮤니티 연결 버튼 fixed -->
     <div class="d-flex justify-content-center custom-bottom shake">
-      <button @click="goToCommunity" class="rounded-btn"><span class="fw-bold">영화 이야기</span> 나누러 가기</button>
+      <button @click="goToCommunity" class="rounded-btn"><span class="fw-bold">{{ $t('movieStory') }}</span>{{
+        $t('letsTalk') }}</button>
+    </div>
+
+    <!-- 페이지 소개 메세지 -->
+    <div class="text-center infoMsg">
+      <h1>{{ $t('introduceMsg1') }}</h1>
+      <h1>{{ $t('introduceMsg2') }}</h1>
+      <h4>{{ $t('introduceMsg3') }}</h4>
+      <h4>{{ $t('introduceMsg4') }}</h4>
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
     <div class="posterTopBox">
 
-      <div class="posterBox">
-        <img v-for="(image, index) in upcomingMovies" :key="index" 
-        :src="`${posterUrl}/${image.poster_path}`" alt="index">
+      <div class="posterBox1">
+        <img v-for="(image, index) in upcomingMovies" :key="index" :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
-      <div class="posterBox">
-        <img v-for="(image, index) in nowPlayingMovies" :key="index" 
-        :src="`${posterUrl}/${image.poster_path}`" alt="index">
+      <div class="posterBox2">
+        <img v-for="(image, index) in popularMovies" :key="index" :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
-      <div class="posterBox">
-        <img v-for="(image, index) in popularMovies" :key="index" 
-        :src="`${posterUrl}/${image.poster_path}`" alt="index">
+      <div class="posterBox1">
+        <img v-for="(image, index) in nowPlayingMovies" :key="index" :src="`${posterUrl}/${image.poster_path}`"
+          alt="index">
       </div>
 
     </div>
@@ -59,20 +64,65 @@
     <div class="qnaGreenBox d-flex justify-content-center align-items-center">
 
       <div class="qnaBox">
-        <h1 class="fw-bold text-center">자주 묻는 질문</h1>
+        <h1 class="fw-bold text-center">{{ $t('qna') }}</h1>
 
-        <div class="accordion" v-for="(qna, index) in qnas" :key="index">
-          <div class="accordion-item px-4" @click="toggle(index)">
+        <div class="accordion">
+          <div class="accordion-item px-4" @click="toggle(0)">
             <div class="accordion-header d-flex justify-content-between align-items-center">
-              <div class="questionFontSize">{{ qna.question }}</div>
+              <div class="questionFontSize">{{ $t('question1') }}</div>
               <i class="fa-solid fa-angle-down"></i>
             </div>
-            <div class="accordion-body" v-show="qna.open">
+            <div class="accordion-body" v-show="openIndex === 0">
               <hr>
-              <p class="answerFont">{{ qna.answer }}</p>
+              <p class="answerFont">{{ $t('answer1') }}</p>
+            </div>
+          </div>
+
+          <div class="accordion-item px-4" @click="toggle(1)">
+            <div class="accordion-header d-flex justify-content-between align-items-center">
+              <div class="questionFontSize">{{ $t('question2') }}</div>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="accordion-body" v-show="openIndex === 1">
+              <hr>
+              <p class="answerFont">{{ $t('answer2') }}</p>
+            </div>
+          </div>
+
+          <div class="accordion-item px-4" @click="toggle(2)">
+            <div class="accordion-header d-flex justify-content-between align-items-center">
+              <div class="questionFontSize">{{ $t('question3') }}</div>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="accordion-body" v-show="openIndex === 2">
+              <hr>
+              <p class="answerFont">{{ $t('answer3') }}</p>
+            </div>
+          </div>
+
+          <div class="accordion-item px-4" @click="toggle(3)">
+            <div class="accordion-header d-flex justify-content-between align-items-center">
+              <div class="questionFontSize">{{ $t('question4') }}</div>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="accordion-body" v-show="openIndex === 3">
+              <hr>
+              <p class="answerFont">{{ $t('answer4') }}</p>
+            </div>
+          </div>
+
+          <div class="accordion-item px-4" @click="toggle(4)">
+            <div class="accordion-header d-flex justify-content-between align-items-center">
+              <div class="questionFontSize">{{ $t('question5') }}</div>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="accordion-body" v-show="openIndex === 4">
+              <hr>
+              <p class="answerFont">{{ $t('answer5') }}</p>
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
@@ -137,41 +187,40 @@ const goToCommunity = function () {
 }
 
 
-// QnA 관련 스크립트
-const qnas = ref([
-  { question: '단축키 모드는 무엇인가요?', answer: '단축키 모드는 마우스를 사용하지 않고도 사이트를 조작할 수 있는 편리한 모드입니다. 안내 팝업창을 확인해주세요!', open: false },
-  { question: '서비스 사용료가 있나요?', answer: '해당 서비스는 무료로 제공되고 있습니다. 우측 하단에 커피 버튼을 누르시면 저희가 커피를 한 잔 할 수 있습니다 :) 감사합니다!', open: false },
-  { question: '어떤 기기에서 사용할 수 있나요?', answer: '저희 서비스는 모바일과 인터넷 모두에서 사용 가능합니다.', open: false },
-  { question: 'Team M.A.D에 대해 알려주세요.', answer: 'M.A.D는 Making A Difference의 약자로, 작은 변화로 사회에 기여하는 것을 목표로 하고 있습니다.', open: false }
-])
+const openIndex = ref(null)
 
-const toggle = index => {
-  qnas.value[index].open = !qnas.value[index].open
-}
+// toggle 함수 수정
+const toggle = (index => {
+  if (openIndex.value === index) {
+    openIndex.value = null
+  } else {
+    openIndex.value = index
+  }
+})
 
 onMounted(() => {
   movieStore.initializeMovies(),
     getPopularMovies()
       .then((response) => {
-        popularMovies.value = response.data.results
+        popularMovies.value = Array(5).fill(response.data.results).flat();
       })
       .catch((error) => {
         console.error('Error getPopularMovies:', error)
       });
-    getUpcomingMovies()
-      .then((response) => {
-        upcomingMovies.value = response.data.results
-      })
-      .catch((error) => {
-        console.error('Error getUpcomingMovies:', error)
-      });
-    getNowPlayingMovies()
-      .then((response) => {
-        nowPlayingMovies.value = response.data.results
-      })
-      .catch((error) => {
-        console.error('Error getNowPlayingMovies:', error)
-      });
+  getUpcomingMovies()
+    .then((response) => {
+      upcomingMovies.value = Array(5).fill(response.data.results).flat();
+    })
+    .catch((error) => {
+      console.error('Error getUpcomingMovies:', error)
+    });
+  getNowPlayingMovies()
+    .then((response) => {
+      nowPlayingMovies.value = Array(5).fill(response.data.results).flat();
+    })
+    .catch((error) => {
+      console.error('Error getNowPlayingMovies:', error)
+    });
 });
 
 </script>
@@ -195,7 +244,6 @@ onMounted(() => {
   height: 70vh;
   opacity: 0.85;
   object-fit: cover;
-  margin-bottom: 3vh;
 }
 
 .custom-top {
@@ -207,6 +255,11 @@ onMounted(() => {
   bottom: 70px;
   width: 100%;
   z-index: 5;
+}
+
+.infoMsg {
+  margin-top: 5vh;
+  margin-bottom: 4vh;
 }
 
 .search-form-nofocus {
@@ -273,25 +326,39 @@ onMounted(() => {
   width: 400px;
 }
 
-.posterBox {
+.posterBox1 {
   display: flex;
+  animation: scroll1 250s linear infinite;
+  width: max-content;
 }
 
+.posterBox2 {
+  display: flex;
+  animation: scroll2 250s linear infinite;
+  width: max-content;
+}
 
-.posterBox img {
+.posterBox1 img {
+  width: 20vh;
+  padding: 10px;
+}
+
+.posterBox2 img {
   width: 20vh;
   padding: 10px;
 }
 
 .posterTopBox {
-  max-width: 80vw;
+  max-width: 100vw;
+  overflow: hidden;
 }
 
 .qnaGreenBox {
   height: auto;
   background-color: #92DE4A;
-  padding: 30px;
-  font-family: 'Nanum Gothic', sans-serif
+  padding: 7vh;
+  font-family: 'Nanum Gothic', sans-serif;
+  margin-top: 3vh;
 }
 
 .questionFontSize {
@@ -318,6 +385,27 @@ onMounted(() => {
     transform: translate3d(0, 2px, 0);
   }
 }
+
+@keyframes scroll1 {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-70%);
+  }
+}
+
+@keyframes scroll2 {
+  0% {
+    transform: translateX(-70%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
 
 @media (max-width: 565px) {
 

@@ -28,7 +28,7 @@ onMounted(() => {
   getArticlesList()
     .then(response => {
       articles.value = response.data.filter((article) => {
-        return article.category === '나눔'
+        return article.category === 'ticket'
       })
     })
 });
