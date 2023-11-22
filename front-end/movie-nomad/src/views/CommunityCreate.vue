@@ -5,7 +5,7 @@
       <div class="form-check">
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="talk" 
-        value="수다"
+        value="talk"
         v-model="category"
         >
         <label class="form-check-label" for="talk">
@@ -15,7 +15,7 @@
       <div class="form-check">
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="toon" 
-        value="영화툰"
+        value="toon"
         v-model="category"
         >
         <label class="form-check-label" for="toon">
@@ -25,7 +25,7 @@
       <div class="form-check">
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="ticket"
-        value="나눔"
+        value="ticket"
         v-model="category"
         >
         <label class="form-check-label" for="ticket"> 
@@ -59,7 +59,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute()
 
 const articleNumber = route.params.category;
-const categoryMap = ['수다', '영화툰', '나눔'];
+const categoryMap = ['talk', 'toon', 'ticket'];
 
 const articleStore = useArticleStore()
 const movieStore = useMovieStore()

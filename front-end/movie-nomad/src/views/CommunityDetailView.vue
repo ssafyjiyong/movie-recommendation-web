@@ -8,9 +8,13 @@
       </div>
       <hr>
       <p>{{ currentArticle.content }}</p>
+      <p>{{ currentArticle }}</p>
     </div>
+    <button>게시글 수정</button>
+    <button @click="deleteTheArticle">게시글 삭제</button>
     <div class="comment-area">
       <h1>comment</h1>
+      
     </div>
   </div>
 
@@ -24,8 +28,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router'
-import { getArticleDetail, getMovieDetail } from '@/apis/movieApi'
+import { useRoute, useRouter } from 'vue-router'
+import { getArticleDetail, deleteArticleAPI } from '@/apis/movieApi'
 import { useMovieStore } from '@/stores/movieStore';
 
 const movieStore = useMovieStore()
@@ -34,6 +38,7 @@ const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movie
 const currentArticle = ref([])
 const movie = ref('')
 const route = useRoute()
+const router = useRouter()
 const articlePk = route.params.articleId
 
 const loading = ref(true)
@@ -47,6 +52,13 @@ const initializeArticleDetail = (articlePk) => {
       console.error('Error initializing article detail:', error)
     })
   loading.value = false
+}
+
+const deleteTheArticle = function () {
+  deleteArticleAPI(articlePk)
+  .then((response) => {
+      router.replace(`/${currentArticle.value.category}`)
+    })
 }
 
 onMounted(() => {

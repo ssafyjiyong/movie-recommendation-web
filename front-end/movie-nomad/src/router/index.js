@@ -11,6 +11,7 @@ import TicketView from '@/views/TicketView.vue'
 import PreviewInfoView from '@/views/PreviewInfoView.vue'
 import BarrierView from '@/views/BarrierView.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

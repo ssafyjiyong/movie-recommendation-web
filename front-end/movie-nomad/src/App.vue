@@ -16,7 +16,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto text-center align-items-center">
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">English</li>
+            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+
+
+                  <button class="btn btn-link text-black" @click="$i18n.locale = 'ko'"> 한국어 </button>
+                  <button class="btn btn-link text-black" @click="$i18n.locale = 'en'"> English </button>
+              
+            </li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
               <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
                 <!-- 다크모드일 경우 아이콘 -->
@@ -30,25 +36,26 @@
               </button>
             </li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
-              영화목록
+              {{ $t('movieList') }}
+
             </li>
 
             <div v-if="!userStore.isLogin" class="d-flex">
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
+                <RouterLink :to="{ name: 'login' }">{{ $t('Login') }}</RouterLink>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'signup' }">회원가입</RouterLink>
+                <RouterLink :to="{ name: 'signup' }">{{ $t('Signup') }}</RouterLink>
               </li>
             </div>
 
             <div v-else class="d-flex justify-content-center align-items-center">
-              <li  class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
                 <RouterLink :to="{ name: 'profile', params: { nickname: userStore.userInfo.nickname } }">{{
                   userStore.userInfo.nickname }}</RouterLink>
               </li>
-              <li  class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <a @click="logout">로그아웃</a>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <a @click="logout">{{ $t('Logout') }}</a>
               </li>
             </div>
           </ul>
@@ -96,11 +103,6 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore';
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useArticleStore } from '@/stores/articleStore';
-import { useMovieStore } from '@/stores/movieStore';
-
-const movieStore = useMovieStore()
-const articleStore = useArticleStore()
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -108,7 +110,7 @@ const isDarkMode = ref(false);
 
 const logout = () => {
   userStore.logout()
-  location.reload
+  location.reload()
 }
 
 const enableDarkMode = () => {

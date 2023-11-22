@@ -23,7 +23,7 @@ onMounted(() => {
   getArticlesList()
     .then(response => {
       articles.value = response.data.filter((article) => {
-        return article.category === '수다'
+        return article.category === 'talk'
       })
     })
 });

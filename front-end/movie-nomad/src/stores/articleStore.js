@@ -34,7 +34,7 @@ export const useArticleStore = defineStore('article', () => {
           confirmButtonText: "확인",
         });
         articles.value.push(response.data);
-        router.push(response.data.ca)
+        router.push(`/${response.data.category}`)
       })
       .catch((error) => {
         console.error(error)
