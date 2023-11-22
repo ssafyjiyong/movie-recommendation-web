@@ -3,27 +3,25 @@
     <h1>BarrierView</h1>
   </div>
 
-  <CommunityGrid
-    :articles="articleStore.articles"
-  />
-
-
+  <div class="latest-article">
+    <div v-for="article in articles" :key="article.id">
+      <CommunityGridCard :article="article" />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import CommunityGrid from '@/components/community/CommunityGrid.vue';
-import { onMounted } from 'vue';
-import { useArticleStore } from '@/stores/articleStore';
 
-const articleStore = useArticleStore()
-
-
-onMounted(() => {
-  articleStore.initializeArticles()
-});
 
 </script>
 
 <style scoped>
+.latest-article {
+  height: 1300px;
+  margin-top: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding-top: 13px;
 
+}
 </style>

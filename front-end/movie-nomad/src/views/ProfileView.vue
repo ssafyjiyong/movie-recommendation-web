@@ -6,7 +6,7 @@
       <div class="text-center">
         <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage">
         <div class="d-flex justify-content-center">
-          <span>{{ userStore.nickname }}</span>
+          <span>{{ profileUserNickname }}</span>
           <button @click="follow">팔로우</button>
         </div>
       </div>
@@ -67,14 +67,14 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
-import { onMounted } from 'vue';
-import { following } from '../apis/userApi';
+import { onMounted, ref } from 'vue';
+import { following, userProfile } from '../apis/userApi';
 import { useRoute } from 'vue-router';
 
 const userStore = useUserStore()
 const route = useRoute()
+const profileUserNickname = route.params.nickname
 
-console.log(route.params.nickname)
 console.log(userStore.token)
 
 
@@ -85,6 +85,17 @@ const follow = () => {
   }
   following(payload)
 }
+
+onMounted(() => {
+  userProfile(profileUserNickname)
+  .then((response) => {
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.error('Error initializing userProfile:', error)
+    })
+})
+
 </script>
 
 <style scoped>
