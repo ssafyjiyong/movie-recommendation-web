@@ -114,9 +114,10 @@ const hateMovie = () => {
   hateMovieApi(moviePk)
 }
 
-onMounted(() => {
+
+onMounted(async () => {
   initializecurrentMovie(moviePk)
-  getActorsList(moviePk)
+  await getActorsList(moviePk)
   .then(response => {
     actors.value = response.data.splice(0, 5)
   })

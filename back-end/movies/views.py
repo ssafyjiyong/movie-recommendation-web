@@ -231,11 +231,16 @@ def actors(request, movie_id):
 
 @api_view(['GET'])
 def directors(request, movie_id):
+    result = []
     movie = Movie.objects.get(id=movie_id)
-    directors = Director.objects.get(movie=movie)
-    serializer = DirectorSerializer(directors, many=True)
+    directors = Director.objects.all()
 
-    return Response(serializer.data)
+    for director in directors:
+        if director in movie.director.all():
+            serializer = DirectorSerializer(director)
+            result.append(serializer.data)
+
+    return Response(result)
 
 
 @api_view(['POST'])
