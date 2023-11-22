@@ -1,6 +1,6 @@
 <template>
   <!-- Navigation-->
-  <div class="d-flex justify-content-center">
+  <div class="theTopBox">
     <nav class="communityNav m-3 py-1">
       <ul class="d-flex justify-content-center align-items-center m-0 p-0">
         <li>
@@ -35,6 +35,11 @@ defineProps({
 </script>
 
 <style scoped>
+.theTopBox {
+  display: flex;
+  justify-content: center;
+}
+
 ul {
   list-style: none;
 }
@@ -49,4 +54,11 @@ ul>li {
   width: 800px;
   background-color: rgb(131, 196, 66);
   border-radius: 50px;
-}</style>
+}
+
+@media only screen and (max-width: 820px) {
+  .theTopBox {
+    display: block;
+  }
+}
+</style>
