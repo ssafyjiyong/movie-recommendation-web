@@ -82,11 +82,11 @@ const router = createRouter({
       name: 'create',
       component: () => import('@/views/CommunityCreate.vue')
     },
-    {
-      path: '/community/update',
-      name: 'communityupdate',
-      component: () => import('@/views/CommunityUpdate.vue')
-    },
+    // {
+    //   path: '/community/update',
+    //   name: 'communityupdate',
+    //   component: () => import('@/views/CommunityUpdate.vue')
+    // },
     {
       path: '/passwordchange',
       name: 'passwordchange',

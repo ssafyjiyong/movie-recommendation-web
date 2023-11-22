@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>TalkView</h1>
+    <h1>영화토크</h1>
   </div>
   <CommunityGrid :articles="articles" />
   <button @click="goToAddArticle">글쓰기</button>
@@ -11,6 +11,10 @@ import CommunityGrid from '@/components/community/CommunityGrid.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getArticlesList } from '@/apis/movieApi';
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 const router = useRouter()
 const articles = ref([])

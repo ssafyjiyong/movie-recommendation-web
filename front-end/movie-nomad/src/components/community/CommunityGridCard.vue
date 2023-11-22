@@ -1,9 +1,8 @@
 <template>
-  <div>
+  <div class="commentBox">
     <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }">
       <span class="article-title">{{ article.title }}</span>
     </RouterLink>
-    <hr>
   </div>
 </template>
 
@@ -32,5 +31,8 @@ a {
   font-size: 17px;
   margin-left: 10px;
   color: black;
+}
+.commentBox {
+  border: 1px solid black;
 }
 </style>

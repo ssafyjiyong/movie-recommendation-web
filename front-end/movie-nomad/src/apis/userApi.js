@@ -97,9 +97,9 @@ export const getCurrentUserInfo = (username) => {
 }
 
 // 특정 유저 정보 조회
-export const userProfile = (userName) => {
+export const userProfile = (userNickname) => {
   return axios
-    .get(`${API_URL}/profile/${userName}/`)
+    .get(`${API_URL}/myblog/blog/${userNickname}/`)
     .then((response) => {
       return response;
     })

@@ -38,6 +38,10 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import Swal from 'sweetalert2'
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 // 로그인
 const username = ref(null)
 const password = ref(null)

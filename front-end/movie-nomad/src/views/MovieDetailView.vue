@@ -37,7 +37,7 @@
         </div>
 
         <!-- 영화 내용  -->
-        <div class="radiusBox">
+        <div class="contentBox">
           <p>{{ currentMovie.overview }}</p>
         </div>
       </div>
@@ -95,6 +95,10 @@ import { ref, onMounted } from 'vue';
 import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMovieArticles, thisMovieMate, thisMovieOST, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
 import { useRoute } from 'vue-router';
 import { useMovieStore } from '@/stores/movieStore';
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 const movieStore = useMovieStore()
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
@@ -183,6 +187,14 @@ onMounted(() => {
 }
 
 .radiusBox {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0px;
+}
+
+.contentBox {
+  height: auto;
   border: 1px solid black;
   border-radius: 10px;
   padding: 20px;

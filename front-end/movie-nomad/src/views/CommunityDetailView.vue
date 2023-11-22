@@ -57,6 +57,10 @@ import { getArticleDetail, deleteArticleAPI } from '@/apis/movieApi'
 import { useMovieStore } from '@/stores/movieStore';
 import CommentCard from '@/components/community/CommentCard.vue';
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 const movieStore = useMovieStore()
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 

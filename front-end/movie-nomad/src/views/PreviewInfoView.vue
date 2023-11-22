@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>PreviewInfoView</h1>
+    <h1>영화뉴스</h1>
   </div>
 
   <div class="latest-article">
@@ -12,16 +12,16 @@
 
 <script setup>
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 
 </script>
 
 <style scoped>
 .latest-article {
-  height: 1300px;
-  margin-top: 20px;
+  height: 80vh;
   border: 1px solid black;
-  border-radius: 10px;
-  padding-top: 13px;
-
 }
 </style>
