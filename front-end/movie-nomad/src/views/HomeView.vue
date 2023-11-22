@@ -2,7 +2,7 @@
   <div class="position-relative">
 
     <!-- 메인 이미지 -->
-    <img class="main-background" src="@/images/main_background.jpg" alt="main-background">
+    <img class="main-background" :src="mainBackground" alt="main-background">
 
     <!-- 영화 검색창 absolute -->
     <div class="d-flex justify-content-center position-absolute custom-top start-50 translate-middle">
@@ -49,6 +49,7 @@
       </div>
 
       <div class="posterBox2">
+        <button @click="changTheBackground" type="button" class="btn btn-outline-success">눌러보세요</button>
         <img v-for="(image, index) in popularMovies" :key="index" :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
@@ -136,6 +137,11 @@ import { useMovieStore } from '@/stores/movieStore';
 import { useRouter } from 'vue-router'
 import { getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
 import { debounce } from 'lodash';
+
+const mainBackground = ref('src/images/main_background.jpg')
+const changTheBackground = function () {
+  mainBackground.value = 'src/images/main_background.gif'
+}
 
 const router = useRouter()
 const movieStore = useMovieStore();
@@ -402,7 +408,7 @@ onMounted(() => {
   }
 
   100% {
-    transform: translateX(0%);
+    transform: translateX(30%);
   }
 }
 
