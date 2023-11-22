@@ -1,41 +1,52 @@
 <template>
   <!-- Navigation-->
-  <nav class="communityNav">
-    <ul class="d-flex justify-content-around align-items-center">
-      <li><RouterLink to="/talk">영화토크</RouterLink></li>
-      <li><RouterLink to="/toon">영화툰</RouterLink></li>
-      <li><RouterLink to="/ticket">티켓나눔</RouterLink></li>
-      <li><RouterLink to="/preview">영화뉴스</RouterLink></li>
-      <li><RouterLink to="/barrier">배리어프리</RouterLink></li>
-    </ul>
-  </nav>
+  <div class="d-flex justify-content-center">
+    <nav class="communityNav m-3 py-1">
+      <ul class="d-flex justify-content-center align-items-center m-0 p-0">
+        <li>
+          <RouterLink class="text-decoration-none text-white fw-bold" to="/talk">영화토크</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="text-decoration-none text-white fw-bold" to="/toon">영화툰</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="text-decoration-none text-white fw-bold" to="/ticket">티켓나눔</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="text-decoration-none text-white fw-bold" to="/preview">영화뉴스</RouterLink>
+        </li>
+        <li>
+          <RouterLink class="text-decoration-none text-white fw-bold" to="/barrier">배리어프리</RouterLink>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <RouterView />
-  
 </template>
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 
 defineProps({
-  isDarkMode:Boolean,
+  isDarkMode: Boolean,
 })
 
 </script>
 
 <style scoped>
 ul {
-   list-style:none;
-   margin: 0;
-   padding: 0;
-   }
-
-ul > li {
-   padding: 10px;
-   border: 1px solid red;
-   }
-.communityNav {
-  margin: 10px 100px;
-  border: 1px solid red;
+  list-style: none;
 }
-</style>
+
+ul>li {
+  padding: 10px;
+  margin: 0px 10px;
+
+}
+
+.communityNav {
+  width: 800px;
+  background-color: rgb(131, 196, 66);
+  border-radius: 50px;
+}</style>
