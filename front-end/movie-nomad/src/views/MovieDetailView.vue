@@ -1,18 +1,10 @@
 <template>
-  <div class="container topBox" v-if="currentMovie">
+  <div class="container topBox" v-if="!loading">
     <!-- Detail의 상단 부분 -->
     <div class="row">
       <!-- Poster -->
       <div class="radiusBox col-3 p-1">
-        <div v-if="!imagloading">
-          <img :src="imageFromStore" alt="movie_poster" class="posterImage">
-        </div>
-
-        <div v-else>
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <img :src="imageFromStore" alt="movie_poster" class="posterImage">
 
         <div class="d-flex flex-column">
           <small>개봉일: {{ currentMovie.release_date }}</small>
@@ -86,6 +78,13 @@
     </div>
 
   </div>
+
+  <div v-else class="d-flex justify-content-center align-items-center m-5">
+          <div class="spinner-border text-success d-inline" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h3 class="m-3">{{ randomMessage }}</h3>
+        </div>
 </template>
 
 <script setup>
@@ -95,6 +94,10 @@ import CommunityGridCard from '@/components/community/CommunityGridCard.vue'
 import { ref, onMounted } from 'vue';
 import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMovieArticles, thisMovieMate, thisMovieOST, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
 import { useRoute } from 'vue-router';
+import { useMovieStore } from '@/stores/movieStore';
+
+const movieStore =  useMovieStore()
+const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 const route = useRoute()
 const currentMovie = ref([])
@@ -107,7 +110,8 @@ const articles = ref([])
 const movieMates = ref([])
 const album = ref([])
 
-const imagloading = ref(true)
+const loading = ref(true)
+
 const imageFromStore = ref('')
 
 const spotify = () => {
@@ -147,7 +151,7 @@ const initializecurrentMovie = (moviePk) => {
             album.value = response.data
           })
   imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
-  imagloading.value = false
+  loading.value = false
 }
     })
     .catch ((error) => {

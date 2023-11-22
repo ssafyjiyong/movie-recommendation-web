@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>지금 뜨는 게시글</h1>
+    <h1>HOT 게시글 모아모아</h1>
     <div class="popular-article">
       <div v-for="article in articles.slice(1, 4)" :key="article.id">
         <CommunityGridCard 
