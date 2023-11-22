@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.renderers import JSONRenderer
 
+from accounts.models import User
+from accounts.serializers import BlogSerializer
+
 from .serializers import MovieSearchSerializer, MovieDetailSerializer, GenreSerializer, ActorSerializer, DirectorSerializer, AlbumSerializer, CollectionSerializer
 from .models import Actor, Album, Director, Genre, Movie, Collection
 from .spotify_config import getHeaders
@@ -176,7 +179,7 @@ def movie_detail(request, movie_id):
         
         # 앨범정보
         try:
-            album = Album.objects.get(id=movie.movie_id)
+            album = Album.objects.get(movie=movie)
         except:
             url = 'https://api.spotify.com/v1/search'
             headers = getHeaders()
@@ -206,6 +209,33 @@ def movie_detail(request, movie_id):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def movie_mate(request, movie_id):
+    results = []
+    movie = Movie.objects.get(id=movie_id)
+
+    me = request.user
+    my_followings = me.followings.all()
+
+    for mate in my_followings:
+        if mate in movie.like_users.all():
+            serializer = BlogSerializer(mate)
+
+            results.append(serializer.data)
+    
+    return Response(results)
+
+
+@api_view(['GET'])
+def movie_album(request, movie_id):
+    movie = Movie.objects.get(id=movie_id)
+    album = Album.objects.get(movie=movie)
+
+    serializer = AlbumSerializer(album)
+
+    return Response(serializer.data)
+
+
 
 @api_view(['GET'])
 def genres(request):
@@ -213,6 +243,20 @@ def genres(request):
     serializer = GenreSerializer(genres, many=True)
 
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def movie_genres(request, movie_id):
+    result = []
+    movie = Movie.objects.get(id=movie_id)
+    genres = Genre.objects.all()
+
+    for genre in genres:
+        if genre in movie.genres.all():
+            serializer = GenreSerializer(genre)
+            result.append(serializer.data)
+
+    return Response(result)
 
 
 @api_view(['GET'])
