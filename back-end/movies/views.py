@@ -394,7 +394,7 @@ def collections_update(request, collection_id, movie_id):
     collection = Collection.objects.get(id=collection_id)
     movie = Movie.objects.get(id=movie_id)
 
-    if request.user == collection.user.all():
+    if request.user == collection.user:
         if movie in collection.movie.all():
             collection.movie.remove(movie)
         else:

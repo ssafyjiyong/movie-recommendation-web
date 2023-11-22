@@ -126,6 +126,20 @@ export const createCollection = () => {
     )
 }
 
+export const addCollection = (collectionId, movieId) => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .post(
+      `${API_URL}/movies/collections/${collectionId}/${movieId}/`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      }
+    )
+}
+
 
 // 영화 좋아요 API
 export const likeMovieApi = (moviePk) => {
