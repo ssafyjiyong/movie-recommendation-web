@@ -341,15 +341,22 @@ def movie_hate(request, movie_id):
     return Response("성공")
 
 
-# 콜렉션 생성
-@api_view(['POST'])
+# 콜렉션 조회 및 생성
+@api_view(['GET', 'POST'])
 def collections(request):
-    serializer = CollectionSerializer()
-
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(user=request.user)
+    if request.method == 'GET':
+        collections = Collection.objects.all()
+        serializer = CollectionSerializer(collections, many=True)
 
         return Response(serializer.data)
+
+    if request.method == 'POST':
+        serializer = CollectionSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
+
+            return Response(serializer.data)
 
 
 
@@ -357,7 +364,7 @@ def collections(request):
 @api_view(['GET'])
 def user_collections(request, user_id):
     user = get_user_model(id=user_id)
-    collections = Collection.objects.filter(user=user)
+    collections = Collection.objects.get(user=user)
     serializer = CollectionSerializer(collections, many=True)
     return Response(serializer.data)
 

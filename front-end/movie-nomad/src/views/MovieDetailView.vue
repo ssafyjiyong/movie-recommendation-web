@@ -27,9 +27,15 @@
               class="fa-solid fa-face-meh"></i>그저그래요</button>
           <button class="btn btn-link text-black p-1" @click="hateMovie"><i
               class="fa-regular fa-thumbs-down"></i>별로예요</button>
-          <button class="btn btn-link text-black p-1"><i class="fa-regular fa-bookmark"></i>저장</button>
+          <!-- 컬렉션 모달 띄우기 -->
+          <button class="btn btn-link text-black p-1" data-bs-toggle="modal" data-bs-target="#collection">
+            <i class="fa-regular fa-bookmark"></i>
+            저장
+          </button>
+          <MovieCollectionModal :moviePk="moviePk" />
           <button class="btn btn-link text-black p-1"><i class="fa-regular fa-pen-to-square"></i>게시글작성</button>
         </div>
+
         <!-- 영화 내용  -->
         <div class="radiusBox">
           <p>{{ currentMovie.overview }}</p>
@@ -83,6 +89,7 @@
 <script setup>
 import MovieCredit from '@/components/movie/MovieCredit.vue'
 import MovieMate from '@/components/movie/MovieMate.vue'
+import MovieCollectionModal from '../components/movie/MovieCollectionModal.vue';
 import CommunityGridCard from '@/components/community/CommunityGridCard.vue'
 import { ref, onMounted } from 'vue';
 import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMovieArticles, thisMovieMate, thisMovieOST, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'

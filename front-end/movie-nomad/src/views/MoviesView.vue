@@ -40,7 +40,7 @@
 
 <script setup>
 import MovieCard from '@/components/MovieCard.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 
 const movieStore = useMovieStore()
@@ -51,7 +51,6 @@ const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movie
 
 const searchMovie = function () {
   movieStore.searchTheMovie(movieKeyword.value)
-  paginatedMovies.value = movieStore.searchedMovies.slice(0, itemsPerPage)
 }
 
 // 페이지 상태 관리
@@ -59,18 +58,21 @@ const itemsPerPage = 15
 const page = ref(1)
 
 // 페이지에 따라 영화 데이터 범위 조정(최초 첫 번째 페이지 데이터 로드)
-const paginatedMovies = ref(movieStore.searchedMovies.slice(0, 14))
+const paginatedMovies = computed (() => {
+  return movieStore.searchedMovies.slice(0, end.value)
+})
 
+const start = ref(0)
+const end = ref(14)
 // 더 보기 버튼 클릭 시 페이지 상태 증가
 const loadMoreMovies = () => {
-  const start = page.value * itemsPerPage
-  const end = start + itemsPerPage
-  paginatedMovies.value = movieStore.searchedMovies.slice(0, end)
+  start.value = page.value * itemsPerPage
+  end.value = start.value + itemsPerPage
   page.value++
 }
 
 onMounted(() => {
-  movieStore.initializeMovies()
+  movieStore.initializeMovies();
 });
 
 </script>

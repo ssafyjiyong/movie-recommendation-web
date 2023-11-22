@@ -8,7 +8,8 @@ class Article(models.Model):
     categories = [
     ('talk', 'talk'),
     ('toon', 'toon'),
-    ('tocket', 'tocket'),
+    ('ticket', 'ticket'),
+
     ]
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

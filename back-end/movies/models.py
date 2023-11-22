@@ -53,5 +53,6 @@ class Album(models.Model):
 
 
 class Collection(models.Model):
+    name = models.CharField(max_length=30)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='collections')
     movie = models.ManyToManyField(Movie, related_name='collections', null=True)
