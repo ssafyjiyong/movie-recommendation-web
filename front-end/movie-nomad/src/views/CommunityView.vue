@@ -6,7 +6,7 @@
       <li><RouterLink to="/toon">영화툰</RouterLink></li>
       <li><RouterLink to="/ticket">티켓나눔</RouterLink></li>
       <li><RouterLink to="/preview">영화뉴스</RouterLink></li>
-      <li><RouterLink to="/barrier">베리어프리</RouterLink></li>
+      <li><RouterLink to="/barrier">배리어프리</RouterLink></li>
     </ul>
   </nav>
 
@@ -16,6 +16,10 @@
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 </script>
 

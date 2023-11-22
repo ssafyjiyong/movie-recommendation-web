@@ -56,6 +56,11 @@ import { useArticleStore } from '@/stores/articleStore';
 import { useMovieStore } from '@/stores/movieStore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+
+defineProps({
+  isDarkMode:Boolean,
+})
+
 const route = useRoute()
 
 const articleNumber = route.params.category;

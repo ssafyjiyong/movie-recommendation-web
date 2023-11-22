@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>BarrierView</h1>
+    <h1>배리어프리</h1>
   </div>
 
   <div class="latest-article">
@@ -11,17 +11,15 @@
 </template>
 
 <script setup>
-
+defineProps({
+  isDarkMode:Boolean,
+})
 
 </script>
 
 <style scoped>
 .latest-article {
-  height: 1300px;
-  margin-top: 20px;
+  height: 80vh;
   border: 1px solid black;
-  border-radius: 10px;
-  padding-top: 13px;
-
 }
 </style>

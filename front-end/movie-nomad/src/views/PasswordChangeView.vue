@@ -6,6 +6,10 @@
 
 <script setup>
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 </script>
 
 <style scoped>

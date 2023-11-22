@@ -43,6 +43,10 @@ import MovieCard from '@/components/MovieCard.vue';
 import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
 

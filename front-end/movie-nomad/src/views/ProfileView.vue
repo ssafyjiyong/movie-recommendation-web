@@ -4,7 +4,9 @@
     <div class="col-4">
       <!-- 프로필 사진과 이름, 닉네임 -->
       <div class="text-center">
-        <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage">
+        <img src="@/images/main_background.jpg" 
+        alt="profile_img" 
+        class="profileImage my-2">
         <div class="d-flex justify-content-center">
           <span>{{ profileUserNickname }}</span>
           <button @click="follow">팔로우</button>
@@ -63,6 +65,12 @@
       </div>
     </div>
   </div>
+  
+  <!-- 회원정보 변경 및 탈퇴 기능 -->
+  <div class="d-flex m-2 justify-content-end">
+    <button class="btn btn-secondary btn-sm">회원정보 변경</button>
+    <button class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
+   </div>
 </template>
 
 <script setup>
@@ -70,6 +78,10 @@ import { useUserStore } from '@/stores/userStore';
 import { onMounted, ref } from 'vue';
 import { following, userProfile } from '../apis/userApi';
 import { useRoute } from 'vue-router';
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -87,13 +99,17 @@ const follow = () => {
 }
 
 onMounted(() => {
-  userProfile(profileUserNickname)
+  if (profileUserNickname === userStore.nickname) {
+    console.log('나의 블로그입니다')
+  } else {
+    userProfile(profileUserNickname)
   .then((response) => {
       console.log(response.data)
     })
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
     })
+  }
 })
 
 </script>
@@ -101,7 +117,7 @@ onMounted(() => {
 <style scoped>
 .topContainer {
   padding: 20px;
-  height: 90vh;
+  height: 100%;
 }
 
 .profileImage {

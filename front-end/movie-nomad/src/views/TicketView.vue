@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>TicketView</h1>
+    <h1>티켓나눔</h1>
   </div>
 
   <CommunityGrid
@@ -16,6 +16,10 @@ import CommunityGrid from '@/components/community/CommunityGrid.vue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getArticlesList } from '@/apis/movieApi';
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 const router = useRouter()
 const articles = ref([])

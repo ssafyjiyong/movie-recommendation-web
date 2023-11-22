@@ -19,8 +19,8 @@
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
 
 
-                  <button class="btn btn-link text-black" @click="$i18n.locale = 'ko'"> 한국어 </button>
-                  <button class="btn btn-link text-black" @click="$i18n.locale = 'en'"> English </button>
+                  <button class="btn btn-link" @click="$i18n.locale = 'ko'"> 한국어 </button>
+                  <button class="btn btn-link" @click="$i18n.locale = 'en'"> English </button>
               
             </li>
             <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
@@ -63,7 +63,8 @@
       </div>
     </nav>
 
-    <RouterView />
+    <RouterView
+    :isDarkMode="isDarkMode" />
 
   </header>
 

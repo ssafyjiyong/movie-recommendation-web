@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative">
+  <div class="position-relative" v-if="!loading">
 
     <!-- 메인 이미지 -->
     <img class="main-background" :src="mainBackground" alt="main-background">
@@ -20,7 +20,7 @@
       <div class="related-searches" v-if="isFocused">
         <div class="p-2" v-for="relatedSearch in relatedSearches" :key="relatedSearch.pk">
           <div @click="goToDetail(relatedSearch.pk)">
-            {{ relatedSearch.title }}
+            <p class="text-black">{{ relatedSearch.title }}</p>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
 
     <!-- 커뮤니티 연결 버튼 fixed -->
     <div class="d-flex justify-content-center custom-bottom shake">
-      <button @click="goToCommunity" class="rounded-btn"><span class="fw-bold">{{ $t('movieStory') }}</span>{{
+      <button @click="goToCommunity" :class="isDarkMode ? 'rounded-btn-dark' : 'rounded-btn'"><span class="fw-bold">{{ $t('movieStory') }}</span>{{
         $t('letsTalk') }}</button>
     </div>
 
@@ -49,7 +49,7 @@
       </div>
 
       <div class="posterBox2">
-        <button @click="changTheBackground" type="button" class="btn btn-outline-success">눌러보세요</button>
+        <button @click="changTheBackground" type="button" class="btn btn-outline-success btn-custom">눌러보세요</button>
         <img v-for="(image, index) in popularMovies" :key="index" :src="`${posterUrl}/${image.poster_path}`" alt="index">
       </div>
 
@@ -129,6 +129,16 @@
 
 
   </div>
+
+
+    <!-- 로딩중에 나오는 명대사 -->
+    <div v-else class="d-flex justify-content-center align-items-center m-5">
+    <div class="spinner-border text-success d-inline" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h3 class="m-3">{{ randomMessage }}</h3>
+  </div>
+
 </template>
 
 <script setup>
@@ -138,6 +148,10 @@ import { useRouter } from 'vue-router'
 import { getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
 import { debounce } from 'lodash';
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 const mainBackground = ref('src/images/main_background.jpg')
 const changTheBackground = function () {
   mainBackground.value = 'src/images/main_background.gif'
@@ -146,6 +160,10 @@ const changTheBackground = function () {
 const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
+
+// 로딩중 명대사
+const loading = ref(true)
+const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 // 포스터 관련 변수
 const popularMovies = ref([])
@@ -209,6 +227,7 @@ onMounted(() => {
     getPopularMovies()
       .then((response) => {
         popularMovies.value = Array(5).fill(response.data.results).flat();
+        loading.value=false
       })
       .catch((error) => {
         console.error('Error getPopularMovies:', error)
@@ -332,6 +351,15 @@ onMounted(() => {
   width: 400px;
 }
 
+.rounded-btn-dark {
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 30px;
+  background-color: green;
+  color: white;
+  width: 400px;
+}
+
 .posterBox1 {
   display: flex;
   animation: scroll1 250s linear infinite;
@@ -344,15 +372,13 @@ onMounted(() => {
   width: max-content;
 }
 
-.posterBox1 img {
+.posterBox1 img,
+.posterBox2 img,
+.btn-custom {
   width: 20vh;
   padding: 10px;
 }
 
-.posterBox2 img {
-  width: 20vh;
-  padding: 10px;
-}
 
 .posterTopBox {
   max-width: 100vw;
@@ -408,7 +434,7 @@ onMounted(() => {
   }
 
   100% {
-    transform: translateX(30%);
+    transform: translateX(9%);
   }
 }
 
