@@ -6,7 +6,8 @@
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="talk" 
         value="수다"
-        v-model="category">
+        v-model="category"
+        >
         <label class="form-check-label" for="talk">
           영화토크
         </label>
@@ -15,7 +16,8 @@
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="toon" 
         value="영화툰"
-        v-model="category">
+        v-model="category"
+        >
         <label class="form-check-label" for="toon">
           영화툰
         </label>
@@ -24,7 +26,8 @@
         <input class="form-check-input" type="radio" name="flexRadioDefault" 
         id="ticket"
         value="나눔"
-        v-model="category">
+        v-model="category"
+        >
         <label class="form-check-label" for="ticket"> 
           티켓나눔
         </label>
@@ -52,11 +55,16 @@
 import { useArticleStore } from '@/stores/articleStore';
 import { useMovieStore } from '@/stores/movieStore';
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+const route = useRoute()
+
+const articleNumber = route.params.category;
+const categoryMap = ['수다', '영화툰', '나눔'];
 
 const articleStore = useArticleStore()
 const movieStore = useMovieStore()
 
-const category = ref(null)
+const category = ref(categoryMap[articleNumber - 1])
 const movieid = ref(null)
 const title = ref(null)
 const content = ref(null)

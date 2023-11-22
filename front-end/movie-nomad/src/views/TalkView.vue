@@ -5,7 +5,7 @@
 
   
   <CommunityGrid
-    :articles="articleStore.articles"
+    :articles="talkArticle"
   />
 
   <button @click="goToAddArticle">글쓰기</button>
@@ -20,6 +20,12 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 const articleStore = useArticleStore()
+const allArticles = articleStore.articles
+
+const talkArticle = allArticles.filter((article) => {
+  console.log(allArticles)
+  return article.category === '수다'
+})
 
 const goToAddArticle = function () {
   router.push('/create/1/')
