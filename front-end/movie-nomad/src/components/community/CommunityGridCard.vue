@@ -1,8 +1,9 @@
 <template>
-  <div class="commentBox">
-    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }">
-      <span class="article-title">{{ article.title }}</span>
-    </RouterLink>
+  <div class="articleBox d-flex justify-content-between">
+    <div>{{ article.id }}</div>
+    <div>{{ article.title }}</div>
+    <div>{{ article.user.nickname }}</div>
+    <div>{{ formatDate(article.created_at) }}</div>
   </div>
 </template>
 
@@ -15,6 +16,10 @@ const props = defineProps({
   article: Object
 })
 
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' });
+}
 
 onMounted(() => {
   getArticleDetail(props.article.id)
@@ -32,7 +37,7 @@ a {
   margin-left: 10px;
   color: black;
 }
-.commentBox {
+.articleBox {
   border: 1px solid black;
 }
 </style>

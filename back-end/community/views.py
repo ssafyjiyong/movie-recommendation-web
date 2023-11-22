@@ -17,7 +17,7 @@ from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerial
 def articles(request):
     # 전체 게시글 목록 조회
     if request.method == 'GET':
-        articles = Article.objects.all()
+        articles = Article.objects.all().order_by('-pk')
         serializer = ArticleListSerializer(articles, many=True)
 
         return Response(serializer.data)

@@ -4,9 +4,9 @@
   </div>
 
   <div class="latest-article">
-    <div v-for="article in articles" :key="article.id">
+    <!-- <div v-for="article in articles" :key="article.id">
       <CommunityGridCard :article="article" />
-    </div>
+    </div> -->
   </div>
 </template>
 
