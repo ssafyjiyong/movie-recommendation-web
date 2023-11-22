@@ -1,5 +1,6 @@
 <template>
   <div class="container" v-if="!loading">
+
     <div class="article-area">
       <h1>{{ currentArticle.title }}</h1>
       <div id='article-info' v-if="currentArticle.user">
@@ -8,16 +9,39 @@
       </div>
       <hr>
       <p>{{ currentArticle.content }}</p>
-      <p>{{ currentArticle }}</p>
+
+      <div class="d-flex justify-content-center">
+        <button>이 게시글 좋아요</button>
+      </div>
     </div>
-    <button>게시글 수정</button>
-    <button @click="deleteTheArticle">게시글 삭제</button>
+
+    <div class="d-flex justify-content-end">
+      <button>게시글 수정</button>
+      <button @click="deleteTheArticle">게시글 삭제</button>
+    </div>
+
+    <!-- 여기서부터 댓글입니다 -->
+
     <div class="comment-area">
-      <h1>comment</h1>
-      
+
+      <div>
+        <p>xx개의 댓글이 있습니다</p>
+      </div>
+
+      <!-- 댓글 작성란 -->
+      <div>
+        <form>
+          <input type="text">
+          <input type="submit">
+        </form>
+      </div>
+      <hr>
+      <CommentCard />
+
     </div>
   </div>
 
+  <!-- 로딩중에 나오는 명대사 -->
   <div v-else class="d-flex justify-content-center align-items-center m-5">
     <div class="spinner-border text-success d-inline" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -31,12 +55,12 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail, deleteArticleAPI } from '@/apis/movieApi'
 import { useMovieStore } from '@/stores/movieStore';
+import CommentCard from '@/components/community/CommentCard.vue';
 
 const movieStore = useMovieStore()
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 const currentArticle = ref([])
-const movie = ref('')
 const route = useRoute()
 const router = useRouter()
 const articlePk = route.params.articleId
@@ -56,7 +80,7 @@ const initializeArticleDetail = (articlePk) => {
 
 const deleteTheArticle = function () {
   deleteArticleAPI(articlePk)
-  .then((response) => {
+    .then((response) => {
       router.replace(`/${currentArticle.value.category}`)
     })
 }
