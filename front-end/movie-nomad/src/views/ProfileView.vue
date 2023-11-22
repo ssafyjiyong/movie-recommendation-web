@@ -7,20 +7,16 @@
         <img src="@/images/main_background.jpg" 
         alt="profile_img" 
         class="profileImage my-2">
-        <div class="d-flex justify-content-center">
-          <span>{{ profileUserNickname }}</span>
-          <button @click="follow">팔로우</button>
+        <div class="d-flex justify-content-center align-items-center">
+          <span class="fw-bold">{{ profileUserNickname }}</span>의 Blog
+          <button class="btn btn-success btn-sm mx-2" @click="follow">팔로우</button>
         </div>
       </div>
 
       <!-- 팔로우 현황 -->
-      <div class="radiusBox row">
-        <div class="col-6">
-          <p class="m-0">팔로우 : 0 명</p>
-        </div>
-        <div class="col-6">
-          <p class="m-0">팔로잉 : 0 명</p>
-        </div>
+      <div class="followBox p-2">
+          <small class="m-0"><i class="fa-solid fa-users"></i> {{ userInfo.follower_count }} followers · </small>
+          <small class="m-0">{{ userInfo.following_count }} followings</small>
       </div>
 
       <!-- 상태메세지 -->
@@ -86,9 +82,9 @@ defineProps({
 const userStore = useUserStore()
 const route = useRoute()
 const profileUserNickname = route.params.nickname
+const userInfo = ref({})
 
-console.log(userStore.token)
-
+console.log(userStore.userInfo)
 
 const follow = () => {
   const payload = {
@@ -101,6 +97,7 @@ const follow = () => {
 onMounted(() => {
   if (profileUserNickname === userStore.nickname) {
     console.log('나의 블로그입니다')
+    userInfo.value = userStore.userInfo
   } else {
     userProfile(profileUserNickname)
   .then((response) => {
@@ -137,7 +134,11 @@ onMounted(() => {
   padding: 20px;
   margin: 10px 0px;
 }
-
+.followBox {
+  border: 1px solid black;
+  border-radius: 10px;
+  margin: 10px 0px;
+}
 .inBlogBox {
   border: 1px solid black;
   border-radius: 10px;
@@ -159,5 +160,11 @@ onMounted(() => {
   border: 1px solid black;
   border-radius: 10px;
   padding: 5px;
+}
+
+@media (max-width: 635px) {
+  .profileImage {
+    display: none;
+  }
 }
 </style>

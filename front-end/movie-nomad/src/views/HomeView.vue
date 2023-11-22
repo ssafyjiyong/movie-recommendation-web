@@ -29,16 +29,17 @@
 
     <!-- 커뮤니티 연결 버튼 fixed -->
     <div class="d-flex justify-content-center custom-bottom shake">
-      <button @click="goToCommunity" :class="isDarkMode ? 'rounded-btn-dark' : 'rounded-btn'"><span class="fw-bold">{{ $t('movieStory') }}</span>{{
-        $t('letsTalk') }}</button>
+      <button @click="goToCommunity" :class="isDarkMode ? 'rounded-btn-dark' : 'rounded-btn'"><span class="fw-bold">{{
+        $t('movieStory') }}</span>{{
+    $t('letsTalk') }}</button>
     </div>
 
     <!-- 페이지 소개 메세지 -->
     <div class="text-center infoMsg">
-      <h1>{{ $t('introduceMsg1') }}</h1>
-      <h1>{{ $t('introduceMsg2') }}</h1>
-      <h4>{{ $t('introduceMsg3') }}</h4>
-      <h4>{{ $t('introduceMsg4') }}</h4>
+      <h1 class="fw-bold">{{ $t('introduceMsg1') }}</h1>
+      <h1 class="fw-bold mb-3">{{ $t('introduceMsg2') }}</h1>
+      <h5>{{ $t('introduceMsg3') }}</h5>
+      <h5>{{ $t('introduceMsg4') }}</h5>
     </div>
 
     <!-- 영화 포스터 애니메이션 -->
@@ -131,25 +132,35 @@
   </div>
 
 
-    <!-- 로딩중에 나오는 명대사 -->
-    <div v-else class="d-flex justify-content-center align-items-center m-5">
+  <!-- 로딩중에 나오는 명대사 -->
+  <div v-else class="d-flex justify-content-center align-items-center m-5">
     <div class="spinner-border text-success d-inline" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
     <h3 class="m-3">{{ randomMessage }}</h3>
   </div>
-
 </template>
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
+import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router'
 import { getPopularMovies, getUpcomingMovies, getNowPlayingMovies } from '@/apis/movieApi'
 import { debounce } from 'lodash';
 
+const userStore = useUserStore()
+
+// token 값이 변경될 때마다 실행
+watch(() => userStore.nickname, () => {
+  if (userStore.nickname !== "") {
+    location.reload()
+  }
+});
+
+
 defineProps({
-  isDarkMode:Boolean,
+  isDarkMode: Boolean,
 })
 
 const mainBackground = ref('src/images/main_background.jpg')
@@ -222,12 +233,13 @@ const toggle = (index => {
   }
 })
 
+
 onMounted(() => {
   movieStore.initializeMovies(),
     getPopularMovies()
       .then((response) => {
         popularMovies.value = Array(5).fill(response.data.results).flat();
-        loading.value=false
+        loading.value = false
       })
       .catch((error) => {
         console.error('Error getPopularMovies:', error)
@@ -283,8 +295,8 @@ onMounted(() => {
 }
 
 .infoMsg {
-  margin-top: 5vh;
-  margin-bottom: 4vh;
+  margin-top: 7vh;
+  margin-bottom: 5vh;
 }
 
 .search-form-nofocus {
