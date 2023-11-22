@@ -3,9 +3,12 @@
 
     <div class="article-area">
       <h1>{{ currentArticle.title }}</h1>
-      <div id='article-info' v-if="currentArticle.user">
-        {{ currentArticle.user['nickname'] }} | {{ currentArticle.movie }} | 마지막 수정일 : {{
-          currentArticle.updated_at.substr(0, 10) }}
+      <div class='article-info' v-if="currentArticle.user">
+        {{ currentArticle.user['nickname'] }} |
+        마지막 수정일 : {{ currentArticle.updated_at.substr(0, 10) }}
+      </div>
+      <div class="article-info">
+        <RouterLink :to="{ name: 'moviedetail', params: { movieId: moviePk } }">{{ movieTitle }}</RouterLink>
       </div>
       <hr>
       <p>{{ currentArticle.content }}</p>
@@ -51,14 +54,15 @@
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { getArticleDetail, deleteArticleAPI } from '@/apis/movieApi'
+import { getArticleDetail, deleteArticleAPI, getMovieDetail } from '@/apis/movieApi'
 import { useMovieStore } from '@/stores/movieStore';
 import CommentCard from '@/components/community/CommentCard.vue';
 
 defineProps({
-  isDarkMode:Boolean,
+  isDarkMode: Boolean,
 })
 
 const movieStore = useMovieStore()
@@ -68,6 +72,8 @@ const currentArticle = ref([])
 const route = useRoute()
 const router = useRouter()
 const articlePk = route.params.articleId
+const movieTitle = ref('')
+const moviePk = ref(0)
 
 const loading = ref(true)
 
@@ -75,6 +81,14 @@ const initializeArticleDetail = (articlePk) => {
   getArticleDetail(articlePk)
     .then((response) => {
       currentArticle.value = response.data
+    })
+    .then(() => {
+      getMovieDetail(currentArticle.value.movie)
+        .then((response) => {
+          // console.log(response)
+          movieTitle.value = response.data['title']
+          moviePk.value = response.data['pk']
+        })
     })
     .catch((error) => {
       console.error('Error initializing article detail:', error)
@@ -113,7 +127,7 @@ onMounted(() => {
   margin-top: 30px
 }
 
-#article-info {
+.article-info {
   text-align: right;
 }
 </style>

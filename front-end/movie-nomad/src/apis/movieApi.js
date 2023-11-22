@@ -224,6 +224,11 @@ export const getArticlesList = () => {
   return axios.get(`${API_URL}/community/article_list/`)
 }
 
+// 특정 유저 게시글 조회
+export const userArticleList = (nickname) => {
+  return axios.get(`${API_URL}/community/article_list/${nickname}/`)
+} 
+
 // 영화 디테일 페이지 해당 영화 article List 조회
 export const thisMovieArticles = (moviePk) => {
   return axios
