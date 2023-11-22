@@ -58,7 +58,7 @@
                 {{ $t('articleList') }}
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :class="['text-decoration-none', isDarkMode? 'text-white':'text-black']" :to="{ name: 'profile', params: { nickname: userStore.userInfo['nickname'] } }">{{
+                <RouterLink :class="['text-decoration-none', isDarkMode? 'text-white':'text-black']" :to="{ name: 'profile', params: { nickname: userStore.userInfo.nickname } }">{{
                   userStore.userInfo.nickname }}{{ $t('blog') }}</RouterLink>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
@@ -88,7 +88,7 @@
       </div>
     </nav>
 
-    <RouterView :isDarkMode="isDarkMode" />
+    <router-view :isDarkMode="isDarkMode" :key="$route.fullPath"/>
 
   </header>
 

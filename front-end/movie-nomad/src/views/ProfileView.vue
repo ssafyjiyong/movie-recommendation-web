@@ -1,12 +1,11 @@
 <template>
+  <router-view :key="route.fullPath" />
   <div class="topContainer d-flex">
     <!-- 프로필 사진 및 상태 -->
     <div class="col-4">
       <!-- 프로필 사진과 이름, 닉네임 -->
       <div class="text-center">
-        <img src="@/images/main_background.jpg" 
-        alt="profile_img" 
-        class="profileImage my-2">
+        <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage my-2">
         <div class="d-flex justify-content-center align-items-center">
           <span class="fw-bold">{{ profileUserNickname }}</span>의 Blog
           <button class="btn btn-success btn-sm mx-2" @click="follow">팔로우</button>
@@ -15,13 +14,13 @@
 
       <!-- 팔로우 현황 -->
       <div class="followBox p-2">
-          <small class="m-0"><i class="fa-solid fa-users"></i> {{ userInfo.follower_count }} followers · </small>
-          <small class="m-0">{{ userInfo.following_count }} followings</small>
+        <small class="m-0"><i class="fa-solid fa-users"></i> {{ userInfo.follower_count }} followers · </small>
+        <small class="m-0">{{ userInfo.following_count }} followings</small>
       </div>
 
       <!-- 상태메세지 -->
       <div class="radiusBox">
-        <p>{{ userStore.status }}</p>
+        <p>{{ userInfo.status }}</p>
         <div class="d-flex justify-content-end">
           <button class="btn btn-link text-secondary p-0">
             <i class="fa-regular fa-pen-to-square"></i>
@@ -57,57 +56,83 @@
 
       <!-- 내가 쓴 게시글 -->
       <div class="articleBox flex-grow-1">
-        <p>게시글 들어갈 자리</p>
+        <ProfileArticle 
+          v-for="article in articles"
+          :key="article.id"
+          :article="article"
+        />
       </div>
     </div>
   </div>
-  
+
   <!-- 회원정보 변경 및 탈퇴 기능 -->
   <div class="d-flex m-2 justify-content-end">
     <button class="btn btn-secondary btn-sm">회원정보 변경</button>
     <button class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
-   </div>
+  </div>
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/userStore';
-import { onMounted, ref } from 'vue';
 import { following, userProfile } from '../apis/userApi';
+import { userArticleList } from '@/apis/movieApi';
+import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue';
 
-defineProps({
-  isDarkMode:Boolean,
-})
+import ProfileArticle from '@/components/profile/ProfileArticle.vue';
+
 
 const userStore = useUserStore()
 const route = useRoute()
+
 const profileUserNickname = route.params.nickname
-const userInfo = ref({})
+const userInfo = ref([])
+const articles = ref([])
 
-console.log(userStore.userInfo)
-
+// 팔로우
 const follow = () => {
   const payload = {
     'token': userStore.token,
     'nickname': route.params.nickname
   }
   following(payload)
+  location.reload()
 }
 
+
+// 다크모드?
+defineProps({
+  isDarkMode: Boolean,
+})
+
+// 프로필 유저정보 불러오기
 onMounted(() => {
   if (profileUserNickname === userStore.nickname) {
     console.log('나의 블로그입니다')
     userInfo.value = userStore.userInfo
   } else {
     userProfile(profileUserNickname)
-  .then((response) => {
+      .then((response) => {
+        userInfo.value = response.data
+        console.log(userInfo.value)
+      })
+      .catch((error) => {
+        console.error('Error initializing userProfile:', error)
+      })
+  }
+  userArticleList(route.params.nickname)
+    .then((response) => {
+      articles.value = response.data
       console.log(response.data)
     })
     .catch((error) => {
-      console.error('Error initializing userProfile:', error)
+      console.log("서버가 아파요...")
     })
-  }
 })
+/////////////////////////////////////////////////////////////////
+
+
+
 
 </script>
 
@@ -134,11 +159,13 @@ onMounted(() => {
   padding: 20px;
   margin: 10px 0px;
 }
+
 .followBox {
   border: 1px solid black;
   border-radius: 10px;
   margin: 10px 0px;
 }
+
 .inBlogBox {
   border: 1px solid black;
   border-radius: 10px;

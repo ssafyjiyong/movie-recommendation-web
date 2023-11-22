@@ -3,7 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
+
 from movies.models import Movie
 
 from .models import Article, Comment, Recomment
@@ -27,6 +29,15 @@ def articles(request):
             serializer.save(user=request.user)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def profile_articles(request, user_name):
+    user = get_object_or_404(get_user_model(), nickname=user_name)
+    articles = Article.objects.filter(user=user).order_by('-pk')
+    serializer = ArticleSerializer(articles, many=True)
+
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
