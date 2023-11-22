@@ -9,11 +9,11 @@
         <div class="d-flex flex-column">
           <small>개봉일: {{ currentMovie.release_date }}</small>
           <small>러닝타임 : {{ currentMovie.runtime }}분</small>
-          <small>장르: {{ currentMovie.genres }}</small>
+          <small>장르: <div v-for="genre in genres">{{ genre.name }}</div></small>
           <small>평점: {{ currentMovie.vote_average }}</small>
           <small>({{ currentMovie.vote_count }}개의 평가)</small>
           <small>인지도: {{ currentMovie.popularity }}</small>
-          <small>감독: {{ currentMovie.director }}</small>
+          <small>감독: <span v-for="director in directors">{{ director.name }}</span></small>
         </div>
       </div>
 
@@ -40,7 +40,10 @@
     <!-- 관련 OST 정보 -->
     <div class="radiusBox d-flex justify-content-between align-items-center">
       <h3>이 영화와 관련된 OST를 들어보실래요?</h3>
-      <button class="btn btn-link text-black"><i class="fa-solid fa-headphones-simple fa-2x"></i></button>
+      <div >
+        <img class="album-jacket" :src="album['image']" alt="">
+      </div>
+      <button class="btn btn-link text-black" @click="spotify"><i class="fa-solid fa-headphones-simple fa-2x"></i></button>
     </div>
 
     <!-- 감독 및 배우 정보 -->
@@ -53,12 +56,25 @@
 
     <!-- 컬렉션 정보 -->
     <div class="radiusBox">
-      <h3>팔로워 중에 이 영화를 좋아하는 친구가 있어요!(있을 경우 랜더링)</h3>
+      <h3>이 영화를 좋아하는 메이트</h3>
+      <MovieMate
+        v-for="mate in movieMates"
+        :key="mate.id"
+        :mate="mate"
+      />
     </div>
 
     <!-- 게시글 정보 -->
     <div class="radiusBox">
       <h3>관련게시글</h3>
+      <hr>
+      <CommunityGridCard
+        v-for="article in articles"
+        :key="article.id"
+        :article="article"
+      >
+      {{ article.title }}
+      </CommunityGridCard>
     </div>
 
   </div>
@@ -73,8 +89,10 @@
 
 <script setup>
 import MovieCredit from '@/components/movie/MovieCredit.vue'
+import MovieMate from '@/components/movie/MovieMate.vue'
+import CommunityGridCard from '@/components/community/CommunityGridCard.vue'
 import { ref, onMounted } from 'vue';
-import { getMovieDetail, getActorsList, getDirectorsList, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
+import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMovieArticles, thisMovieMate, thisMovieOST, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
 import { useRoute } from 'vue-router';
 import { useMovieStore } from '@/stores/movieStore';
 
@@ -85,8 +103,20 @@ const route = useRoute()
 const currentMovie = ref([])
 const moviePk = route.params.movieId
 
+const actors = ref([])
+const directors = ref([])
+const genres = ref([])
+const articles = ref([])
+const movieMates = ref([])
+const album = ref([])
+
 const loading = ref(true)
+
 const imageFromStore = ref('')
+
+const spotify = () => {
+  window.open(album.value['url'])
+}
 
 const initializecurrentMovie = (moviePk) => {
   getMovieDetail(moviePk)
@@ -98,8 +128,27 @@ const initializecurrentMovie = (moviePk) => {
             actors.value = response.data.splice(0, 5)
           })
         getDirectorsList(moviePk)
-          .then(() => {
-            director.value = response.data
+          .then((response) => {
+            directors.value = response.data
+          })
+        getGenresList(moviePk)
+          .then((response) => {
+            genres.value = response.data
+          })
+        thisMovieArticles(moviePk)
+          .then((response) => {
+            // console.log(response.data)
+            articles.value = response.data
+          })
+        thisMovieMate(moviePk)
+          .then((response) => {
+            // console.log(response.data)
+            movieMates.value = response.data
+          })
+        thisMovieOST(moviePk)
+          .then((response) => {
+            // console.log(response.data)
+            album.value = response.data
           })
   imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
   loading.value = false
@@ -109,8 +158,6 @@ const initializecurrentMovie = (moviePk) => {
   console.error('Error initializing movie detail:', error)
 })
 }
-
-const actors = ref([])
 
 const likeMovie = () => {
   likeMovieApi(moviePk)
@@ -144,5 +191,10 @@ onMounted(() => {
 
 .actors {
   display: flex;
+}
+
+.album-jacket {
+  width: 30%;
+  height: 30%;
 }
 </style>
