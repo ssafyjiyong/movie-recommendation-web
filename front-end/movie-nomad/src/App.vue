@@ -15,47 +15,72 @@
           <i class="fas fa-bars fa-xl py-3"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ms-auto text-center align-items-center">
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-
-
-                  <button class="btn btn-link" @click="$i18n.locale = 'ko'"> 한국어 </button>
-                  <button class="btn btn-link" @click="$i18n.locale = 'en'"> English </button>
-              
-            </li>
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-              <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
-                <!-- 다크모드일 경우 아이콘 -->
-                <div v-if="isDarkMode">
-                  <i class="fa-regular fa-lightbulb"></i>
-                </div>
-                <!-- 일반모드 아이콘 -->
-                <div v-else>
-                  <i class="fa-solid fa-lightbulb"></i>
-                </div>
-              </button>
-            </li>
-            <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
-              {{ $t('movieList') }}
-
-            </li>
-
-            <div v-if="!userStore.isLogin" class="d-flex">
+          
+          <ul class="navbar-nav ms-auto">
+            <div v-if="!userStore.isLogin" class="d-flex justify-content-around align-items-center">
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
+                {{ $t('movieList') }}
+              </li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToArticleList">
+                {{ $t('articleList') }}
+              </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
                 <RouterLink :to="{ name: 'login' }">{{ $t('Login') }}</RouterLink>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
                 <RouterLink :to="{ name: 'signup' }">{{ $t('Signup') }}</RouterLink>
               </li>
+              <li class="nav-item dropdown">
+                <select v-model="$i18n.locale" class="form-select">
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
+                  <!-- 다크모드일 경우 아이콘 -->
+                  <div v-if="isDarkMode">
+                    <i class="fa-regular fa-lightbulb"></i>
+                  </div>
+                  <!-- 일반모드 아이콘 -->
+                  <div v-else>
+                    <i class="fa-solid fa-lightbulb"></i>
+                  </div>
+                </button>
+              </li>
             </div>
 
-            <div v-else class="d-flex justify-content-center align-items-center">
+            <div v-else class="d-flex justify-content-around align-items-center">
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
+                {{ $t('movieList') }}
+              </li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToArticleList">
+                {{ $t('articleList') }}
+              </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'profile', params: { nickname: userStore.userInfo['nickname'] } }">{{
-                  userStore.userInfo.nickname }}</RouterLink>
+                <RouterLink :class="['text-decoration-none', isDarkMode? 'text-white':'text-black']" :to="{ name: 'profile', params: { nickname: userStore.userInfo['nickname'] } }">{{
+                  userStore.userInfo.nickname }}{{ $t('blog') }}</RouterLink>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
                 <a @click="logout">{{ $t('Logout') }}</a>
+              </li>
+              <li class="nav-item dropdown">
+                <select v-model="$i18n.locale" class="form-select">
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </li>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
+                  <!-- 다크모드일 경우 아이콘 -->
+                  <div v-if="isDarkMode">
+                    <i class="fa-regular fa-lightbulb"></i>
+                  </div>
+                  <!-- 일반모드 아이콘 -->
+                  <div v-else>
+                    <i class="fa-solid fa-lightbulb"></i>
+                  </div>
+                </button>
               </li>
             </div>
           </ul>
@@ -63,8 +88,7 @@
       </div>
     </nav>
 
-    <RouterView
-    :isDarkMode="isDarkMode" />
+    <RouterView :isDarkMode="isDarkMode" />
 
   </header>
 
@@ -136,6 +160,10 @@ const goToMovieList = function () {
   router.push('/movies')
 }
 
+const goToArticleList = function () {
+  router.push('/community')
+}
+
 onMounted(() => {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     enableDarkMode();
@@ -169,6 +197,10 @@ body {
 
 <!-- 로컬 스타일 지정 -->
 <style scoped>
+li:hover {
+  cursor: pointer;
+}
+
 nav {
   font-family: 'Nanum Gothic', sans-serif;
   /* font-family: 'Open Sans', sans-serif; */

@@ -1,6 +1,8 @@
 {
   "englishMode" : "English",
   "movieList" : "Movie List",
+  "articleList" : "Community",
+  "blog" : "'s Movielog",
   "Login" : "Login",
   "Logout" : "Logout",
   "Signup" : "Sign Up",

@@ -1,6 +1,8 @@
 {
   "englishMode" : "English",
   "movieList" : "영화목록",
+  "articleList" : "커뮤니티",
+  "blog" : "'s 무비로그",
   "Login" : "로그인",
   "Logout" : "로그아웃",
   "Signup" : "회원가입",
