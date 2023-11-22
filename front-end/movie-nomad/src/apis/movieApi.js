@@ -112,12 +112,14 @@ export const userCollection = () => {
 }
 
 // 영화 컬렉션 생성하기
-export const createCollection = () => {
+export const createCollection = (collectionName) => {
   const token = window.localStorage.getItem('token')
   return axios
     .post(
       `${API_URL}/movies/collections/`,
-      {},
+      {
+        name: collectionName,
+      },
       {
         headers: {
           Authorization: `Token ${token}`
@@ -126,6 +128,12 @@ export const createCollection = () => {
     )
 }
 
+// 컬렉션 상세 정보
+export const getCollection = (collectionId) => {
+  return axios.get(`${API_URL}/movies/collections/${collectionId}/`)
+}
+
+// 컬렉션에 영화 추가하기
 export const addCollection = (collectionId, movieId) => {
   const token = window.localStorage.getItem('token')
   return axios

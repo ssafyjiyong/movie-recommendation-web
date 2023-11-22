@@ -51,7 +51,7 @@
 
             <div v-else class="d-flex justify-content-center align-items-center">
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'profile', params: { nickname: userStore.userInfo.nickname } }">{{
+                <RouterLink :to="{ name: 'profile', params: { nickname: userStore.userInfo['nickname'] } }">{{
                   userStore.userInfo.nickname }}</RouterLink>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
