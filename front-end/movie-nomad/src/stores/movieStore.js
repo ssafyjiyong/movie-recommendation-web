@@ -54,10 +54,10 @@ export const useMovieStore = defineStore('movie', () => {
     '내 최고의 행운은 도박에서 이 배의 티켓을 딴 거야, 당신을 만났으니까. - 타이타닉',
     '삶의 종착역은 다 같아, 어떤 길로 가는지가 다를 뿐이지, 넌 네 길로 가는 거야. - 벤자민 버튼의 시간은 거꾸로 간다',
     '난 가고 싶은 곳에 가기 위해 뛰었는데 그게 삶의 기회가 될 줄 몰랐어요. - Forrest Gump']
+  const loading = ref(true)
 
   // 전체 영화 정보 저장목록
   const allMovies = ref([])
-
   const searchKeyword = ref('')
 
   const searchedMovies = computed(() => {
@@ -80,6 +80,7 @@ export const useMovieStore = defineStore('movie', () => {
       .then((response) => {
         if (response && response.data) {
           allMovies.value = response.data
+          loading.value = false
           console.log('모든 영화를 불러왔습니다ㅎㅎ')
         }
       })
@@ -88,5 +89,5 @@ export const useMovieStore = defineStore('movie', () => {
       })
   }
 
-  return { allMovies, searchedMovies, initializeMovies, searchTheMovie, loadingMessage }
-})
+  return { allMovies, searchedMovies, initializeMovies, searchTheMovie, loadingMessage, loading }
+});

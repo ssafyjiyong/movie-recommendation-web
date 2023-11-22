@@ -21,11 +21,10 @@
 
 <script setup>
 import CommunityGridCard from '@/components/community/CommunityGridCard.vue';
-const props = defineProps({
+
+defineProps({
   articles: Object
 })
-
-const articles = props.articles
 
 </script>
 

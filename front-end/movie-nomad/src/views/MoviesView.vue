@@ -1,5 +1,6 @@
 <template>
-  <div class="container d-flex justify-content-between my-3">
+  <div class="container d-flex justify-content-between my-3"
+  v-if="!movieStore.loading">
     <!-- 검색창 및 검색결과 -->
     <div class="col-9 me-3">
       <!-- 검색창 -->
@@ -28,12 +29,12 @@
 
   </div>
 
-  <!-- <div v-else>
-    <div class="spinner-border text-success" role="status">
+  <div v-else class="d-flex justify-content-center align-items-center m-5">
+    <div class="spinner-border text-success d-inline" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-    <span>영화 목록을 가져오는중...</span>
-  </div> -->
+    <h3 class="m-3">{{ randomMessage }}</h3>
+  </div>
 </template>
 
 
@@ -44,7 +45,9 @@ import { useMovieStore } from '@/stores/movieStore';
 
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
-const loading = ref(true) // 로딩 상태 관리
+
+// 로딩 관련
+const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 const searchMovie = function () {
   movieStore.searchTheMovie(movieKeyword.value)
@@ -65,6 +68,10 @@ const loadMoreMovies = () => {
   paginatedMovies.value = movieStore.searchedMovies.slice(0, end)
   page.value++
 }
+
+onMounted(() => {
+  movieStore.initializeMovies()
+});
 
 </script>
 
