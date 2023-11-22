@@ -2,7 +2,7 @@
   <div class="container">
     <h1>HOT 게시글 모아모아</h1>
     <div class="popular-article">
-      <div v-for="article in articles.slice(1, 4)" :key="article.id">
+      <div v-for="article in articles.slice(0, 4)" :key="article.id">
         <CommunityGridCard 
           :article="article"
         />
@@ -23,9 +23,8 @@
 import CommunityGridCard from '@/components/community/CommunityGridCard.vue';
 
 defineProps({
-  articles: Object
+  articles: Array
 })
-
 </script>
 
 <style scoped>

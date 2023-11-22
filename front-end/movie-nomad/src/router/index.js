@@ -36,6 +36,7 @@ const router = createRouter({
       children: [
         {
           path: '/talk',
+          name: 'talk',
           component: TalkView
         },
         {

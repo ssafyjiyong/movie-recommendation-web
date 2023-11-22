@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }" :article="article">
+    <RouterLink :to="{ name: 'communityDetail', params: { articleId: article.id } }">
       <span class="article-title">{{ article.title }}</span>
     </RouterLink>
     <hr>
