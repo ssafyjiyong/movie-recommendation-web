@@ -3,13 +3,9 @@ import HomeView from '@/views/HomeView.vue'
 import MoviesView from '@/views/MoviesView.vue'
 import MovieDetailView from '@/views/MovieDetailView.vue'
 import CommunityDetailView from '@/views/CommunityDetailView.vue'
-import CommunityView from '@/views/CommunityView.vue'
+import CommunityNavView from '@/views/CommunityNavView.vue'
 import ProfileView from '@/views/ProfileView.vue'
-import TalkView from '@/views/TalkView.vue'
-import ToonView from '@/views/ToonView.vue'
-import TicketView from '@/views/TicketView.vue'
-import PreviewInfoView from '@/views/PreviewInfoView.vue'
-import BarrierView from '@/views/BarrierView.vue'
+import CommunityView from '@/views/CommunityView.vue'
 
 
 const router = createRouter({
@@ -32,33 +28,13 @@ const router = createRouter({
     },
     {
       path: '/community',
-      name: 'community',
-      component: CommunityView,
+      name: 'communitynav',
+      component: CommunityNavView,
       children: [
         {
-          path: '/talk',
-          name: 'talk',
-          component: TalkView
-        },
-        {
-          path: '/toon',
-          name: 'toon',
-          component: ToonView
-        },
-        {
-          path: '/ticket',
-          name: 'ticket',
-          component: TicketView
-        },
-        {
-          path: '/preview',
-          name: 'preview',
-          component: PreviewInfoView
-        },
-        {
-          path: '/barrier',
-          name: 'barrier',
-          component: BarrierView
+          path: '/community/:category',
+          name: 'community',
+          component: CommunityView
         },
         {
           path: '/communitydetail/:articleId',

@@ -162,7 +162,7 @@ const goToMovieList = function () {
 }
 
 const goToArticleList = function () {
-  router.push('/talk')
+  router.push('/community/talk')
 }
 const goToLogin = function () {
   router.push('/login')
