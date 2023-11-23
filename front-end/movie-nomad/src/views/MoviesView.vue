@@ -7,9 +7,14 @@
       <div class="d-flex justify-content-center mb-3">
         <form @submit.prevent="searchMovie"
           :class='["rounded-3", "border", isFocused ? "search-form-focus" : "search-form-nofocus"]'>
-          <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
-            :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
-            @blur="restorePlaceholder">
+          <input @keyup="debouncedSearch" 
+          type="text" class="search-input" 
+          :placeholder=placeholderText
+          :value="movieKeyword" 
+          @click="resetFilteredMovies"
+          @input="movieKeyword = $event.target.value"
+          @focus="clearPlaceholder"
+          @blur="restorePlaceholder">
           <button type="submit" class="btn btn-link text-black"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
       </div>
@@ -21,22 +26,23 @@
         </div>
 
         <div class="p-1 movieListBox">
-        <div v-if="paginatedMovies.length">
-          <div v-for="(searchedMovie, idx) in paginatedMovies" :key="idx">
-            <MovieCard :searchedMovie="searchedMovie" />
-            <hr class="m-0">
-          </div>
+
+            <div v-if="paginatedMovies.length">
+              <div v-for="(searchedMovie, idx) in paginatedMovies" :key="idx">
+                <MovieCard :searchedMovie="searchedMovie" />
+                <hr class="m-0">
+              </div>
+            </div>
+            <div v-else class="text-center pt-2">
+              <i class="fa-solid fa-circle-exclamation text-secondary fa-lg"></i>
+              <h4 class="p-2 fw-bold text-secondary">검색어에 해당하는 결과가 없습니다</h4>
+            </div>
+
         </div>
-        <div v-else class="text-center pt-2">
-          <i class="fa-solid fa-circle-exclamation text-secondary fa-lg"></i>
-          <h4 class="p-2 fw-bold text-secondary">검색어에 해당하는 결과가 없습니다</h4>
+        <!-- 더 보기 버튼 -->
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-custom fw-bold m-2" @click="loadMoreMovies">결과 더 보기</button>
         </div>
-      </div>
-      <!-- 더 보기 버튼 -->
-      <div class="d-flex justify-content-center">
-        <button class="btn btn-custom fw-bold m-2" 
-        @click="loadMoreMovies">결과 더 보기</button>
-      </div>
       </div>
 
     </div>
@@ -45,43 +51,42 @@
     <!-- 필터 -->
     <div class="border rounded-3 flex-grow-1">
 
-        <div class="filterTitleBoxTop text-white p-2">
-          <p class="fw-bold m-0">장르별: </p>
-        </div>
-        <div class="mb-2">
-          <button v-for="(genre, idx) in genres"
-          @click="filterGenre(genre.name)"
-          :key="idx" 
-          type="button" class="btn btn-outline-success btn-sm m-1">
-            {{ genreTranslation[genre.name] }}
-          </button>
-        </div>
+      <div class="filterTitleBoxTop text-white p-2">
+        <p class="fw-bold m-0">장르별: </p>
+      </div>
+      <div class="mb-2">
+        <button @click="resetFilteredMovies" class="btn btn-outline-success btn-sm m-1">전체</button>
+        <button v-for="(genre, idx) in genres" @click="filterGenre(genre.name)" :key="idx" type="button"
+          class="btn btn-outline-success btn-sm m-1">
+          {{ genreTranslation[genre.name] }}
+        </button>
+      </div>
 
-        <div class="filterTitleBox text-white p-2">
-          <p class="fw-bold m-0">분류별: </p>
-        </div>
-        <div class="mb-2">
-          <button @click="popularity" class="btn btn-outline-success btn-sm m-1">인기도</button>
-          <button @click="voteAverage" class="btn btn-outline-success btn-sm m-1">평점</button>
-          <button @click="voteCount" class="btn btn-outline-success btn-sm m-1">평가수</button>
-          <button @click="latest" class="btn btn-outline-success btn-sm m-1">최신</button>
-          <button @click="classic" class="btn btn-outline-success btn-sm m-1">클래식</button>
-        </div>
-        
-        <div class="filterTitleBox text-white p-2">
-          <p class="fw-bold m-0">원어별: </p>
-        </div>
-        <div class="mb-2">
-          <button @click="english" class="btn btn-outline-success btn-sm m-1">영어</button>
-          <button class="btn btn-outline-success btn-sm m-1">한국어</button>
-          <button class="btn btn-outline-success btn-sm m-1">스페인어</button>
-          <button class="btn btn-outline-success btn-sm m-1">일본어</button>
-          <button class="btn btn-outline-success btn-sm m-1">중국어</button>
-          <button class="btn btn-outline-success btn-sm m-1">광동어</button>
-          <button class="btn btn-outline-success btn-sm m-1">러시아어</button>
-          <button class="btn btn-outline-success btn-sm m-1">프랑스어</button>
-          <button class="btn btn-outline-success btn-sm m-1">인도어</button>
-        </div>
+      <div class="filterTitleBox text-white p-2">
+        <p class="fw-bold m-0">분류별: </p>
+      </div>
+      <div class="mb-2">
+        <button @click="popularity" class="btn btn-outline-success btn-sm m-1">인기도</button>
+        <button @click="voteAverage" class="btn btn-outline-success btn-sm m-1">평점</button>
+        <button @click="voteCount" class="btn btn-outline-success btn-sm m-1">평가수</button>
+        <button @click="latest" class="btn btn-outline-success btn-sm m-1">최신</button>
+        <button @click="classic" class="btn btn-outline-success btn-sm m-1">오래된</button>
+      </div>
+
+      <div class="filterTitleBox text-white p-2">
+        <p class="fw-bold m-0">원어별: </p>
+      </div>
+      <div class="mb-2">
+        <button @click="english" class="btn btn-outline-success btn-sm m-1">영어</button>
+        <button @click="korean" class="btn btn-outline-success btn-sm m-1">한국어</button>
+        <button @click="spanish" class="btn btn-outline-success btn-sm m-1">스페인어</button>
+        <button @click="japanease" class="btn btn-outline-success btn-sm m-1">일본어</button>
+        <button @click="chinease" class="btn btn-outline-success btn-sm m-1">중국어</button>
+        <button @click="hongkong" class="btn btn-outline-success btn-sm m-1">광동어</button>
+        <button @click="russian" class="btn btn-outline-success btn-sm m-1">러시아어</button>
+        <button @click="franch" class="btn btn-outline-success btn-sm m-1">프랑스어</button>
+        <button @click="hindi" class="btn btn-outline-success btn-sm m-1">힌디어</button>
+      </div>
 
 
     </div>
@@ -141,7 +146,11 @@ const page = ref(1)
 
 // 페이지에 따라 영화 데이터 범위 조정(최초 첫 번째 페이지 데이터 로드)
 const paginatedMovies = computed(() => {
-  return movieStore.searchedMovies.slice(0, end.value)
+  if (filteredMovies.value.length) {
+    return filteredMovies.value.slice(0, end.value)
+  } else {
+    return movieStore.searchedMovies.slice(0, end.value)
+  }
 })
 
 const start = ref(0)
@@ -154,47 +163,88 @@ const loadMoreMovies = () => {
 }
 
 //////////////////////////////////필터/////////////////////////////////////////
+const filteredMovies = ref([]);
+
+const resetFilteredMovies = () => {
+  filteredMovies.value = [];
+}
+
 const filterGenre = (genre) => {
-  return movieStore.searchedMovies.filter(movie => 
+  filteredMovies.value = movieStore.searchedMovies.filter(movie =>
     movie.genres.some(g => g.name === genre)
   );
 }
 
-
 const popularity = () => {
+  resetFilteredMovies();
   return movieStore.searchedMovies.sort((a, b) => {
     return b.popularity - a.popularity
   })
 }
 
 const voteAverage = () => {
+  resetFilteredMovies();
   return movieStore.searchedMovies.sort((a, b) => {
     return b.vote_average - a.vote_average
   })
 }
 
 const voteCount = () => {
+  resetFilteredMovies();
   return movieStore.searchedMovies.sort((a, b) => {
     return b.vote_count - a.vote_count
   })
 }
 
 const latest = () => {
+  resetFilteredMovies();
   return movieStore.searchedMovies.sort((a, b) => {
     return b.release_date > a.release_date ? 1 : -1
   })
 }
 
 const classic = () => {
-  return movieStore.searchedMovies.sort((a, b) => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.release_date !== '').sort((a, b) => {
     return b.release_date > a.release_date ? -1 : 1
   })
 }
 
 const english = () => {
-  // console.log(movieStore.searchedMovies)
-  return movieStore.searchedMovies.filter(movie => movie.original_language === "en")
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "en")
 }
+
+const korean = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "ko")
+}
+
+const spanish = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "es")
+}
+
+const japanease = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "ja")
+}
+
+const chinease = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "zh")
+}
+
+const hongkong = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "yue")
+}
+
+const russian = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "ru")
+}
+
+const franch = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "fr")
+}
+
+const hindi = () => {
+  filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "hi")
+}
+
 const genres = ref([])
 
 const genreTranslation = {
@@ -238,19 +288,23 @@ onMounted(() => {
   background-color: #83C442;
   color: white;
 }
+
 .movieListBox {
   background-color: #F6FFE8;
 }
+
 .filterTitleBoxTop {
   background-color: #83C442;
   border-top-right-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
   margin-bottom: 5px;
 }
+
 .filterTitleBox {
   background-color: #83C442;
   margin-bottom: 5px;
 }
+
 .container {
   min-height: 100vh;
 }
