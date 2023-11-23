@@ -1,5 +1,5 @@
 <template>
-  <div class="container mb-5 mt-3">
+  <div class="container mb-5 mt-3 text-black">
 
     <div class="article-area">
 
@@ -35,20 +35,26 @@
       </div>
 
       <div class="p-3">
-        <div v-if="imageExist">
-          <img :src="`http://localhost:8000${currentArticle.image}`" alt="image">
+        <div v-if="imageExist" class="text-center">
+          <img 
+          :src="`http://localhost:8000${currentArticle.image}`" 
+          alt="image">
         </div>
         <p class="fs-5">{{ currentArticle.content }}</p>
       </div>
 
       <div class="d-flex justify-content-center">
-        <button class="btn btn-custom"><i class="fa-regular fa-thumbs-up"></i> 좋아요 | {{ currentArticle.like_user_count
-        }}</button>
+        <button 
+        @click="likeArticle"
+        class="btn btn-custom">
+        <i class="fa-regular fa-thumbs-up"></i> 
+        좋아요 | {{ currentArticle.like_user_count }}
+        </button>
       </div>
     </div>
 
     <div class="d-flex justify-content-end m-3">
-      <small class="cursorEffect">수정</small>
+      <small class="cursorEffect" @click="updateArticle">수정</small>
       <small class="mx-1">|</small>
       <small class="cursorEffect" @click="deleteTheArticle">삭제</small>
     </div>
@@ -75,26 +81,24 @@
 
     </div>
     <div>
-      <button class="btn btn-back-custom mx-2 mb-2">뒤로가기</button>
+      <button 
+      @click="goBack"
+      class="btn btn-back-custom mx-2 mb-2">뒤로가기</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail, deleteArticleAPI, getMovieDetail } from '@/apis/movieApi'
-import { useMovieStore } from '@/stores/movieStore';
 import CommentCard from '@/components/community/CommentCard.vue';
 import { computed } from '@vue/reactivity';
+import { likeArticleApi } from '@/apis/movieApi';
 
 defineProps({
   isDarkMode: Boolean,
 })
-
-const movieStore = useMovieStore()
-const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 const currentArticle = ref([])
 const route = useRoute()
@@ -103,6 +107,7 @@ const articlePk = route.params.articleId
 const movieTitle = ref('')
 const moviePk = ref(0)
 const articleImage = ref(false)
+const alreadyLike = ref(false)
 
 const loadingMovieInfo = ref(false)
 
@@ -110,8 +115,29 @@ const imageExist = computed(() => {
   return articleImage.value
 })
 
+// 영화 디테일로 이동
 const goToDetail = function () {
   router.push(`/moviedetail/${moviePk.value}`)
+}
+
+const goBack = function () {
+  router.push(`/community/${route.params.category}`)
+}
+
+const likeArticle = function () {
+  likeArticleApi(route.params.articleId)
+  .then(() => {
+    if (alreadyLike.value === false) {
+      currentArticle.value.like_user_count += 1;
+      alreadyLike.value = true
+    } else {
+      currentArticle.value.like_user_count -= 1;
+      alreadyLike.value = false
+    }
+    })
+    .catch((error) => {
+      console.error('Error liking article:', error)
+    })
 }
 
 const initializeArticleDetail = (articlePk) => {
@@ -138,8 +164,12 @@ const initializeArticleDetail = (articlePk) => {
 const deleteTheArticle = function () {
   deleteArticleAPI(articlePk)
     .then((response) => {
-      router.replace(`/${currentArticle.value.category}`)
+      router.replace(`/community/${currentArticle.value.category}`)
     })
+}
+
+const updateArticle = function () {
+    router.replace(`/community/update/${route.params.articleId}/${currentArticle.value.category}`)
 }
 
 onMounted(() => {
@@ -177,6 +207,9 @@ onMounted(() => {
   border-radius: 20px;
   padding: 1%;
   background-color: #f6ffe8;
+}
+img {
+  max-width: 90%;
 }
 
 .cursorEffect {

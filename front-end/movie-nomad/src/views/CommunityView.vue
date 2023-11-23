@@ -51,8 +51,18 @@ const category = computed(()=> {
 }
 })
 
+const categoryNumber = computed(()=> {
+  if (route.params.category==='talk') {
+  return 1
+} else if (route.params.category==='toon') {
+  return 2
+} else if (route.params.category==='ticket') {
+  return 3
+}
+})
+
 const goToAddArticle = function () {
-  router.push('/create/1/')
+  router.push(`/create/${categoryNumber.value}/`)
 }
 
 onMounted(async () => {

@@ -71,7 +71,7 @@ const formatDate = (dateStr) => {
 }
 
 const goToDetail = function (articleId) {
-  router.push(`/communitydetail/${articleId}`)
+  router.push(`/communitydetail/${route.params.category}/${articleId}`)
 }
 
 const category = computed(() => {
