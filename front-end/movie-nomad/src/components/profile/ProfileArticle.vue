@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink class="box" :to="{ name: 'communityDetail', params: { category: article.category ,articleId: article.id } }">
+    <RouterLink class="box" :to="{ name: 'communityDetail', params: { category: article.category, articleId: article.id } }">
       <div>{{ article.title }}</div>
       <div>{{ movieTitle }}</div>
     </RouterLink>

@@ -64,11 +64,6 @@ const router = createRouter({
       component: () => import('@/views/CommunityUpdate.vue')
     },
     {
-      path: '/passwordchange',
-      name: 'passwordChange',
-      component: () => import('@/views/PasswordChangeView.vue')
-    },
-    {
       path: '/signup',
       name: 'signup',
       component: () => import('@/views/SignupView.vue')
