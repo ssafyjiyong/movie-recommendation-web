@@ -103,12 +103,6 @@ import { useMovieStore } from '@/stores/movieStore';
 import { debounce } from 'lodash';
 import { getGenres } from '@/apis/movieApi'
 
-
-
-defineProps({
-  isDarkMode: Boolean,
-})
-
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
 

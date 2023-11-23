@@ -29,7 +29,7 @@
 
     <!-- 커뮤니티 연결 버튼 fixed -->
     <div class="d-flex justify-content-center custom-bottom shake">
-      <button @click="goToCommunity" :class="isDarkMode ? 'rounded-btn-dark' : 'rounded-btn'"><span class="fw-bold">{{
+      <button @click="goToCommunity" class='rounded-btn'><span class="fw-bold">{{
         $t('movieStory') }}</span>{{
     $t('letsTalk') }}</button>
     </div>
@@ -157,11 +157,6 @@ watch(() => userStore.nickname, () => {
     location.reload()
   }
 });
-
-
-defineProps({
-  isDarkMode: Boolean,
-})
 
 const mainBackground = ref('src/images/main_background.jpg')
 const changTheBackground = function () {
@@ -357,16 +352,7 @@ onMounted(() => {
   padding: 11px 20px;
   border: 0;
   border-radius: 30px;
-  background-color: rgb(32, 32, 32);
-  color: white;
-  width: 400px;
-}
-
-.rounded-btn-dark {
-  padding: 11px 20px;
-  border: 0;
-  border-radius: 30px;
-  background-color: green;
+  background-color: #00aa4d;
   color: white;
   width: 400px;
 }

@@ -87,9 +87,7 @@
       </div>
     </nav>
 
-    <router-view 
-    :isDarkMode="isDarkMode" 
-    :key="$route.fullPath"/>
+    <router-view />
 
   </header>
 

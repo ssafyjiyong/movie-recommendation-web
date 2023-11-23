@@ -29,10 +29,6 @@ import { getArticlesList } from '@/apis/movieApi';
 import CommunityGrid from '@/components/community/CommunityGrid.vue';
 import { computed } from '@vue/reactivity';
 
-defineProps({
-  isDarkMode: Boolean,
-})
-
 const router = useRouter()
 const route = useRoute()
 const allArticles = ref([])
