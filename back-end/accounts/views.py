@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import BlogSerializer, ProfileUpdateSerializer
+from .serializers import BlogSerializer, ProfileUpdateSerializer, StatusUpdateSerializer
 
 User = get_user_model()
 
@@ -33,8 +33,8 @@ def following(request, nickname):
 
 
 @api_view(['PUT'])
-def update_profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+def update_profile(request, user_pk):
+    user = get_object_or_404(User, id=user_pk)
 
     if request.user == user:
         serializer = ProfileUpdateSerializer(
@@ -43,6 +43,21 @@ def update_profile(request, user_id):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+
+            return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def update_status(request, user_pk):
+    user = get_object_or_404(User, id=user_pk)
+
+    if request.user == user:
+        serializer = StatusUpdateSerializer(
+            instance=request.user, data=request.data
+        )
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user)
 
             return Response(serializer.data)
         

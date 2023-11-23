@@ -58,6 +58,7 @@ export const useUserStore = defineStore("user", () => {
             isLogin.value = true;
             window.localStorage.setItem("token", token.value);
             fetchCurrentUser();
+            router.push({ name: "home" });
           } else {
             Swal.fire({
               title: "로그인에 실패했습니다. \n 아이디와 비밀번호를 확인하세요",
@@ -83,7 +84,6 @@ export const useUserStore = defineStore("user", () => {
           .then((res) => {
             setCurrentUser(res.data);
             window.localStorage.setItem("userPk", res.data.pk);
-            router.push({ name: "home" });
           })
           .then(() => {
             getCurrentUserInfo(userData.value['username'])

@@ -99,8 +99,21 @@ class BlogSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('pk', 'nickname', 'status', 'profile_pic')
+        fields = ('pk', 'status', 'profile_pic')
 
+
+# 상메 업데이트
+class StatusUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk', 'status')
+
+
+# 프사 업데이트
+class PictureUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk', 'profile_pic')
 
 # # 닉네임 업데이트
 # class NicknameUpdateSerializer(serializers.ModelSerializer):
@@ -110,18 +123,8 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 
 
-# # 상메 업데이트
-# class StatusUpdateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('pk', 'status')
 
 
-# # 프사 업데이트
-# class PictureUpdateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('pk', 'profile_pic')
 
 # class LikeProfileSerializer(serializers.ModelSerializer):
 #     class Meta:

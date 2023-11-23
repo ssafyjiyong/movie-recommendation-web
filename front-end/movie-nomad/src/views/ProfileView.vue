@@ -8,23 +8,37 @@
         <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage my-2">
         <div class="d-flex justify-content-center align-items-center">
           <span class="fw-bold">{{ profileUserNickname }}</span>의 Blog
-          <button class="btn btn-success btn-sm mx-2" @click="follow">팔로우</button>
+          <div v-show="!isMyProfile">
+            <button class="btn btn-success btn-sm mx-2" @click="follow">팔로우</button>
+          </div>
         </div>
       </div>
 
-      <!-- 팔로우 현황 -->
+      <!-- 팔로우 현황(완료) -->
       <div class="followBox p-2">
         <small class="m-0"><i class="fa-solid fa-users"></i> {{ userInfo.follower_count }} followers · </small>
         <small class="m-0">{{ userInfo.following_count }} followings</small>
       </div>
 
-      <!-- 상태메세지 -->
+      <!-- 상태메세지(완료) -->
       <div class="radiusBox">
-        <p>{{ userInfo.status }}</p>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-link text-secondary p-0">
-            <i class="fa-regular fa-pen-to-square"></i>
-          </button>
+        <div v-show="!updateStatus">
+          <p>{{ userInfo.status }}</p>
+          <div v-if="isMyProfile">
+                      <div class="d-flex justify-content-end">
+              <button @click="statusUpdate" class="btn btn-link text-secondary p-0">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-show="updateStatus">
+          <form @submit.prevent="submitStauts">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none;"
+              v-model="status"></textarea>
+            <input class="btn btn-success btn-sm" type="submit">
+          </form>
+          <button @click="cancleStatus" class="btn btn-danger btn-sm">취소</button>
         </div>
       </div>
 
@@ -54,26 +68,24 @@
         </div>
       </div>
 
-      <!-- 내가 쓴 게시글 -->
+      <!-- 내가 쓴 게시글(완료) -->
       <div class="articleBox flex-grow-1">
-        <ProfileArticle 
-          v-for="article in articles"
-          :key="article.id"
-          :article="article"
-        />
+        <ProfileArticle v-for="article in articles" :key="article.id" :article="article" />
       </div>
     </div>
   </div>
 
   <!-- 회원정보 변경 및 탈퇴 기능 -->
   <div class="d-flex m-2 justify-content-end">
-    <button class="btn btn-secondary btn-sm">회원정보 변경</button>
-    <button class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
+    <RouterLink v-show="isMyProfile" :to="{ name: 'profileUpdate' }">
+      <button class="btn btn-secondary btn-sm">회원정보 변경</button>
+    </RouterLink>
+    <button v-show="isMyProfile" class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
   </div>
 </template>
 
 <script setup>
-import { following, userProfile } from '../apis/userApi';
+import { following, userProfile, changeStatus } from '../apis/userApi';
 import { userArticleList } from '@/apis/movieApi';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
@@ -86,6 +98,9 @@ const userStore = useUserStore()
 const route = useRoute()
 
 const profileUserNickname = route.params.nickname
+const isMyProfile = ref(true)
+const updateStatus = ref(false)
+const status = ref()
 const userInfo = ref([])
 const articles = ref([])
 
@@ -99,6 +114,27 @@ const follow = () => {
   location.reload()
 }
 
+// 상태 변경
+const statusUpdate = () => {
+  updateStatus.value = true
+}
+
+const submitStauts = () => {
+  const payload = {
+    status: status.value
+  }
+  changeStatus(payload, userStore.userData['pk'])
+    .then(() => {
+      window.alert("변경되었습니다.")
+      updateStatus.value = false
+      userStore.userInfo.status = status.value
+    })
+}
+
+const cancleStatus = () => {
+  status.value = userStore.userInfo.status
+  updateStatus.value = false
+}
 
 // 다크모드?
 defineProps({
@@ -110,11 +146,14 @@ onMounted(() => {
   if (profileUserNickname === userStore.nickname) {
     console.log('나의 블로그입니다')
     userInfo.value = userStore.userInfo
+    status.value = userStore.userInfo.status
+    // console.log(userStore.userData)
   } else {
     userProfile(profileUserNickname)
       .then((response) => {
         userInfo.value = response.data
         console.log(userInfo.value)
+        isMyProfile.value = false
       })
       .catch((error) => {
         console.error('Error initializing userProfile:', error)
@@ -123,7 +162,6 @@ onMounted(() => {
   userArticleList(route.params.nickname)
     .then((response) => {
       articles.value = response.data
-      console.log(response.data)
     })
     .catch((error) => {
       console.log("서버가 아파요...")
