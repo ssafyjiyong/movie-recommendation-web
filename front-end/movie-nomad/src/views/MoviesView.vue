@@ -154,10 +154,11 @@ const loadMoreMovies = () => {
 }
 
 //////////////////////////////////필터/////////////////////////////////////////
-const filterGenre = (genre) => {
-  return movieStore.searchedMovies.filter(movie => 
-    movie.genres.some(g => g.name === genre)
-  );
+const filterGenre = () => {
+  // console.log(movieStore.searchedMovies)
+  return movieStore.searchedMovies.sort((a, b) => {
+    
+  })
 }
 
 
@@ -193,7 +194,8 @@ const classic = () => {
 
 const english = () => {
   // console.log(movieStore.searchedMovies)
-  return movieStore.searchedMovies.filter(movie => movie.original_language === "en")
+  return movieStore.searchedMovies.sort(movie => {
+    return movie.original_language === "en"})
 }
 const genres = ref([])
 

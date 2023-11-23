@@ -35,6 +35,7 @@ import MovieCollectionModalList from '@/components/movie/MovieCollectionModalLis
 const userStore = useUserStore()
 const myCollection = ref([])
 const toggle = ref(false)
+const deleteToggle = ref(false)
 
 const collectionName = ref('')
 const newCollection = () => {

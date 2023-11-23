@@ -11,7 +11,7 @@ urlpatterns = [
     path('directors/<int:movie_id>/', views.directors),
     path('actors/<int:movie_id>/', views.actors),
     path('collections/<int:collection_id>/', views.collections_delete),
-    path('collections/<int:movie_id>/', views.movie_collections),
+    path('collections/movie/<int:movie_id>/', views.movie_collections),
     path('collections/<int:user_id>/', views.user_collections),
     path('collections/<int:collection_id>/<int:movie_id>/', views.collections_update),
     path('movie_search/<str:movie_title>/', views.movie_search),

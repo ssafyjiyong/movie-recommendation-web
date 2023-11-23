@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h3 class="collection-name">{{ collection.name }}</h3>
+    <div class="collection-name">
+      <h3>{{ collection.name }}</h3>
+      <div v-show="myCollection">
+        <button @click="deleteCollection" class="btn btn-danger btn-sm">컬렉션 삭제</button>
+      </div>
+    </div>
     <div class="movie-list row row-cols-auto">
       <div class="col-sm-4 col-md-3 col-lg-2" v-for="movie in movies" :key="movie.id">
         <RouterLink class="movie-poster" :to="{ name: 'moviedetail', params: { movieId: movie.pk } }">
@@ -15,14 +20,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getMoviesList } from '@/apis/movieApi';
+import { ref, onMounted, computed } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { getMoviesList, deleteCollectionApi } from '@/apis/movieApi';
+
+const userStore = useUserStore()
 
 const props = defineProps({
   collection: Object
 })
 
+const mine = () => {
+  if (userStore.userData.pk === props.collection.user) {
+    myCollection.value = true
+  } else {
+    myCollection.value = false
+  }
+}
+
+const myCollection = ref(false)
+
 const movies = ref([])
+
+const deleteCollection = () => {
+  deleteCollectionApi(props.collection.id)
+    .then((response) => {
+      window.alert("삭제되었습니다.")
+      location.reload()
+    })
+}
+
 
 onMounted(() => {
   getMoviesList()
@@ -34,6 +61,9 @@ onMounted(() => {
           movies.value.push(movie);
         }
       });
+    })
+    .then(() => {
+      mine()
     })
 })
 </script>
@@ -50,6 +80,8 @@ a {
   background-color: #83C442;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .movie-list {
@@ -61,7 +93,7 @@ a {
   text-align: center;
 }
 
-.movie-poster img{
+.movie-poster img {
   width: 100%;
   height: 80%;
   margin-bottom: 10px;

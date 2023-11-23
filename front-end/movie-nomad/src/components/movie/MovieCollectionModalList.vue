@@ -1,13 +1,13 @@
 <template>
   <div class="list">
     <li>{{ items[0].name }}</li>
-    <div v-show="!isCollected">
-      <button @click="addMovie(items[0].pk, items[1])">+</button>
+      <div v-show="!isCollected">
+        <button class="btn" @click="addMovie(items[0].pk, items[1])"><i class="far fa-star" style="color: #00d13f;"></i></button>
+      </div>
+      <div v-show="isCollected">
+        <button class="btn" @click="removeMovie(items[0].pk, items[1])"><i class="fa-solid fa-star" style="color: #00d13f;"></i></button>
+      </div>
     </div>
-    <div v-show="isCollected">
-      <button @click="removeMovie(items[0].pk, items[1])">-</button>
-    </div>
-  </div>
 </template>
 
 <script setup>
