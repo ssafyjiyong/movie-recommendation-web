@@ -44,6 +44,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=254, blank=True, null=True)
     status = models.TextField(default='상태메시지를 변경해보세요!')
     nickname = models.CharField(max_length=150, unique=True)
+    total_watch = models.IntegerField(default=0)
     profile_pic = ProcessedImageField(
     		blank = True,
         	upload_to = 'profile/images',
@@ -51,4 +52,4 @@ class User(AbstractUser):
         	format = 'JPEG',
         	options = {'quality':90},
     		)
-    USERNAME_FIELD = 'username'    
+    USERNAME_FIELD = 'username'

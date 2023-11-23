@@ -95,11 +95,13 @@ import { ref, onMounted } from 'vue';
 import { getMovieDetail, getActorsList, getDirectorsList, getGenresList, thisMovieArticles, thisMovieMate, thisMovieOST, likeMovieApi, sosoMovieApi, hateMovieApi } from '@/apis/movieApi'
 import { useRoute } from 'vue-router';
 import { useMovieStore } from '@/stores/movieStore';
+import { useUserStore } from '@/stores/userStore';
 
 defineProps({
   isDarkMode:Boolean,
 })
 
+const userStore = useUserStore()
 const movieStore = useMovieStore()
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
@@ -164,15 +166,15 @@ const initializecurrentMovie = (moviePk) => {
 }
 
 const likeMovie = () => {
-  likeMovieApi(moviePk)
+  likeMovieApi(moviePk, userStore.userInfo.nickname)
 }
 
 const sosoMovie = () => {
-  sosoMovieApi(moviePk)
+  sosoMovieApi(moviePk, userStore.userInfo.nickname)
 }
 
 const hateMovie = () => {
-  hateMovieApi(moviePk)
+  hateMovieApi(moviePk, userStore.userInfo.nickname)
 }
 
 onMounted(() => {

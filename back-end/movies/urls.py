@@ -18,8 +18,7 @@ urlpatterns = [
     path('movie_detail/<int:movie_id>/', views.movie_detail),
     path('movie_detail/<int:movie_id>/following/', views.movie_mate),
     path('movie_detail/<int:movie_id>/album/', views.movie_album),
-    path('movie_detail/<int:movie_id>/like/', views.movie_like),
-    path('movie_detail/<int:movie_id>/soso/', views.movie_normal),
-    path('movie_detail/<int:movie_id>/hate/', views.movie_hate),
-    path('runtime/<str:nickname>/', views.total_watch),
+    path('movie_detail/<int:movie_id>/like/<str:nickname>/', views.movie_like),
+    path('movie_detail/<int:movie_id>/soso/<str:nickname>/', views.movie_normal),
+    path('movie_detail/<int:movie_id>/hate/<str:nickname>/', views.movie_hate),
 ]
