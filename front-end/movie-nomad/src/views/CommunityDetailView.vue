@@ -1,8 +1,14 @@
 <template>
-  <div class="container" v-if="!loading">
+  <div class="container mb-5" v-if="!loading">
 
     <div class="article-area">
-      <h1>{{ currentArticle.title }}</h1>
+
+      <!-- 글 제목 -->
+      <div class="py-3 px-4">
+        <h1>{{ currentArticle.title }}</h1>
+      </div>
+
+
       <div class='article-info' v-if="currentArticle.user">
         {{ currentArticle.user['nickname'] }} |
         마지막 수정일 : {{ currentArticle.updated_at.substr(0, 10) }}
@@ -122,20 +128,18 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  max-width: 90%;
+  max-width: 800px;
+  min-width: 576px;
+  padding: 0;
+  background-color: #E5D7CE;
 }
 
 .article-area {
   border: 1px black solid;
-  border-radius: 10px;
-  margin-top: 30px;
-  padding: 20px;
 }
 
 .comment-area {
   border: 1px solid black;
-  border-radius: 10px;
-  margin-top: 30px
 }
 
 .article-info {

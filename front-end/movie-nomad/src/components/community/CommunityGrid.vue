@@ -1,53 +1,51 @@
 <template>
-  <div class="container">
-    <!-- <h2>HOT 게시글 모아모아</h2>
-    <div class="popular-article my-3">
-      <div v-for="article in articles.slice(0,5)" :key="article.id">
-        <CommunityGridCard 
-          :article="article"
-        />
-      </div>
-    </div> -->
 
-    <h2>게시글 목록</h2>
-    <div class="latest-article">
-      <!-- 게시글 -->
-      <div v-for="article in articles" :key="article.id">
-        <CommunityGridCard
-          :article="article"
-        />
+<div class="topArticleBox">
+        <div class="latest-article">
+          <div class="articleBox d-flex text-center justify-content-between">
+            <div class="col-1 py-3">글번호</div>
+            <div class="col-7 py-3">글제목</div>
+            <div class="col-2 py-3">작성자</div>
+            <div class="col-2 py-3">작성일</div>
+          </div>
+          <hr class="m-0">
+
+          <CommunityGridCard 
+          :allArticles="allArticles"/>
+
+        </div>
       </div>
-    </div>
-  </div>
 </template>
 
 <script setup>
-import CommunityGridCard from '@/components/community/CommunityGridCard.vue';
-import { ref, computed } from 'vue';
-import { sortBy } from 'lodash';
+import CommunityGridCard from './CommunityGridCard.vue';
+import { ref, onMounted } from 'vue';
+import { getArticlesList } from '@/apis/movieApi';
 
-const props = defineProps({
-  articles: Array
+
+defineProps({
+  isDarkMode: Boolean,
+  allArticles:Array,
 })
 
-// const hotArticles = computed(() => sortBy(props, 'like_user_count').reverse().slice(0, 4));
-// console.log(props)
-// console.log(hotArticles.value)
+const allArticles = ref([])
 
 </script>
 
 <style scoped>
-.container {
-  max-width: 90%;
+#articleList:hover {
+  background-color: rgb(248, 248, 248);
+  font-weight: bold;
+  color: rgb(99, 99, 99);
 }
 
-.popular-article {
-  border: 1px solid black;
-  background-color: #E0FDED;
+.topArticleBox {
+  width: 800px;
 }
-
 .latest-article {
-  height: 80vh;
-  border: 1px solid black;
+  min-height: 10vh;
+  border: 1px solid #BFBFBF;
+  border-start-start-radius: 10px;
+  border-start-end-radius: 10px;
 }
 </style>
