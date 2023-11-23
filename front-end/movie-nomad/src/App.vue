@@ -19,16 +19,16 @@
           <ul class="navbar-nav ms-auto">
             <div v-if="!userStore.isLogin" class="d-flex justify-content-around align-items-center">
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMovieList">
-                {{ $t('movieList') }}
+                <span>{{ $t('movieList') }}</span>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToArticleList">
-                {{ $t('articleList') }}
+                <span>{{ $t('articleList') }}</span>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToLogin">
-                {{ $t('Login') }}
+                <span>{{ $t('Login') }}</span>
               </li>
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2 btn btn-custom fw-bold" @click="goToSingup">
-                {{ $t('Signup') }}
+                <span>{{ $t('Signup') }}</span>
               </li>
               <li class="nav-item">
                 <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
@@ -226,4 +226,11 @@ nav {
 img {
   width: 250px;
 }
+
+@media (min-width: 768px) and (max-width: 800px) {
+  li {
+    margin: 3px !important;
+  }
+}
+
 </style>
