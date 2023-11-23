@@ -261,7 +261,8 @@ export const createArticleAPI = (payload) => {
   return axios
     .post(`${API_URL}/community/article_list/`, payload, {
       headers: {
-        Authorization: `Token ${token}`
+        "Content-Type": "multipart/form-data",
+        Authorization: `Token ${token}`,
       }
     })
     .then((response) => {
