@@ -8,7 +8,7 @@ from allauth.utils import get_username_max_length
 from allauth.account.adapter import get_adapter
 
 from community.models import Article
-from movies.models import Movie
+from movies.models import Movie, Collection
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -73,6 +73,12 @@ class BlogSerializer(serializers.ModelSerializer):
                 'release_date',
             )
 
+    class CollectionSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Collection
+            fields = '__all__'
+
+    collections = CollectionSerializer(many=True, read_only=True)
     followers = FollowFollowingSerializer(many=True, read_only=True)
     followings = FollowFollowingSerializer(many=True, read_only=True)
     follower_count = serializers.IntegerField(
