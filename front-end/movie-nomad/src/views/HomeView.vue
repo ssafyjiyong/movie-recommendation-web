@@ -217,7 +217,7 @@ const restorePlaceholder = function () {
 }
 
 const goToCommunity = function () {
-  router.push('/talk')
+  router.push('/community/talk')
 }
 
 
