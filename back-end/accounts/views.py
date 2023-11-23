@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import BlogSerializer, ProfileUpdateSerializer, StatusUpdateSerializer
+from .serializers import BlogSerializer, ProfileUpdateSerializer, StatusUpdateSerializer, PictureUpdateSerializer
 
 User = get_user_model()
 
@@ -60,7 +60,29 @@ def update_status(request, user_pk):
             serializer.save(user=request.user)
 
             return Response(serializer.data)
-        
+
+
+@api_view(['POST', 'PUT'])
+def update_picture(request, user_pk):
+    user = get_object_or_404(User, id=user_pk)
+    me = request.user
+
+    if request.method == 'PUT':
+        if me == user:
+            serializer = PictureUpdateSerializer(
+                instance=request.user, data=request.data
+            )
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
+
+    if request.method == 'POST':
+        if me == user:
+            serializer = PictureUpdateSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET'])
 def blog(request, user_name):
@@ -68,3 +90,12 @@ def blog(request, user_name):
     serializer = BlogSerializer(user)
 
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def signout(request, nickname):
+    user = get_object_or_404(User, nickname=nickname)
+
+    if request.user == user:
+        user.delete()
+        return Response("회원탈퇴 완료")

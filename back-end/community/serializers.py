@@ -28,7 +28,6 @@ class ArticleListSerializer(serializers.ModelSerializer):
         model = Article
         fields = '__all__'
 
-
 # # 게시글 이미지
 # class ArticleImageSerializer(serializers.ModelSerializer):
 #     image = serializers.ImageField(use_url=True)
