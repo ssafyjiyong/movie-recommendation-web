@@ -12,7 +12,8 @@
           <img :src="`http://localhost:8000${userInfo.profile_pic}`" alt="profile_image" class="profileImage my-2">
         </div>
         <div v-show="isMyProfile">
-          <button type="button" data-bs-toggle="modal" data-bs-target="#profilePicture" class="btn btn-link text-secondary p-0">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#profilePicture"
+            class="btn btn-link text-secondary p-0">
             <i class="fa-solid fa-camera" style="color: #8eecb2;"></i>
           </button>
           <ProfilePicture />
@@ -65,13 +66,10 @@
       <!-- 컬렉션과 내 영화 정보(좋아하는 장르 등) -->
       <div class="d-flex justify-content-between">
         <!-- 컬렉션 -->
-        <div class="inBlogBox1 me-4 ps-4">
-          <div 
-            class="collection-box col-6"
-            v-for="collection in collections"
-            :key="collection.id"
-          >
+        <div class="inBlogBox1 me-3">
+          <div class="collection-box" v-for="collection in collections.slice(0, 1)" :key="collection.id">
             <ProfileCollection :collection="collection" />
+            <button class="btn btn-success btn-sm" @click="moreCollections">컬렉션 더보기</button>
           </div>
         </div>
 
@@ -90,12 +88,7 @@
 
   <!-- 회원정보 변경 및 탈퇴 기능 -->
   <div class="d-flex m-2 justify-content-end">
-    <button 
-      class="btn btn-secondary btn-sm"
-      type="button"
-      data-bs-toggle="modal"
-      data-bs-target="#updatePassword"
-    >
+    <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#updatePassword">
       비밀번호 변경
     </button>
     <PasswordUpdate />
@@ -136,6 +129,14 @@ const collections = ref([])
 const profileExist = computed(() => {
   return profile_image.value
 })
+
+// 컬렉션 더보기
+const moreCollections = () => {
+  router.push({
+    name: 'userCollection',
+    params: {nickname: userStore.nickname},
+  })
+}
 
 // 팔로우
 const follow = () => {
@@ -196,7 +197,7 @@ onMounted(() => {
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
       window.alert("유저정보가 존재하지 않습니다.")
-      router.push( { name :'home' } )
+      router.push({ name: 'home' })
     })
 
   userArticleList(route.params.nickname)
@@ -277,10 +278,10 @@ onMounted(() => {
   padding: 5px;
 }
 
-
 .collectionBox {
   display: flex;
 }
+
 @media (max-width: 635px) {
   .profileImage {
     display: none;

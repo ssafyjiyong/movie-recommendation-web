@@ -49,6 +49,11 @@ const router = createRouter({
       component: ProfileView
     },
     {
+      path: '/userCollection/:nickname',
+      name: 'userCollection',
+      component: () => import('@/views/UserCollection.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue')
