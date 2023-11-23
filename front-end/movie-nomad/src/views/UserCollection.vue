@@ -14,7 +14,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { userProfile } from '../apis/userApi';
-
+import Swal from "sweetalert2";
 import CollectionCard from '@/components/CollectionCard.vue';
 
 const route = useRoute()
@@ -28,7 +28,12 @@ onMounted(() => {
     })
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
-      window.alert("유저정보가 존재하지 않습니다.")
+      Swal.fire({
+        title: `유저 정보가 존재하지 않습니다.`,
+        icon: "success",
+        confirmButtonColor: "#FFFFFF",
+        confirmButtonText: "확인"
+      })
       router.push({ name: 'home' })
     })
 })
