@@ -1,5 +1,5 @@
 <template>
-<div class="modal fade" id="updatePassword" tabindex="-1" aria-labelledby="updatePasswordLabel" aria-hidden="true">
+<div class="modal fade" id="updatePassword" tabindex="-1" aria-labelledby="updatePasswordLabel" aria-hidden="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -82,6 +82,8 @@ const submitPassword = () => {
         .then((result) => {
           if (result.isConfirmed) {
             userStore.afterUpdatePassword()
+            var backdrop = document.querySelector('.modal-backdrop');
+            backdrop.parentNode.removeChild(backdrop);
           }
         })
     })
