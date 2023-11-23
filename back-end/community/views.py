@@ -115,14 +115,25 @@ def comment(request, article_pk):
             return Response(serializer.data)
 
 
-@api_view(['DELETE'])
-def comment_delete(request, article_pk, comment_pk):
+@api_view(['GET', 'POST', 'DELETE'])
+def comment_delete(request, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)
 
-    if comment.user == request.user:
-        comment.delete()
+    if request.method == 'GET':
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
     
-    return Response("삭제되었습니다.")
+    if request.method == 'POST':
+        if request.user in comment.like_users.all():
+            comment.like_users.remove(request.user)
+        else:
+            comment.like_users.add(request.user)
+        return Response(CommentSerializer(comment).data)
+    if request.method == 'DELETE':
+        if comment.user == request.user:
+            comment.delete()
+        
+        return Response("삭제되었습니다.")
 
 
 @api_view(['GET', 'POST'])
