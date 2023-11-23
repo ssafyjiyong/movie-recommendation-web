@@ -1,10 +1,19 @@
 <template>
-  <div v-for="(searchedArticle, idx) in paginatedArticles" :key="idx">
-    <div id="articleList" class="d-flex text-center justify-content-between">
-      <div class="col-1 py-2">{{ searchedArticle.id }}</div>
-      <div @click="goToDetail(searchedArticle.id)" class="articleTitle col-7 py-2">{{ searchedArticle.title }}</div>
-      <div class="col-2 py-2">{{ searchedArticle.user.nickname }}</div>
-      <div class="col-2 py-2">{{ formatDate(searchedArticle.created_at) }}</div>
+  <div v-if="articleExist">
+    <div v-for="(searchedArticle, idx) in paginatedArticles" :key="idx">
+      <div id="articleList" class="d-flex text-center justify-content-between">
+        <div class="col-1 py-2">{{ searchedArticle.id }}</div>
+        <div @click="goToDetail(searchedArticle.id)" class="articleTitle col-7 py-2">{{ searchedArticle.title }}</div>
+        <div class="col-2 py-2">{{ searchedArticle.user.nickname }}</div>
+        <div class="col-2 py-2">{{ formatDate(searchedArticle.created_at) }}</div>
+      </div>
+      <hr class="m-0">
+    </div>
+  </div>
+
+  <div v-else>
+    <div id="articleList" class="d-flex text-center justify-content-center">
+      <div @click="AddArticle" class="articleTitle p-2">첫번째 글을 작성해보세요!</div>
     </div>
     <hr class="m-0">
   </div>
@@ -23,12 +32,19 @@ import { getArticlesList } from '@/apis/movieApi';
 
 defineProps({
   isDarkMode: Boolean,
-  allArticles:Array,
+  allArticles: Array,
 })
 
 const router = useRouter()
 const route = useRoute()
 const allArticles = ref([])
+const articleExist = computed(() => {
+  if (paginatedArticles.value.length) {
+    return true
+  } else {
+    return false
+  };
+})
 
 
 // 페이지 상태 관리
@@ -58,6 +74,20 @@ const goToDetail = function (articleId) {
   router.push(`/communitydetail/${articleId}`)
 }
 
+const category = computed(() => {
+  if (route.params.category === 'talk') {
+    return 1
+  } else if (route.params.category === 'toon') {
+    return 2
+  } else {
+    return 3
+  }
+})
+
+const AddArticle = function () {
+  router.push(`/create/${category.value}/`)
+}
+
 onMounted(async () => {
   await getArticlesList()
     .then(response => {
@@ -74,9 +104,11 @@ onMounted(async () => {
   font-weight: bold;
   color: rgb(99, 99, 99);
 }
+
 .articleTitle {
   cursor: pointer;
 }
+
 .btn-custom {
   background-color: #83C442;
   color: white;

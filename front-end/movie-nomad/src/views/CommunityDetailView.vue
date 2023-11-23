@@ -1,64 +1,82 @@
 <template>
-  <div class="container mb-5" v-if="!loading">
+  <div class="container mb-5 mt-3">
 
     <div class="article-area">
 
       <!-- 글 제목 -->
-      <div class="py-3 px-4">
-        <h1>{{ currentArticle.title }}</h1>
+      <div class="py-3 px-4 d-flex justify-content-between align-items-end">
+        <div class="flex-grow-1">
+          <h3>{{ currentArticle.title }}</h3>
+        </div>
+
+        <div v-if="loadingMovieInfo" class="col-4 text-end aboutMovie">
+          <span>영화 </span>
+          <span @click="goToDetail" class="cursorEffect fs-5">'{{ movieTitle }}'</span>
+          <span>에 대하여</span>
+        </div>
+        <div v-else class="col-4 text-end aboutMovie">
+          <span>관련 영화 정보를 찾고 있습니다 </span>
+          <div class="spinner-border text-success spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
       </div>
 
+      <div class="d-flex justify-content-between px-3 py-2 bg-white">
+        <div class='article-info' v-if="currentArticle.user">
+          <span>{{ currentArticle.user['nickname'] }} |
+            마지막 수정일 : {{ currentArticle.updated_at.substr(0, 10) }}</span>
+        </div>
 
-      <div class='article-info' v-if="currentArticle.user">
-        {{ currentArticle.user['nickname'] }} |
-        마지막 수정일 : {{ currentArticle.updated_at.substr(0, 10) }}
+        <div>
+          <i class="fa-solid fa-heart text-danger mx-1"></i>
+          <span>{{ currentArticle.like_user_count }}</span>
+        </div>
       </div>
-      <div class="article-info">
-        <RouterLink :to="{ name: 'moviedetail', params: { movieId: moviePk } }">{{ movieTitle }}</RouterLink>
+
+      <div class="p-3">
+        <div v-if="imageExist">
+          <img :src="`http://localhost:8000${currentArticle.image}`" alt="image">
+        </div>
+        <p class="fs-5">{{ currentArticle.content }}</p>
       </div>
-      <hr>
-      <div v-if="imageExist">
-        <img :src="`http://localhost:8000${currentArticle.image}`" alt="image">
-      </div>
-      <p>{{ currentArticle.content }}</p>
 
       <div class="d-flex justify-content-center">
-        <button>이 게시글 좋아요</button>
+        <button class="btn btn-custom"><i class="fa-regular fa-thumbs-up"></i> 좋아요 | {{ currentArticle.like_user_count
+        }}</button>
       </div>
     </div>
 
-    <div class="d-flex justify-content-end">
-      <button>게시글 수정</button>
-      <button @click="deleteTheArticle">게시글 삭제</button>
+    <div class="d-flex justify-content-end m-3">
+      <small class="cursorEffect">수정</small>
+      <small class="mx-1">|</small>
+      <small class="cursorEffect" @click="deleteTheArticle">삭제</small>
     </div>
 
     <!-- 여기서부터 댓글입니다 -->
 
     <div class="comment-area">
 
-      <div>
-        <p>xx개의 댓글이 있습니다</p>
+      <div class="bg-white px-3 py-2">
+        <p class="m-0">댓글</p>
       </div>
 
       <!-- 댓글 작성란 -->
       <div>
         <form>
-          <input type="text">
-          <input type="submit">
+          <div class="mb-3">
+            <label for="formControlInput" class="form-label"></label>
+            <input type="text" class="form-control w-75 d-inline-block m-2" id="formControlInput" placeholder="욕설/비난 시 회원 탈퇴입니다.">
+            <button type="submit" class="btn btn-success">댓글 작성</button>
+          </div>
         </form>
       </div>
-      <hr>
       <CommentCard />
 
     </div>
-  </div>
-
-  <!-- 로딩중에 나오는 명대사 -->
-  <div v-else class="d-flex justify-content-center align-items-center m-5">
-    <div class="spinner-border text-success d-inline" role="status">
-      <span class="visually-hidden">Loading...</span>
+    <div>
+      <button class="btn btn-back-custom mx-2 mb-2">뒤로가기</button>
     </div>
-    <h3 class="m-3">{{ randomMessage }}</h3>
   </div>
 </template>
 
@@ -86,11 +104,15 @@ const movieTitle = ref('')
 const moviePk = ref(0)
 const articleImage = ref(false)
 
-const loading = ref(true)
+const loadingMovieInfo = ref(false)
 
 const imageExist = computed(() => {
   return articleImage.value
 })
+
+const goToDetail = function () {
+  router.push(`/moviedetail/${moviePk.value}`)
+}
 
 const initializeArticleDetail = (articlePk) => {
   getArticleDetail(articlePk)
@@ -105,12 +127,12 @@ const initializeArticleDetail = (articlePk) => {
         .then((response) => {
           movieTitle.value = response.data['title']
           moviePk.value = response.data['pk']
+          loadingMovieInfo.value = true
         })
     })
     .catch((error) => {
       console.error('Error initializing article detail:', error)
     })
-  loading.value = false
 }
 
 const deleteTheArticle = function () {
@@ -127,22 +149,40 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.aboutMovie { 
+  min-width: 230px;
+}
+.btn-custom {
+  background-color: #FBDFDF;
+  color: #EC5E5E;
+}
+
+.btn-custom:hover {
+  background-color: #EC5E5E;
+  color: white;
+}
+
+.btn-back-custom:hover {
+  background-color: #b3b6b8;
+  color: black
+}
+
+.btn-back-custom {
+  background-color: gray;
+  color: white;
+}
+
 .container {
-  max-width: 800px;
-  min-width: 576px;
-  padding: 0;
-  background-color: #E5D7CE;
+  width: 80%;
+  border-radius: 20px;
+  padding: 1%;
+  background-color: #f6ffe8;
 }
 
-.article-area {
-  border: 1px black solid;
-}
-
-.comment-area {
-  border: 1px solid black;
+.cursorEffect {
+  cursor: pointer;
 }
 
 .article-info {
   text-align: right;
-}
-</style>
+}</style>

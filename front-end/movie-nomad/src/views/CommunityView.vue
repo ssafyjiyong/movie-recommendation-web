@@ -1,7 +1,9 @@
 <template>
   <div class="topTopBox">
-    <div class="theTopBox">
-      <div class="d-flex justify-content-between">
+    <div>
+
+      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-between infoBox">
       <div class="m-3">
         <i class="fa-solid fa-comment-dots fa-lg mx-2"></i><span class="fw-bold textColor">{{ category }}</span>
       </div>
@@ -9,9 +11,12 @@
           <button class="btn btn-custom btn-sm fw-bold mt-3 me-3" @click="goToAddArticle">글쓰기</button>
         </div>
       </div>
+    </div>
 
-      <CommunityGrid 
-      :allArticles="allArticles"/>
+      <div class="d-flex justify-content-center">
+        <CommunityGrid 
+        :allArticles="allArticles"/>
+      </div>
 
     </div>
   </div>
@@ -66,16 +71,14 @@ onMounted(async () => {
   font-weight: bold;
   color: rgb(99, 99, 99);
 }
+.infoBox {
+  width: 80%;
+}
 .topTopBox {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.theTopBox {
-  width: 800px;
-  display: flex;
-  flex-direction: column;
+  min-width: 744px;
 }
 .textColor {
   color: rgb(37, 37, 37);
@@ -84,24 +87,5 @@ onMounted(async () => {
 .btn-custom {
   background-color: #83C442;
   color: white;
-}
-
-/* 미디엄사이즈 */
-@media only screen and (max-width: 768px) {
-
-.topTopBox {
-  justify-content:start;
-  margin: auto 5px;
-}
-}
-
-/* 스몰사이즈 */
-@media only screen and (max-width: 576px) {
-
-  .theTopBox,
-  .topTopBox {
-    justify-content:start;
-    margin: auto 5px;
-  }
 }
 </style>

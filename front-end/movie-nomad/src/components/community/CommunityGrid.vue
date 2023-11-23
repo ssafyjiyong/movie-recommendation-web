@@ -19,9 +19,7 @@
 
 <script setup>
 import CommunityGridCard from './CommunityGridCard.vue';
-import { ref, onMounted } from 'vue';
-import { getArticlesList } from '@/apis/movieApi';
-
+import { ref } from 'vue';
 
 defineProps({
   isDarkMode: Boolean,
@@ -40,8 +38,9 @@ const allArticles = ref([])
 }
 
 .topArticleBox {
-  width: 800px;
+  width: 80%;
 }
+
 .latest-article {
   min-height: 10vh;
   border: 1px solid #BFBFBF;

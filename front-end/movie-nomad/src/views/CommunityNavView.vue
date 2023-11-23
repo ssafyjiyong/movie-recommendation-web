@@ -1,8 +1,8 @@
 <template>
   <!-- Navigation-->
   <div class="theTopBox">
-    <nav class="communityNav m-3 py-1">
-      <ul class="d-flex justify-content-center align-items-center m-0 p-0">
+    <!-- <nav> -->
+      <ul class=" communityNav d-flex justify-content-around align-items-center m-0 p-0">
         <li>
           <RouterLink class="text-decoration-none text-white fw-bold" to="/community/talk">영화토크</RouterLink>
         </li>
@@ -19,10 +19,11 @@
           <RouterLink class="text-decoration-none text-white fw-bold" to="/community/barrier">배리어프리</RouterLink>
         </li>
       </ul>
-    </nav>
+    <!-- </nav> -->
   </div>
 
-  <RouterView class="d-grid" />
+  <RouterView />
+
 </template>
 
 <script setup>
@@ -38,6 +39,7 @@ defineProps({
 .theTopBox {
   display: flex;
   justify-content: center;
+  min-width: 744px;
 }
 
 ul {
@@ -51,15 +53,8 @@ ul>li {
 }
 
 .communityNav {
-  width: 800px;
+  width: 80%;
   background-color: rgb(131, 196, 66);
   border-radius: 50px;
-}
-
-/* 스몰사이즈 */
-@media only screen and (max-width: 576px) {
-  .theTopBox {
-    display: block;
-  }
 }
 </style>
