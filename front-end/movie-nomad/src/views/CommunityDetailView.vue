@@ -11,6 +11,9 @@
         <RouterLink :to="{ name: 'moviedetail', params: { movieId: moviePk } }">{{ movieTitle }}</RouterLink>
       </div>
       <hr>
+      <div v-if="imageExist">
+        <img :src="`http://localhost:8000${currentArticle.image}`" alt="image">
+      </div>
       <p>{{ currentArticle.content }}</p>
 
       <div class="d-flex justify-content-center">
@@ -60,6 +63,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail, deleteArticleAPI, getMovieDetail } from '@/apis/movieApi'
 import { useMovieStore } from '@/stores/movieStore';
 import CommentCard from '@/components/community/CommentCard.vue';
+import { computed } from '@vue/reactivity';
 
 defineProps({
   isDarkMode: Boolean,
@@ -74,18 +78,25 @@ const router = useRouter()
 const articlePk = route.params.articleId
 const movieTitle = ref('')
 const moviePk = ref(0)
+const articleImage = ref(false)
 
 const loading = ref(true)
+
+const imageExist = computed(() => {
+  return articleImage.value
+})
 
 const initializeArticleDetail = (articlePk) => {
   getArticleDetail(articlePk)
     .then((response) => {
       currentArticle.value = response.data
+      if (response.data.image !== null) {
+        articleImage.value = true
+      }
     })
     .then(() => {
       getMovieDetail(currentArticle.value.movie)
         .then((response) => {
-          // console.log(response)
           movieTitle.value = response.data['title']
           moviePk.value = response.data['pk']
         })

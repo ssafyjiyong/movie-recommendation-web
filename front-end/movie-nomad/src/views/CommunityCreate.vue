@@ -6,7 +6,7 @@
         <div class="text-center p-3">
           <h2>글 작성하기</h2>
         </div>
-
+        
         <form @submit.prevent="addArticle">
           <div class="mb-3">게시판</div>
           <div class="d-flex justify-content-around mb-3">
@@ -35,11 +35,9 @@
 
           <div class="mb-3">
             <label for="movie" class="form-label">영화 선택 :</label>
-            <input v-model="movieid" class="form-control" list="movieOptions" id="movie" 
-            placeholder="영화 제목을 검색해주세요">
+            <input v-model="movieid" class="form-control" list="movieOptions" id="movie" placeholder="영화 제목을 검색해주세요">
             <datalist v-if="allMovies.length" id="movieOptions">
-              <option v-for="(movie, idx) in allMovies" 
-              :key="idx" :value="movie.pk">{{ movie.title }}</option>
+              <option v-for="(movie, idx) in allMovies" :key="idx" :value="movie.pk">{{ movie.title }}</option>
             </datalist>
           </div>
 
@@ -55,7 +53,7 @@
 
           <div class="mb-3">
             <label for="image" class="form-label">이미지 업로드</label>
-            <input @change="uploadFiles" class="form-control" type="file" id="image">
+            <input @change="uploadFiles" class="form-control" accept="image/*" type="file" id="image">
           </div>
 
 
@@ -104,7 +102,8 @@ const addArticle = function () {
     category: category.value,
     movie: movieid.value,
     title: title.value,
-    content: content.value
+    content: content.value,
+    image: articleImage.value[0],
   }
   articleStore.createArticle(payload)
 }
