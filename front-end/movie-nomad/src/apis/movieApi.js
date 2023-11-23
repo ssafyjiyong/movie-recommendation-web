@@ -150,11 +150,11 @@ export const addCollection = (collectionId, movieId) => {
 
 
 // 영화 좋아요 API
-export const likeMovieApi = (moviePk) => {
+export const likeMovieApi = (moviePk, nickname) => {
   const token = window.localStorage.getItem('token')
   return axios
     .post(
-      `${API_URL}/movies/movie_detail/${moviePk}/like/`,
+      `${API_URL}/movies/movie_detail/${moviePk}/like/${nickname}/`,
       {},
       {
         headers: {
@@ -172,11 +172,11 @@ export const likeMovieApi = (moviePk) => {
 }
 
 // 영화 그저그래요 API
-export const sosoMovieApi = (moviePk) => {
+export const sosoMovieApi = (moviePk, nickname) => {
   const token = window.localStorage.getItem('token')
   return axios
     .post(
-      `${API_URL}/movies/movie_detail/${moviePk}/soso/`,
+      `${API_URL}/movies/movie_detail/${moviePk}/like/${nickname}/`,
       {},
       {
         headers: {
@@ -194,11 +194,11 @@ export const sosoMovieApi = (moviePk) => {
 }
 
 // 영화 별로예요 API
-export const hateMovieApi = (moviePk) => {
+export const hateMovieApi = (moviePk, nickname) => {
   const token = window.localStorage.getItem('token')
   return axios
     .post(
-      `${API_URL}/movies/movie_detail/${moviePk}/hate/`,
+      `${API_URL}/movies/movie_detail/${moviePk}/like/${nickname}/`,
       {},
       {
         headers: {
@@ -232,7 +232,7 @@ export const userArticleList = (nickname) => {
 // 영화 디테일 페이지 해당 영화 article List 조회
 export const thisMovieArticles = (moviePk) => {
   return axios
-    .get(`${API_URL}/community/article_list/${moviePk}/`)
+    .get(`${API_URL}/community/article_list/movie/${moviePk}/`)
     .then((response) => {
       return response
     })

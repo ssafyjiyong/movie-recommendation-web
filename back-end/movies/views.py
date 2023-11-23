@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
@@ -288,7 +288,8 @@ def directors(request, movie_id):
 
 
 @api_view(['POST'])
-def movie_like(request, movie_id):
+def movie_like(request, movie_id, nickname):
+    user = get_object_or_404(get_user_model(), nickname=nickname)
     movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.normal_users.all():
@@ -299,18 +300,24 @@ def movie_like(request, movie_id):
         movie.like_users.add(request.user)
     elif request.user in movie.like_users.all():
         movie.like_users.remove(request.user)
+        user.total_watch -= movie.runtime
     else:
         movie.like_users.add(request.user)
+        user.total_watch += movie.runtime
+    
+    user.save()
     
     return Response("성공")
 
 
 @api_view(['POST'])
-def movie_normal(request, movie_id):
+def movie_normal(request, movie_id, nickname):
+    user = get_object_or_404(get_user_model(), nickname=nickname)
     movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.normal_users.all():
         movie.normal_users.remove(request.user)
+        user.total_watch -= movie.runtime
     elif request.user in movie.hate_users.all():
         movie.hate_users.remove(request.user)
         movie.normal_users.add(request.user)
@@ -319,12 +326,16 @@ def movie_normal(request, movie_id):
         movie.normal_users.add(request.user)
     else:
         movie.normal_users.add(request.user)
+        user.total_watch += movie.runtime
+
+    user.save()
 
     return Response("성공")
 
 
 @api_view(['POST'])
-def movie_hate(request, movie_id):
+def movie_hate(request, movie_id, nickname):
+    user = get_object_or_404(get_user_model(), nickname=nickname)
     movie = Movie.objects.get(id=movie_id)
 
     if request.user in movie.normal_users.all():
@@ -332,11 +343,13 @@ def movie_hate(request, movie_id):
         movie.hate_users.add(request.user)
     elif request.user in movie.hate_users.all():
         movie.hate_users.remove(request.user)
+        user.total_watch -= movie.runtime
     elif request.user in movie.like_users.all():
         movie.like_users.remove(request.user)
         movie.hate_users.add(request.user)
     else:
         movie.hate_users.add(request.user)
+        user.total_watch += movie.runtime
 
     return Response("성공")
 
@@ -406,10 +419,3 @@ def collections_update(request, collection_id, movie_id):
         
         serializer = CollectionSerializer(collection)
         return Response(serializer.data)
-    
-
-# 총 영화 감상 시간
-@api_view(['GET'])
-def total_watch(request, nickname):
-    user = get_user_model(nickname=nickname)
-    

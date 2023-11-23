@@ -44,7 +44,7 @@
 
       <!-- 총 영화 본 시간 -->
       <div class="radiusBox text-center">
-        <p>와우! <strong>1102시간</strong> 보았다 영화를!</p>
+        <p>와우! <strong>{{ userInfo['total_watch'] }}시간</strong> 보았다 영화를!</p>
       </div>
     </div>
 
@@ -89,7 +89,7 @@ import { following, userProfile, changeStatus } from '../apis/userApi';
 import { userArticleList } from '@/apis/movieApi';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 import ProfileArticle from '@/components/profile/ProfileArticle.vue';
 
@@ -101,8 +101,8 @@ const profileUserNickname = route.params.nickname
 const isMyProfile = ref(true)
 const updateStatus = ref(false)
 const status = ref()
-const userInfo = ref([])
 const articles = ref([])
+const userInfo = ref([])
 
 // 팔로우
 const follow = () => {
@@ -128,6 +128,7 @@ const submitStauts = () => {
       window.alert("변경되었습니다.")
       updateStatus.value = false
       userStore.userInfo.status = status.value
+      location.reload()
     })
 }
 
@@ -142,24 +143,22 @@ defineProps({
 })
 
 // 프로필 유저정보 불러오기
-onMounted(() => {
-  if (profileUserNickname === userStore.nickname) {
-    console.log('나의 블로그입니다')
-    userInfo.value = userStore.userInfo
-    status.value = userStore.userInfo.status
-    // console.log(userStore.userData)
-  } else {
-    userProfile(profileUserNickname)
-      .then((response) => {
-        userInfo.value = response.data
-        console.log(userInfo.value)
+onMounted(async() => {
+  await userProfile(profileUserNickname)
+    .then((response) => {
+      userInfo.value = response.data
+      status.value = userStore.userInfo.status
+    })
+    .then(() => {
+      if (userInfo.value.nickname !== profileUserNickname) {
         isMyProfile.value = false
-      })
-      .catch((error) => {
-        console.error('Error initializing userProfile:', error)
-      })
-  }
-  userArticleList(route.params.nickname)
+      }
+    })
+    .catch((error) => {
+      console.error('Error initializing userProfile:', error)
+    })
+
+  await userArticleList(route.params.nickname)
     .then((response) => {
       articles.value = response.data
     })
