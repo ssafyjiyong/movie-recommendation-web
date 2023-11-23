@@ -137,7 +137,7 @@
     <div class="spinner-border text-success d-inline" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-    <h3 class="m-3">{{ randomMessage }}</h3>
+    <h3 class="m-3">이스터에그를 찾아보세요!</h3>
   </div>
 </template>
 
@@ -172,9 +172,8 @@ const router = useRouter()
 const movieStore = useMovieStore();
 const movieKeyword = ref('')
 
-// 로딩중 명대사
+// 로딩중
 const loading = ref(true)
-const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
 
 // 포스터 관련 변수
 const popularMovies = ref([])

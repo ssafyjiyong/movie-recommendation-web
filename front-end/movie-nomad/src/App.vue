@@ -24,19 +24,13 @@
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToArticleList">
                 {{ $t('articleList') }}
               </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'login' }">{{ $t('Login') }}</RouterLink>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToLogin">
+                {{ $t('Login') }}
               </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :to="{ name: 'signup' }">{{ $t('Signup') }}</RouterLink>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2 btn btn-custom fw-bold" @click="goToSingup">
+                {{ $t('Signup') }}
               </li>
-              <li class="nav-item dropdown">
-                <select v-model="$i18n.locale" class="form-select">
-                  <option value="ko">한국어</option>
-                  <option value="en">English</option>
-                </select>
-              </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+              <li class="nav-item">
                 <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
                   <!-- 다크모드일 경우 아이콘 -->
                   <div v-if="isDarkMode">
@@ -48,6 +42,12 @@
                   </div>
                 </button>
               </li>
+              <li class="nav-item dropdown">
+                <select v-model="$i18n.locale" class="form-select">
+                  <option value="ko">한국어</option>
+                  <option value="en">English</option>
+                </select>
+              </li>
             </div>
 
             <div v-else class="d-flex justify-content-around align-items-center">
@@ -57,12 +57,11 @@
               <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToArticleList">
                 {{ $t('articleList') }}
               </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <RouterLink :class="['text-decoration-none', isDarkMode? 'text-white':'text-black']" :to="{ name: 'profile', params: { nickname: userStore.userInfo.nickname } }">{{
-                  userStore.userInfo.nickname }}{{ $t('blog') }}</RouterLink>
+              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2" @click="goToMyblog">
+                {{ userStore.userInfo.nickname + $t('blog') }}
               </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
-                <a @click="logout">{{ $t('Logout') }}</a>
+              <li @click="logout" class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+                <a>{{ $t('Logout') }}</a>
               </li>
               <li class="nav-item dropdown">
                 <select v-model="$i18n.locale" class="form-select">
@@ -70,7 +69,7 @@
                   <option value="en">English</option>
                 </select>
               </li>
-              <li class="nav-item px-lg-3 py-2 py-lg-2 mx-2">
+              <li class="nav-item">
                 <button :class="['btn', 'btn-link', isDarkMode ? 'text-white' : 'text-black']" @click="toggleDarkMode">
                   <!-- 다크모드일 경우 아이콘 -->
                   <div v-if="isDarkMode">
@@ -88,7 +87,9 @@
       </div>
     </nav>
 
-    <router-view :isDarkMode="isDarkMode" :key="$route.fullPath"/>
+    <router-view 
+    :isDarkMode="isDarkMode" 
+    :key="$route.fullPath"/>
 
   </header>
 
@@ -163,6 +164,16 @@ const goToMovieList = function () {
 const goToArticleList = function () {
   router.push('/talk')
 }
+const goToLogin = function () {
+  router.push('/login')
+}
+
+const goToSingup = function () {
+  router.push('/signup')
+}
+const goToMyblog = function () {
+  router.push(`/profile/${userStore.userInfo.nickname}`)
+}
 
 onMounted(() => {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -208,7 +219,11 @@ nav {
   /* font-family: 'Lato', sans-serif; */
 }
 
-
+.btn-custom {
+  background-color: #83C442;
+  color: white;
+  border-radius: 20px;
+}
 
 img {
   width: 250px;
