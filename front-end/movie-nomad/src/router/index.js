@@ -69,11 +69,6 @@ const router = createRouter({
       component: () => import('@/views/PasswordChangeView.vue')
     },
     {
-      path: '/profile/update',
-      name: 'profileUpdate',
-      component: () => import('@/views/ProfileUpdateView.vue')
-    },
-    {
       path: '/signup',
       name: 'signup',
       component: () => import('@/views/SignupView.vue')

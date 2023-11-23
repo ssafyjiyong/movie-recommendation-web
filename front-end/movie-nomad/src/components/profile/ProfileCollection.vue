@@ -1,6 +1,8 @@
 <template>
-  <div class="box">
+  <div class="box col-10 ms-3">
+    <div class="collection-name">{{ collection.name }}</div>
     <div
+      class="col-5"
       v-for="movie in movies"
       :key="movie.id"
     >
@@ -40,12 +42,17 @@ onMounted( () => {
 </script>
 
 <style scoped>
+.collection-name {
+  width: 100%;
+  text-align: center;
+}
 .box {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;  
 }
 
 .box img{
-  width: 25%;
+  justify-content: center;
+  width: 100%;
 }
 </style>

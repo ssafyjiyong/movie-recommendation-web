@@ -207,22 +207,20 @@ export const updatePicture = (userPk, payload) => {
     });
 };
 
-// // 프사최초등록
-// export const initialPicture = (userPk, payload) => {
-//   const token = window.localStorage.getItem("token");
+// 비밀번호 변경
+export const updatePassword = (payload) => {
+  const token = window.localStorage.getItem("token");
 
-//   return axios
-//     .post(`${API_URL}/myblog/${userPk}/update_picture/`, payload, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//         Authorization: `Token ${token}`,
-//       },
-//     })
-//     .then((response) => {
-//       return response;
-//     })
-//     .catch((error) => {
-//       console.error("API 요청 중 에러가 발생했습니다:", error);
-//       throw error;
-//     });
-// };
+  return axios
+    .post(`${API_URL}/accounts/password/change/`, payload, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("서버가 아파요...")
+    })
+}
