@@ -1,14 +1,14 @@
 <template>
-  <div class="modal fade" id="collection" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade text-black" id="collection" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="collection">My Movie Collections</h1>
+          <h1 class="modal-title fs-5 fw-bold" id="collection">나의 컬렉션</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
         </div>
         <div class="modal-body">
-          <ul>
+          <ul class="list-group list-group-flush">
             <MovieCollectionModalList v-for="collection in myCollection" :key="collection.id"
               :items="[collection, moviePk]" />
           </ul>
@@ -31,6 +31,7 @@ import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { userCollection, createCollection } from '@/apis/movieApi';
 import MovieCollectionModalList from '@/components/movie/MovieCollectionModalList.vue'
+import Swal from "sweetalert2";
 
 const userStore = useUserStore()
 const myCollection = ref([])
@@ -48,7 +49,12 @@ const newCollectionCancle = () => {
 const makeCollection = () => {
   createCollection(collectionName.value)
     .then((response) => {
-      window.alert("컬렉션이 생성되었습니다!")
+      Swal.fire({
+        title: `컬렉션이 성공적으로 생성되었습니다.`,
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인"
+      })
       toggle.value = false
     })
     .then(() => {
@@ -92,6 +98,5 @@ onMounted(() => {
 <style scoped>
 .modal-content {
   background-color: white;
-  opacity: 0.9;
 }
 </style>

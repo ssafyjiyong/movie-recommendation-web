@@ -5,7 +5,7 @@
       <div class="d-flex justify-content-center">
       <div class="d-flex justify-content-between infoBox">
       <div class="m-3">
-        <i class="fa-solid fa-comment-dots fa-lg mx-2"></i><span class="fw-bold textColor">{{ category }}</span>
+        <i class="fa-solid fa-comment-dots fa-lg mx-2"></i><span class="fw-bold">{{ category }}</span>
       </div>
       <div>
           <button class="btn btn-custom btn-sm fw-bold mt-3 me-3" @click="goToAddArticle">글쓰기</button>
@@ -86,10 +86,6 @@ onMounted(async () => {
   justify-content: center;
   min-width: 744px;
 }
-.textColor {
-  color: rgb(37, 37, 37);
-}
-
 .btn-custom {
   background-color: #83C442;
   color: white;
