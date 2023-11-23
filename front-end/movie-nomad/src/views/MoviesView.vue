@@ -1,46 +1,90 @@
 <template>
-  <div class="container d-flex justify-content-between my-3"
-  v-if="!movieStore.loading">
+  <div class="container d-flex justify-content-between my-3 text-black" v-if="!movieStore.loading">
     <!-- 검색창 및 검색결과 -->
     <div class="col-9 me-3">
 
-    <!-- 영화 검색창 -->
-    <div class="d-flex justify-content-center mb-4">
-      <form @submit.prevent="searchMovie" :class='["rounded-3", "border", isFocused ? "search-form-focus" : "search-form-nofocus"]'>
-        <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
-          :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
-          @blur="restorePlaceholder">
-        <button type="submit" class="btn btn-link text-black"><i
-            class="fa-solid fa-magnifying-glass"></i></button>
-      </form>
-    </div>
+      <!-- 영화 검색창 -->
+      <div class="d-flex justify-content-center mb-3">
+        <form @submit.prevent="searchMovie"
+          :class='["rounded-3", "border", isFocused ? "search-form-focus" : "search-form-nofocus"]'>
+          <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
+            :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
+            @blur="restorePlaceholder">
+          <button type="submit" class="btn btn-link text-black"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+      </div>
 
       <!-- 영화리스트 공간 -->
       <div class="border rounded-3">
+        <div class="filterTitleBoxTop text-white p-2 m-0">
+          <p class="fw-bold m-0 fs-5">영화목록</p>
+        </div>
+
+        <div class="p-1 movieListBox">
         <div v-if="paginatedMovies.length">
-          <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" 
-          :key="idx" :searchedMovie="searchedMovie" />
+          <div v-for="(searchedMovie, idx) in paginatedMovies" :key="idx">
+            <MovieCard :searchedMovie="searchedMovie" />
+            <hr class="m-0">
+          </div>
         </div>
         <div v-else class="text-center pt-2">
           <i class="fa-solid fa-circle-exclamation text-secondary fa-lg"></i>
           <h4 class="p-2 fw-bold text-secondary">검색어에 해당하는 결과가 없습니다</h4>
         </div>
       </div>
-
       <!-- 더 보기 버튼 -->
-      <button @click="loadMoreMovies">더 보기</button>
+      <div class="d-flex justify-content-center">
+        <button class="btn btn-custom fw-bold m-2" 
+        @click="loadMoreMovies">결과 더 보기</button>
+      </div>
+      </div>
+
     </div>
 
 
     <!-- 필터 -->
-    <div class="border rounded-3 flex-grow-1 p-2">
-      <button
-      v-for="(genre, idx) in genres"
-      :key="idx"
-      type="button" 
-      class="btn btn-outline-success btn-sm">{{ genre.name }}</button>
-    </div>
+    <div class="border rounded-3 flex-grow-1">
 
+        <div class="filterTitleBoxTop text-white p-2">
+          <p class="fw-bold m-0">장르별: </p>
+        </div>
+        <div class="mb-2">
+          <button v-for="(genre, idx) in genres" 
+          :key="idx" 
+          type="button" class="btn btn-outline-success btn-sm m-1">
+            {{ genreTranslation[genre.name] }}
+          </button>
+        </div>
+
+        <div class="filterTitleBox text-white p-2">
+          <p class="fw-bold m-0">분류별: </p>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-outline-success btn-sm m-1">인기도</button>
+          <button class="btn btn-outline-success btn-sm m-1">평점</button>
+          <button class="btn btn-outline-success btn-sm m-1">평가수</button>
+          <button class="btn btn-outline-success btn-sm m-1">유명도</button>
+          <button class="btn btn-outline-success btn-sm m-1">최신</button>
+          <button class="btn btn-outline-success btn-sm m-1">클래식</button>
+        </div>
+        
+        <div class="filterTitleBox text-white p-2">
+          <p class="fw-bold m-0">원어별: </p>
+        </div>
+        <div class="mb-2">
+          <button class="btn btn-outline-success btn-sm m-1">영어</button>
+          <button class="btn btn-outline-success btn-sm m-1">한국어</button>
+          <button class="btn btn-outline-success btn-sm m-1">스페인어</button>
+          <button class="btn btn-outline-success btn-sm m-1">일본어</button>
+          <button class="btn btn-outline-success btn-sm m-1">중국어</button>
+          <button class="btn btn-outline-success btn-sm m-1">광동어</button>
+          <button class="btn btn-outline-success btn-sm m-1">러시아어</button>
+          <button class="btn btn-outline-success btn-sm m-1">프랑스어</button>
+          <button class="btn btn-outline-success btn-sm m-1">인도어</button>
+        </div>
+
+
+    </div>
   </div>
 
   <div v-else class="d-flex justify-content-center align-items-center m-5">
@@ -62,7 +106,7 @@ import { getGenres } from '@/apis/movieApi'
 
 
 defineProps({
-  isDarkMode:Boolean,
+  isDarkMode: Boolean,
 })
 
 const movieStore = useMovieStore()
@@ -102,7 +146,7 @@ const itemsPerPage = 15
 const page = ref(1)
 
 // 페이지에 따라 영화 데이터 범위 조정(최초 첫 번째 페이지 데이터 로드)
-const paginatedMovies = computed (() => {
+const paginatedMovies = computed(() => {
   return movieStore.searchedMovies.slice(0, end.value)
 })
 
@@ -117,21 +161,60 @@ const loadMoreMovies = () => {
 
 const genres = ref([])
 
+const genreTranslation = {
+  'Action': '액션',
+  'Adventure': '모험',
+  'Animation': '애니메이션',
+  'Comedy': '코미디',
+  'Crime': '범죄',
+  'Documentary': '다큐멘터리',
+  'Drama': '드라마',
+  'Family': '가족',
+  'Fantasy': '판타지',
+  'History': '역사',
+  'Horror': '공포',
+  'Music': '음악',
+  'Mystery': '미스터리',
+  'Romance': '멜로/로맨스',
+  'Science Fiction': 'SF',
+  'TV Movie': 'TV 영화',
+  'Thriller': '스릴러',
+  'War': '전쟁',
+  'Western': '서부'
+}
+
 onMounted(() => {
   movieStore.initializeMovies();
   getGenres()
-      .then((response) => {
-        genres.value = response.data
-      })
-      .catch((error) => {
-        console.error('Error getting all genres:', error)
-      });
+    .then((response) => {
+      genres.value = response.data
+    })
+    .catch((error) => {
+      console.error('Error getting all genres:', error)
+    });
 });
 
 </script>
 
 
 <style scoped>
+.btn-custom {
+  background-color: #83C442;
+  color: white;
+}
+.movieListBox {
+  background-color: #F6FFE8;
+}
+.filterTitleBoxTop {
+  background-color: #83C442;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  margin-bottom: 5px;
+}
+.filterTitleBox {
+  background-color: #83C442;
+  margin-bottom: 5px;
+}
 .container {
   min-height: 100vh;
 }
@@ -140,6 +223,7 @@ onMounted(() => {
   border: 1px solid black;
   margin-bottom: 10px;
 }
+
 .search-form-nofocus {
   display: flex;
   justify-content: center;

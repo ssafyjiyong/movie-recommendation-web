@@ -1,9 +1,9 @@
 <template>
-  <div class="container topBox" v-if="!loading">
+  <div class="container topBox text-black" v-if="!loading">
     <!-- Detail의 상단 부분 -->
     <div class="row">
       <!-- Poster -->
-      <div class="radiusBox col-3 p-1">
+      <div class="radiusBox col-3 p-1 m-2 mb-0">
         <img :src="imageFromStore" alt="movie_poster" class="posterImage">
 
         <div class="d-flex flex-column">
@@ -18,26 +18,35 @@
       </div>
 
       <!-- 좋아요 및 영화 내용 -->
-      <div class="col-9">
+      <div class="col  d-flex flex-column ps-0">
         <!-- 좋아요 및 컬렉션 추가 버튼 등 -->
-        <div class="radiusBox d-flex justify-content-around">
-          <button class="btn btn-link text-black p-1" @click="likeMovie"><i
-              class="fa-regular fa-thumbs-up"></i>좋아요</button>
-          <button class="btn btn-link text-black p-1" @click="sosoMovie"><i
-              class="fa-solid fa-face-meh"></i>그저그래요</button>
-          <button class="btn btn-link text-black p-1" @click="hateMovie"><i
-              class="fa-regular fa-thumbs-down"></i>별로예요</button>
+        <div class="radiusBox d-flex flex-column">
+
+          <div class="d-flex justify-content-around">
+            <span class="p-1" @click="likeMovie">
+              <i class="fa-regular fa-thumbs-up"></i>좋아요</span>
+            <span class="p-1" @click="sosoMovie">
+              <i class="fa-solid fa-face-meh"></i>
+              그저그래요</span>
+            <span class="p-1" @click="hateMovie">
+              <i class="fa-regular fa-thumbs-down"></i>
+              별로예요</span>
+          </div>
+
+
           <!-- 컬렉션 모달 띄우기 -->
-          <button class="btn btn-link text-black p-1" data-bs-toggle="modal" data-bs-target="#collection">
-            <i class="fa-regular fa-bookmark"></i>
-            저장
-          </button>
-          <MovieCollectionModal :moviePk="moviePk" />
-          <button class="btn btn-link text-black p-1"><i class="fa-regular fa-pen-to-square"></i>게시글작성</button>
+          <div class="d-flex justify-content-end">
+            <span class="p-1" data-bs-toggle="modal" data-bs-target="#collection">
+              <i class="fa-regular fa-bookmark"></i>
+              저장
+            </span>
+            <MovieCollectionModal :moviePk="moviePk" />
+            <span class="p-1"><i class="fa-regular fa-pen-to-square"></i>게시글작성</span>
+          </div>
         </div>
 
         <!-- 영화 내용  -->
-        <div class="contentBox">
+        <div class="contentBox flex-grow-1 my-0">
           <p>{{ currentMovie.overview }}</p>
         </div>
       </div>
@@ -71,9 +80,13 @@
     <div class="radiusBox">
       <h3>관련게시글</h3>
       <hr>
-      <CommunityGridCard v-for="article in articles" :key="article.id" :article="article">
+
+      <CommunityGridCard 
+      v-for="article in allArticles" 
+      :key="article.id" :article="article">
         {{ article.title }}
       </CommunityGridCard>
+
     </div>
 
   </div>
@@ -98,7 +111,7 @@ import { useMovieStore } from '@/stores/movieStore';
 import { useUserStore } from '@/stores/userStore';
 
 defineProps({
-  isDarkMode:Boolean,
+  isDarkMode: Boolean,
 })
 
 const userStore = useUserStore()
@@ -112,7 +125,7 @@ const moviePk = route.params.movieId
 const actors = ref([])
 const directors = ref([])
 const genres = ref([])
-const articles = ref([])
+const allArticles = ref([])
 const movieMates = ref([])
 const album = ref([])
 
@@ -124,45 +137,47 @@ const spotify = () => {
   window.open(album.value['url'])
 }
 
-const initializecurrentMovie = (moviePk) => {
-  getMovieDetail(moviePk)
-    .then((response) => {
-      if (response && response.data) {
-        currentMovie.value = response.data
-        getActorsList(moviePk)
-          .then(response => {
-            actors.value = response.data.splice(0, 5)
-          })
-        getDirectorsList(moviePk)
-          .then((response) => {
-            directors.value = response.data
-          })
-        getGenresList(moviePk)
-          .then((response) => {
-            genres.value = response.data
-          })
-        thisMovieArticles(moviePk)
-          .then((response) => {
-            // console.log(response.data)
-            articles.value = response.data
-          })
-        thisMovieMate(moviePk)
-          .then((response) => {
-            // console.log(response.data)
-            movieMates.value = response.data
-          })
-        thisMovieOST(moviePk)
-          .then((response) => {
-            // console.log(response.data)
-            album.value = response.data
-          })
-        imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
-        loading.value = false
-      }
-    })
-    .catch((error) => {
-      console.error('Error initializing movie detail:', error)
-    })
+const initializecurrentMovie = async (moviePk) => {
+  try {
+    const detailResponse = await getMovieDetail(moviePk)
+    const actorsResponse = getActorsList(moviePk)
+    const directorsResponse = getDirectorsList(moviePk)
+    const genresResponse = getGenresList(moviePk)
+    const articlesResponse = thisMovieArticles(moviePk)
+    const matesResponse = thisMovieMate(moviePk)
+    const ostResponse = thisMovieOST(moviePk)
+
+    const [
+      actorsData,
+      directorsData,
+      genresData,
+      articlesData,
+      matesData,
+      ostData
+    ] = await Promise.all([
+      actorsResponse,
+      directorsResponse,
+      genresResponse,
+      articlesResponse,
+      matesResponse,
+      ostResponse
+    ])
+
+    if (detailResponse && detailResponse.data) {
+      currentMovie.value = detailResponse.data
+      actors.value = actorsData.data.splice(0, 5)
+      directors.value = directorsData.data
+      genres.value = genresData.data
+      allArticles.value = articlesData.data
+      movieMates.value = matesData.data
+      album.value = ostData.data
+      imageFromStore.value = `https://image.tmdb.org/t/p/w500/${currentMovie.value.poster_path}`
+    }
+  } catch (error) {
+    console.error('Error initializing movie detail:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
 const likeMovie = () => {
@@ -184,6 +199,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
+span {
+  cursor: pointer;
+}
+
+.topBox {
+  background-color: #F6FFE8;
+}
+
 .posterImage {
   width: 100%;
 }
@@ -191,7 +214,7 @@ onMounted(() => {
 .radiusBox {
   border: 1px solid black;
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px;
   margin: 10px 0px;
 }
 
