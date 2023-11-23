@@ -9,12 +9,12 @@
           <h3>{{ currentArticle.title }}</h3>
         </div>
 
-        <div v-if="loadingMovieInfo" class="col-4 text-end aboutMovie">
+        <div v-if="loadingMovieInfo" class="text-end aboutMovie">
           <span>영화 </span>
           <span @click="goToDetail" class="cursorEffect fs-5">'{{ movieTitle }}'</span>
           <span>에 대하여</span>
         </div>
-        <div v-else class="col-4 text-end aboutMovie">
+        <div v-else class="text-end aboutMovie">
           <span>관련 영화 정보를 찾고 있습니다 </span>
           <div class="spinner-border text-success spinner-border-sm" role="status">
             <span class="visually-hidden">Loading...</span>
