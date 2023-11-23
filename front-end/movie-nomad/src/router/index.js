@@ -37,7 +37,7 @@ const router = createRouter({
           component: CommunityView
         },
         {
-          path: '/communitydetail/:articleId',
+          path: '/communitydetail/:category/:articleId',
           name: 'communityDetail',
           component: CommunityDetailView
         },
@@ -58,11 +58,11 @@ const router = createRouter({
       name: 'create',
       component: () => import('@/views/CommunityCreate.vue')
     },
-    // {
-    //   path: '/community/update',
-    //   name: 'communityupdate',
-    //   component: () => import('@/views/CommunityUpdate.vue')
-    // },
+    {
+      path: '/community/update/:articleId/:category',
+      name: 'communityupdate',
+      component: () => import('@/views/CommunityUpdate.vue')
+    },
     {
       path: '/passwordchange',
       name: 'passwordChange',
