@@ -143,6 +143,7 @@ const likeArticle = function () {
 const initializeArticleDetail = (articlePk) => {
   getArticleDetail(articlePk)
     .then((response) => {
+      console.log(response.data)
       currentArticle.value = response.data
       if (response.data.image !== null) {
         articleImage.value = true

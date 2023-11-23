@@ -49,7 +49,8 @@
           <p class="fw-bold m-0">장르별: </p>
         </div>
         <div class="mb-2">
-          <button v-for="(genre, idx) in genres" 
+          <button v-for="(genre, idx) in genres"
+          @click="filterGenre(genre.name)"
           :key="idx" 
           type="button" class="btn btn-outline-success btn-sm m-1">
             {{ genreTranslation[genre.name] }}
@@ -60,19 +61,18 @@
           <p class="fw-bold m-0">분류별: </p>
         </div>
         <div class="mb-2">
-          <button class="btn btn-outline-success btn-sm m-1">인기도</button>
-          <button class="btn btn-outline-success btn-sm m-1">평점</button>
-          <button class="btn btn-outline-success btn-sm m-1">평가수</button>
-          <button class="btn btn-outline-success btn-sm m-1">유명도</button>
-          <button class="btn btn-outline-success btn-sm m-1">최신</button>
-          <button class="btn btn-outline-success btn-sm m-1">클래식</button>
+          <button @click="popularity" class="btn btn-outline-success btn-sm m-1">인기도</button>
+          <button @click="voteAverage" class="btn btn-outline-success btn-sm m-1">평점</button>
+          <button @click="voteCount" class="btn btn-outline-success btn-sm m-1">평가수</button>
+          <button @click="latest" class="btn btn-outline-success btn-sm m-1">최신</button>
+          <button @click="classic" class="btn btn-outline-success btn-sm m-1">클래식</button>
         </div>
         
         <div class="filterTitleBox text-white p-2">
           <p class="fw-bold m-0">원어별: </p>
         </div>
         <div class="mb-2">
-          <button class="btn btn-outline-success btn-sm m-1">영어</button>
+          <button @click="english" class="btn btn-outline-success btn-sm m-1">영어</button>
           <button class="btn btn-outline-success btn-sm m-1">한국어</button>
           <button class="btn btn-outline-success btn-sm m-1">스페인어</button>
           <button class="btn btn-outline-success btn-sm m-1">일본어</button>
@@ -159,6 +159,48 @@ const loadMoreMovies = () => {
   page.value++
 }
 
+//////////////////////////////////필터/////////////////////////////////////////
+const filterGenre = (genre) => {
+  return movieStore.searchedMovies.filter(movie => 
+    movie.genres.some(g => g.name === genre)
+  );
+}
+
+
+const popularity = () => {
+  return movieStore.searchedMovies.sort((a, b) => {
+    return b.popularity - a.popularity
+  })
+}
+
+const voteAverage = () => {
+  return movieStore.searchedMovies.sort((a, b) => {
+    return b.vote_average - a.vote_average
+  })
+}
+
+const voteCount = () => {
+  return movieStore.searchedMovies.sort((a, b) => {
+    return b.vote_count - a.vote_count
+  })
+}
+
+const latest = () => {
+  return movieStore.searchedMovies.sort((a, b) => {
+    return b.release_date > a.release_date ? 1 : -1
+  })
+}
+
+const classic = () => {
+  return movieStore.searchedMovies.sort((a, b) => {
+    return b.release_date > a.release_date ? -1 : 1
+  })
+}
+
+const english = () => {
+  // console.log(movieStore.searchedMovies)
+  return movieStore.searchedMovies.filter(movie => movie.original_language === "en")
+}
 const genres = ref([])
 
 const genreTranslation = {

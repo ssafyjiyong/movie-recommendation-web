@@ -8,6 +8,13 @@ User = get_user_model()
 
 
 class MovieSearchSerializer(serializers.ModelSerializer):
+    class GenreSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Genre
+            fields = '__all__'
+    
+    genres = GenreSerializer(many=True, read_only=True)
+
     class Meta:
         model = Movie
         fields = (
@@ -23,6 +30,7 @@ class MovieSearchSerializer(serializers.ModelSerializer):
             'vote_average',
             'vote_count',
             'popularity',
+            'genres',
         )
 
 

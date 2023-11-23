@@ -41,7 +41,6 @@ onMounted(() => {
 <style scoped>
 a {
   text-decoration: none;
-  color: black;
 }
 
 .collection-name {
@@ -54,7 +53,8 @@ a {
 }
 
 .movie-list {
-  border-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   background-color: #F6FFE8;
   padding: 20px;
   margin: 0 0 20px 0;
