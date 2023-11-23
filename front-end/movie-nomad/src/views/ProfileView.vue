@@ -111,6 +111,7 @@ import ProfilePicture from '@/components/profile/ProfilePicture.vue';
 import ProfileCollection from '@/components/profile/ProfileCollection.vue';
 import PasswordUpdate from '@/components/profile/PasswordUpdate.vue';
 import SignOut from '@/components/profile/SignOut.vue';
+import Swal from "sweetalert2";
 
 
 const userStore = useUserStore()
@@ -159,7 +160,12 @@ const submitStauts = () => {
   }
   changeStatus(payload, userStore.userData['pk'])
     .then(() => {
-      window.alert("변경되었습니다.")
+      Swal.fire({
+        title: `내 상태 변경이 완료되었습니다.`,
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "확인"
+      })
       updateStatus.value = false
       userStore.userInfo.status = status.value
       location.reload()
@@ -191,7 +197,12 @@ onMounted(() => {
     })
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
-      window.alert("유저정보가 존재하지 않습니다.")
+      Swal.fire({
+        title: `유저 정보가 존재하지 않습니다.`,
+        icon: "success",
+        confirmButtonColor: "#FFFFFF",
+        confirmButtonText: "확인"
+      })
       router.push({ name: 'home' })
     })
 
