@@ -31,7 +31,6 @@ import { getArticlesList } from '@/apis/movieApi';
 
 
 defineProps({
-  isDarkMode: Boolean,
   allArticles: Array,
 })
 

@@ -69,16 +69,11 @@
 import { useArticleStore } from '@/stores/articleStore';
 import { useMovieStore } from '@/stores/movieStore';
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getArticleDetail } from '@/apis/movieApi'
-import router from '../router';
-
-
-defineProps({
-  isDarkMode: Boolean,
-})
 
 const route = useRoute()
+const router = useRouter()
 
 const articleStore = useArticleStore()
 const movieStore = useMovieStore()

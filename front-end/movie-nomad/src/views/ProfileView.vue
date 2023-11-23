@@ -171,11 +171,6 @@ const cancleStatus = () => {
   updateStatus.value = false
 }
 
-// 다크모드?
-defineProps({
-  isDarkMode: Boolean,
-})
-
 // 프로필 유저정보 불러오기
 onMounted(() => {
   userProfile(profileUserNickname)

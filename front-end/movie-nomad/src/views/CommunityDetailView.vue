@@ -77,6 +77,7 @@
           </div>
         </form>
       </div>
+
       <CommentCard />
 
     </div>
@@ -95,10 +96,6 @@ import { getArticleDetail, deleteArticleAPI, getMovieDetail } from '@/apis/movie
 import CommentCard from '@/components/community/CommentCard.vue';
 import { computed } from '@vue/reactivity';
 import { likeArticleApi } from '@/apis/movieApi';
-
-defineProps({
-  isDarkMode: Boolean,
-})
 
 const currentArticle = ref([])
 const route = useRoute()

@@ -40,10 +40,6 @@ import { ref } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import Swal from "sweetalert2";
 
-defineProps({
-  isDarkMode:Boolean,
-})
-
 // 회원 가입
 const nickname = ref(null);
 const username = ref(null);

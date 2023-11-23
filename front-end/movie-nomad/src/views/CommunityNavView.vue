@@ -29,10 +29,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 
-defineProps({
-  isDarkMode: Boolean,
-})
-
 </script>
 
 <style scoped>
