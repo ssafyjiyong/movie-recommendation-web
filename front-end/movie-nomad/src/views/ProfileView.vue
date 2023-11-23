@@ -65,13 +65,13 @@
       <!-- 컬렉션과 내 영화 정보(좋아하는 장르 등) -->
       <div class="d-flex justify-content-between">
         <!-- 컬렉션 -->
-        <div class="inBlogBox flex-grow-1 me-2">
-          <div class="collection-box">
-            <ProfileCollection
-              v-for="collection in collections"
-              :key="collection.id"
-              :collection="collection"
-            />
+        <div class="inBlogBox1 me-4 ps-4">
+          <div 
+            class="collection-box col-6"
+            v-for="collection in collections"
+            :key="collection.id"
+          >
+            <ProfileCollection :collection="collection" />
           </div>
         </div>
 
@@ -90,9 +90,15 @@
 
   <!-- 회원정보 변경 및 탈퇴 기능 -->
   <div class="d-flex m-2 justify-content-end">
-    <RouterLink v-show="isMyProfile" :to="{ name: 'profileUpdate' }">
-      <button class="btn btn-secondary btn-sm">회원정보 변경</button>
-    </RouterLink>
+    <button 
+      class="btn btn-secondary btn-sm"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#updatePassword"
+    >
+      비밀번호 변경
+    </button>
+    <PasswordUpdate />
     <button v-show="isMyProfile" type="button" data-bs-toggle="modal" data-bs-target="#signOut"
       class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
     <SignOut />
@@ -104,17 +110,19 @@
 import { following, userProfile, changeStatus } from '../apis/userApi';
 import { userArticleList } from '@/apis/movieApi';
 import { useUserStore } from '@/stores/userStore';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 
 import ProfileArticle from '@/components/profile/ProfileArticle.vue';
 import ProfilePicture from '@/components/profile/ProfilePicture.vue';
 import ProfileCollection from '@/components/profile/ProfileCollection.vue';
+import PasswordUpdate from '@/components/profile/PasswordUpdate.vue';
 import SignOut from '@/components/profile/SignOut.vue';
 
 
 const userStore = useUserStore()
 const route = useRoute()
+const router = useRouter()
 
 const profileUserNickname = route.params.nickname
 const isMyProfile = ref(true)
@@ -187,6 +195,8 @@ onMounted(() => {
     })
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
+      window.alert("유저정보가 존재하지 않습니다.")
+      router.push( { name :'home' } )
     })
 
   userArticleList(route.params.nickname)
@@ -242,6 +252,14 @@ onMounted(() => {
   padding: 5px;
 }
 
+.inBlogBox1 {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .blogBox {
   border: 1px solid black;
   border-radius: 10px;
@@ -259,11 +277,10 @@ onMounted(() => {
   padding: 5px;
 }
 
-.collection-box {
-  display: flex;
-  flex-wrap: wrap;
-}
 
+.collectionBox {
+  display: flex;
+}
 @media (max-width: 635px) {
   .profileImage {
     display: none;

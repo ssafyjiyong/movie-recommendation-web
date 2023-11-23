@@ -117,6 +117,20 @@ export const useUserStore = defineStore("user", () => {
     router.push({ name: "home" });
   };
 
+  const afterUpdatePassword = () => {
+    token.value = "";
+    isLogin.value = false;
+    userData.value = {
+      pk: null,
+      username: "",
+    };
+    nickname.value = "";
+    userInfo.value = null;
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("userPk");
+    router.push({ name: "login" });
+  };
+
   return {
     token,
     isLogin,
@@ -127,6 +141,7 @@ export const useUserStore = defineStore("user", () => {
     loginUser,
     fetchCurrentUser,
     logout,
+    afterUpdatePassword,
     status,
     nickname
   };
