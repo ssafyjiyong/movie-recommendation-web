@@ -12,7 +12,7 @@
             type="email"
             class="form-control"
             id="email"
-            placeholder="you@example.com"
+            placeholder="name@example.com"
           />
         </div>
         <div class="mb-3">
@@ -23,10 +23,11 @@
             type="password"
             class="form-control"
             id="password"
+            placeholder="비밀번호 : 8자리 이상"
           />
         </div>
-        <div class="d-grid gap-2">
-          <button @click="logIn" class="btn btn-success mt-4">로그인</button>
+        <div class="d-grid gap-2 mb-3">
+          <button @click="logIn" class="btn fw-bold">로그인</button>
         </div>
       </div>
     </div>
@@ -74,4 +75,10 @@ const logIn = () => {
 }
 </script>
 
-<style></style>
+<style scoped>
+.btn {
+  border-radius: 20px;
+  background-color: #7DBE3F;
+  color: white;
+}
+</style>

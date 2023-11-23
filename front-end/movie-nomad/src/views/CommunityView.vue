@@ -56,7 +56,8 @@ ul>li {
   border-radius: 50px;
 }
 
-@media only screen and (max-width: 820px) {
+/* 스몰사이즈 */
+@media only screen and (max-width: 576px) {
   .theTopBox {
     display: block;
   }

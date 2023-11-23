@@ -8,7 +8,7 @@
         <h2 class="text-center mb-4">회원가입</h2>
         <div class="mb-3">
           <label for="nickname" class="form-label">닉네임</label>
-          <input v-model="nickname" type="text" class="form-control" id="nickname" placeholder="본인을 상징하는 닉네임을 정해주세요!" />
+          <input v-model="nickname" type="text" class="form-control" id="nickname" placeholder="닉네임을 정해주세요" />
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">이메일</label>
@@ -16,15 +16,19 @@
         </div>
         <div class="mb-4">
           <label for="password1" class="form-label">비밀번호</label>
-          <input v-model="password1" type="password" class="form-control" id="password1" placeholder="비밀번호" />
+          <input v-model="password1" 
+          type="password" 
+          class="form-control" 
+          id="password1" 
+          placeholder="비밀번호(최소 8자리)" />
         </div>
         <div class="mb-4">
           <label for="password2" class="form-label">비밀번호 확인</label>
           <input v-model="password2" @keyup.enter="signUp" type="password" class="form-control" id="password2"
             placeholder="비밀번호 확인" />
         </div>
-        <div class="d-grid">
-          <button @click="signUp" class="btn btn-success mt-4">회원가입</button>
+        <div class="d-grid mb-4">
+          <button @click="signUp" class="btn fw-bold">회원가입</button>
         </div>
       </div>
     </div>
@@ -98,4 +102,11 @@ const signUp = () => {
 };
 </script>
 
-<style></style>
+<style scoped>
+
+.btn {
+  border-radius: 20px;
+  background-color: #7DBE3F;
+  color: white;
+}
+</style>
