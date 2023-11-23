@@ -3,18 +3,28 @@
   v-if="!movieStore.loading">
     <!-- 검색창 및 검색결과 -->
     <div class="col-9 me-3">
-      <!-- 검색창 -->
-      <div class="searchBox">
-        <form @submit.prevent="searchMovie">
-          <input type="text" v-model="movieKeyword">
-          <input type="submit">
-        </form>
-      </div>
+
+    <!-- 영화 검색창 -->
+    <div class="d-flex justify-content-center mb-4">
+      <form @submit.prevent="searchMovie" :class='["rounded-3", "border", isFocused ? "search-form-focus" : "search-form-nofocus"]'>
+        <input @keyup="debouncedSearch" type="text" class="search-input" :placeholder=placeholderText
+          :value="movieKeyword" @input="movieKeyword = $event.target.value" @focus="clearPlaceholder"
+          @blur="restorePlaceholder">
+        <button type="submit" class="btn btn-link text-black"><i
+            class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+    </div>
 
       <!-- 영화리스트 공간 -->
-      <div class="movieListBox">
-        <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" 
-        :key="idx" :searchedMovie="searchedMovie" />
+      <div class="border rounded-3">
+        <div v-if="paginatedMovies.length">
+          <MovieCard v-for="(searchedMovie, idx) in paginatedMovies" 
+          :key="idx" :searchedMovie="searchedMovie" />
+        </div>
+        <div v-else class="text-center pt-2">
+          <i class="fa-solid fa-circle-exclamation text-secondary fa-lg"></i>
+          <h4 class="p-2 fw-bold text-secondary">검색어에 해당하는 결과가 없습니다</h4>
+        </div>
       </div>
 
       <!-- 더 보기 버튼 -->
@@ -23,8 +33,12 @@
 
 
     <!-- 필터 -->
-    <div class="filterBox flex-grow-1">
-      <p>필터가 들어갈 자리입니다</p>
+    <div class="border rounded-3 flex-grow-1 p-2">
+      <button
+      v-for="(genre, idx) in genres"
+      :key="idx"
+      type="button" 
+      class="btn btn-outline-success btn-sm">{{ genre.name }}</button>
     </div>
 
   </div>
@@ -42,6 +56,10 @@
 import MovieCard from '@/components/MovieCard.vue';
 import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
+import { debounce } from 'lodash';
+import { getGenres } from '@/apis/movieApi'
+
+
 
 defineProps({
   isDarkMode:Boolean,
@@ -49,6 +67,28 @@ defineProps({
 
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
+
+// 검색창 관련 변수
+const placeholderText = ref('원하시는 영화를 검색해보세요!')
+const isFocused = ref(false)
+
+const searchMovieForRelatedSearches = function () {
+  movieStore.searchTheMovie(movieKeyword.value)
+}
+
+const debouncedSearch = debounce(searchMovieForRelatedSearches, 100);
+
+const clearPlaceholder = function () {
+  placeholderText.value = ''
+  isFocused.value = true
+}
+
+const restorePlaceholder = function () {
+  setTimeout(() => {
+    placeholderText.value = '원하시는 영화를 검색해보세요!'
+    isFocused.value = false
+  }, 200)
+}
 
 // 로딩 관련
 const randomMessage = movieStore.loadingMessage[Math.floor(Math.random() * movieStore.loadingMessage.length)];
@@ -75,8 +115,17 @@ const loadMoreMovies = () => {
   page.value++
 }
 
+const genres = ref([])
+
 onMounted(() => {
   movieStore.initializeMovies();
+  getGenres()
+      .then((response) => {
+        genres.value = response.data
+      })
+      .catch((error) => {
+        console.error('Error getting all genres:', error)
+      });
 });
 
 </script>
@@ -87,18 +136,45 @@ onMounted(() => {
   min-height: 100vh;
 }
 
-.filterBox {
-  border: 1px solid black;
-  border-radius: 10px;
-}
-
-.movieListBox {
-  border: 1px solid black;
-  border-radius: 10px;
-}
-
 .searchBox {
   border: 1px solid black;
   margin-bottom: 10px;
+}
+.search-form-nofocus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  padding: 7px;
+  /* box-shadow: 0 4px 6px 0 hsla(0, 0%, 32%, 0.2); */
+}
+
+.search-form-focus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  padding: 7px;
+}
+
+.search-input {
+  width: 90%;
+  border: none;
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input::placeholder {
+  text-align: center;
+  font-weight: bold;
+  color: #7DBE3F;
+  font-size: 1.3em;
+  opacity: 0.7;
 }
 </style>

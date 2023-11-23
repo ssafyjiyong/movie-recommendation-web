@@ -133,6 +133,11 @@ export const getCollection = (collectionId) => {
   return axios.get(`${API_URL}/movies/collections/${collectionId}/`)
 }
 
+// 전체 장르 불러오기
+export const getGenres = () => {
+  return axios.get(`${API_URL}/movies/genres/`)
+}
+
 // 컬렉션에 영화 추가하기
 export const addCollection = (collectionId, movieId) => {
   const token = window.localStorage.getItem('token')

@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getMoviesList, searchMovie } from '@/apis/movieApi'
+import { getMoviesList } from '@/apis/movieApi'
 
 export const useMovieStore = defineStore('movie', () => {
   // 로딩 메세지
@@ -86,7 +86,7 @@ export const useMovieStore = defineStore('movie', () => {
       })
       .catch((error) => {
         console.error('Error getting all movies:', error)
-      })
+      });
   }
 
   return { allMovies, searchedMovies, initializeMovies, searchTheMovie, loadingMessage, loading }

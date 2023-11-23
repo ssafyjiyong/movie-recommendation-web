@@ -20,7 +20,7 @@
       <div class="related-searches" v-if="isFocused">
         <div class="p-2" v-for="relatedSearch in relatedSearches" :key="relatedSearch.pk">
           <div @click="goToDetail(relatedSearch.pk)">
-            <p class="text-black">{{ relatedSearch.title }}</p>
+            <p class="text-black m-0">{{ relatedSearch.title }}</p>
           </div>
         </div>
       </div>
