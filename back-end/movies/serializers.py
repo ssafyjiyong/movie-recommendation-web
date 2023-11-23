@@ -75,7 +75,7 @@ class CollectionSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
-            fields = ('pk', 'nickname', 'profile_pic')
+            fields = ('pk', 'nickname',)
 
     user = UserSerializer(read_only=True)
     

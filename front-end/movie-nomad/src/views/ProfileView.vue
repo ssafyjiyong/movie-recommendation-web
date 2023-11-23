@@ -66,11 +66,12 @@
       <div class="d-flex justify-content-between">
         <!-- 컬렉션 -->
         <div class="inBlogBox flex-grow-1 me-2">
-          <div class="text-center">
-            <small>Collection</small>
-          </div>
-          <div class="text-center">
-            <img src="@/images/image1.jpg" alt="collection_img" class="collectionImage" v-for="index in Array(4).fill()">
+          <div class="collection-box">
+            <ProfileCollection
+              v-for="collection in collections"
+              :key="collection.id"
+              :collection="collection"
+            />
           </div>
         </div>
 
@@ -107,7 +108,8 @@ import { useRoute } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 
 import ProfileArticle from '@/components/profile/ProfileArticle.vue';
-import ProfilePicture from '@/components/profile/ProfilePicture.vue'
+import ProfilePicture from '@/components/profile/ProfilePicture.vue';
+import ProfileCollection from '@/components/profile/ProfileCollection.vue';
 import SignOut from '@/components/profile/SignOut.vue';
 
 
@@ -171,6 +173,7 @@ onMounted(() => {
     .then((response) => {
       console.log(response.data)
       userInfo.value = response.data
+      collections.value = response.data.collections
       status.value = userStore.userInfo.status
     })
     .then(() => {
@@ -193,6 +196,8 @@ onMounted(() => {
     .catch((error) => {
       console.log("서버가 아파요...")
     })
+
+
 })
 /////////////////////////////////////////////////////////////////
 
@@ -252,6 +257,11 @@ onMounted(() => {
   border: 1px solid black;
   border-radius: 10px;
   padding: 5px;
+}
+
+.collection-box {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 635px) {
