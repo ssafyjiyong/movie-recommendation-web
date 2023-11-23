@@ -397,7 +397,7 @@ export const createCommentAPI = (articlePk, payload) => {
 export const deleteCommentAPI = (articlePk, commentPk) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .delete(`${API_URL}/community/article_detail/${articlePk}/comment/${commentPk}`, {
+    .delete(`${API_URL}/community/article_detail/${articlePk}/comment/${commentPk}/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -407,6 +407,37 @@ export const deleteCommentAPI = (articlePk, commentPk) => {
     })
     .catch((error) => {
       console.error('comment 삭제, API 요청 중 에러가 발생했습니다:', error)
+      throw error
+    })
+}
+
+// comment 조회
+export const likeCommentAPI = (commentPk) => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .post(`${API_URL}/community/comment/${commentPk}/`, {}, {
+      headers:{
+        Authorization: `Token ${token}`
+    }
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.error('comment like, API 요청 중 에러가 발생했습니다:', error)
+      throw error
+    })
+}
+
+// comment 조아요
+export const getCommentAPI = (commentPk) => {
+  return axios
+    .get(`${API_URL}/community/comment/${commentPk}/`)
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.error('comment 조회, API 요청 중 에러가 발생했습니다:', error)
       throw error
     })
 }

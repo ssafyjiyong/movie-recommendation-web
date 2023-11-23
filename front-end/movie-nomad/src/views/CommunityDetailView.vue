@@ -69,16 +69,21 @@
 
       <!-- 댓글 작성란 -->
       <div>
-        <form>
+        <form @submit.prevent="commentCreate">
           <div class="mb-3">
             <label for="formControlInput" class="form-label"></label>
-            <input type="text" class="form-control w-75 d-inline-block m-2" id="formControlInput" placeholder="욕설/비난 시 회원 탈퇴입니다.">
+            <input v-model="commentContent" type="text" class="form-control w-75 d-inline-block m-2" id="formControlInput" placeholder="욕설/비난 시 회원 탈퇴입니다.">
             <button type="submit" class="btn btn-success">댓글 작성</button>
           </div>
         </form>
       </div>
 
-      <CommentCard />
+      <CommentCard 
+      v-for="comment in currentArticle.comments"
+      :key="comment.id"
+      :comment="comment"
+      />
+
 
     </div>
     <div>
@@ -95,7 +100,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getArticleDetail, deleteArticleAPI, getMovieDetail } from '@/apis/movieApi'
 import CommentCard from '@/components/community/CommentCard.vue';
 import { computed } from '@vue/reactivity';
-import { likeArticleApi } from '@/apis/movieApi';
+import { likeArticleApi, createCommentAPI } from '@/apis/movieApi';
 
 const currentArticle = ref([])
 const route = useRoute()
@@ -105,12 +110,24 @@ const movieTitle = ref('')
 const moviePk = ref(0)
 const articleImage = ref(false)
 const alreadyLike = ref(false)
+const commentContent = ref()
 
 const loadingMovieInfo = ref(false)
 
 const imageExist = computed(() => {
   return articleImage.value
 })
+
+// 댓글 작성
+const commentCreate = () => {
+  const payload = {
+    content: commentContent.value
+  }
+  createCommentAPI(articlePk, payload)
+  .then(() => {
+    location.reload()
+  })
+}
 
 // 영화 디테일로 이동
 const goToDetail = function () {
@@ -140,7 +157,6 @@ const likeArticle = function () {
 const initializeArticleDetail = (articlePk) => {
   getArticleDetail(articlePk)
     .then((response) => {
-      console.log(response.data)
       currentArticle.value = response.data
       if (response.data.image !== null) {
         articleImage.value = true
