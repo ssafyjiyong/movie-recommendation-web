@@ -163,6 +163,7 @@ const loadMoreMovies = () => {
 }
 
 //////////////////////////////////필터/////////////////////////////////////////
+
 const filteredMovies = ref([]);
 
 const resetFilteredMovies = () => {
@@ -211,6 +212,7 @@ const classic = () => {
 
 const english = () => {
   filteredMovies.value = movieStore.searchedMovies.filter(movie => movie.original_language === "en")
+
 }
 
 const korean = () => {

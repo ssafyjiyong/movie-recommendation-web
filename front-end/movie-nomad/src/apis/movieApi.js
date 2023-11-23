@@ -133,6 +133,25 @@ export const getCollection = (collectionId) => {
   return axios.get(`${API_URL}/movies/collections/${collectionId}/`)
 }
 
+// 컬렉션 삭제
+export const deleteCollectionApi = (collectionId) => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .delete(
+      `${API_URL}/movies/collections/${collectionId}/`,{
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.error('컬렉션 삭제, API 요청 중 에러가 발생했습니다:', error)
+      throw error
+    })
+}
+
 // 전체 장르 불러오기
 export const getGenres = () => {
   return axios.get(`${API_URL}/movies/genres/`)

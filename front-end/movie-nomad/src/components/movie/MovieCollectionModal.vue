@@ -36,6 +36,7 @@ import Swal from "sweetalert2";
 const userStore = useUserStore()
 const myCollection = ref([])
 const toggle = ref(false)
+const deleteToggle = ref(false)
 
 const collectionName = ref('')
 const newCollection = () => {
