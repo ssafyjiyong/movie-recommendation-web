@@ -122,11 +122,21 @@ const formatDate = (dateStr) => {
   border-start-end-radius: 10px;
 }
 
-@media only screen and (max-width: 820px) {
+/* 미디엄사이즈 */
+@media only screen and (max-width: 768px) {
+
+.topTopBox {
+  justify-content:start;
+  margin: auto 5px;
+}
+}
+
+/* 스몰사이즈 */
+@media only screen and (max-width: 576px) {
 
   .theTopBox,
   .topTopBox {
-    display: block;
+    justify-content:start;
     margin: auto 5px;
   }
 }
