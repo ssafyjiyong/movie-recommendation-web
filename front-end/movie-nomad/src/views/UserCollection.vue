@@ -31,7 +31,7 @@ onMounted(() => {
       Swal.fire({
         title: `유저 정보가 존재하지 않습니다.`,
         icon: "success",
-        confirmButtonColor: "#FFFFFF",
+        confirmButtonColor: "#DC3545",
         confirmButtonText: "확인"
       })
       router.push({ name: 'home' })

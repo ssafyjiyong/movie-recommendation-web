@@ -17,9 +17,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { getMoviesList } from '@/apis/movieApi';
-import { useMovieStore } from '@/stores/movieStore';
 
-const movieStore = useMovieStore()
 const props = defineProps({
   collection: Object
 })

@@ -44,7 +44,7 @@ const removeMovie = (a, b) => {
   Swal.fire({
         title: `${props.items[0].name} 컬렉션에서 제거되었습니다.`,
         icon: "success",
-        confirmButtonColor: "#FFFFFF",
+        confirmButtonColor: "#DC3545",
         confirmButtonText: "확인"
       })
   isCollected.value = false
