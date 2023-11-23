@@ -58,8 +58,8 @@ class BlogSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = Article
-            fields = ('pk', 'title', 'content', 'created_at', 'updated_at',)
-            read_only_fields = ('movie','user',)
+            fields = ('pk', 'title', 'content', 'created_at', 'updated_at', 'user')
+            read_only_fields = ('movie',)
 
     # 좋아요한 영화만 프로필에 표시 하기 위함
     class MovieSerializer(serializers.ModelSerializer):

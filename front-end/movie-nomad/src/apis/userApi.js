@@ -72,6 +72,22 @@ export const logOut = () => {
     });
 };
 
+
+export const signOut = (nickname, token) => {
+  return axios
+    .delete(`${API_URL}/myblog/${nickname}/signout/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.log("안됨...돌아가")
+    })
+}
+
 // 현재 사용자 정보 조회
 export const whoIsCurrentUser = (token) => {
   return axios
@@ -170,3 +186,43 @@ export const changeStatus = (payload, userPk) => {
       throw error;
     });
 };
+
+// 프사변경
+export const updatePicture = (userPk, payload) => {
+  const token = window.localStorage.getItem("token");
+
+  return axios
+    .put(`${API_URL}/myblog/${userPk}/update_picture/`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("API 요청 중 에러가 발생했습니다:", error);
+      throw error;
+    });
+};
+
+// // 프사최초등록
+// export const initialPicture = (userPk, payload) => {
+//   const token = window.localStorage.getItem("token");
+
+//   return axios
+//     .post(`${API_URL}/myblog/${userPk}/update_picture/`, payload, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//         Authorization: `Token ${token}`,
+//       },
+//     })
+//     .then((response) => {
+//       return response;
+//     })
+//     .catch((error) => {
+//       console.error("API 요청 중 에러가 발생했습니다:", error);
+//       throw error;
+//     });
+// };

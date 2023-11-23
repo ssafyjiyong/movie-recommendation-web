@@ -5,12 +5,24 @@
     <div class="col-4">
       <!-- 프로필 사진과 이름, 닉네임 -->
       <div class="text-center">
-        <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage my-2">
+        <div v-show="!profileExist">
+          <img src="@/images/main_background.jpg" alt="profile_img" class="profileImage my-2">
+        </div>
+        <div v-show="profileExist">
+          <img :src="`http://localhost:8000${userInfo.profile_pic}`" alt="profile_image" class="profileImage my-2">
+        </div>
+        <div v-show="isMyProfile">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#profilePicture" class="btn btn-link text-secondary p-0">
+            <i class="fa-solid fa-camera" style="color: #8eecb2;"></i>
+          </button>
+          <ProfilePicture />
+        </div>
         <div class="d-flex justify-content-center align-items-center">
           <span class="fw-bold">{{ profileUserNickname }}</span>의 Blog
           <div v-show="!isMyProfile">
             <button class="btn btn-success btn-sm mx-2" @click="follow">팔로우</button>
           </div>
+
         </div>
       </div>
 
@@ -25,7 +37,7 @@
         <div v-show="!updateStatus">
           <p>{{ userInfo.status }}</p>
           <div v-if="isMyProfile">
-                      <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end">
               <button @click="statusUpdate" class="btn btn-link text-secondary p-0">
                 <i class="fa-regular fa-pen-to-square"></i>
               </button>
@@ -80,9 +92,12 @@
     <RouterLink v-show="isMyProfile" :to="{ name: 'profileUpdate' }">
       <button class="btn btn-secondary btn-sm">회원정보 변경</button>
     </RouterLink>
-    <button v-show="isMyProfile" class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
+    <button v-show="isMyProfile" type="button" data-bs-toggle="modal" data-bs-target="#signOut"
+      class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
+    <SignOut />
   </div>
 </template>
+
 
 <script setup>
 import { following, userProfile, changeStatus } from '../apis/userApi';
@@ -92,6 +107,8 @@ import { useRoute } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 
 import ProfileArticle from '@/components/profile/ProfileArticle.vue';
+import ProfilePicture from '@/components/profile/ProfilePicture.vue'
+import SignOut from '@/components/profile/SignOut.vue';
 
 
 const userStore = useUserStore()
@@ -100,9 +117,15 @@ const route = useRoute()
 const profileUserNickname = route.params.nickname
 const isMyProfile = ref(true)
 const updateStatus = ref(false)
+const profile_image = ref(true)
 const status = ref()
 const articles = ref([])
 const userInfo = ref([])
+const collections = ref([])
+
+const profileExist = computed(() => {
+  return profile_image.value
+})
 
 // 팔로우
 const follow = () => {
@@ -143,22 +166,27 @@ defineProps({
 })
 
 // 프로필 유저정보 불러오기
-onMounted(async() => {
-  await userProfile(profileUserNickname)
+onMounted(() => {
+  userProfile(profileUserNickname)
     .then((response) => {
+      console.log(response.data)
       userInfo.value = response.data
       status.value = userStore.userInfo.status
     })
     .then(() => {
-      if (userInfo.value.nickname !== profileUserNickname) {
+      if (userStore.nickname !== profileUserNickname) {
         isMyProfile.value = false
+      }
+
+      if (!userInfo.value.profile_pic) {
+        profile_image.value = false
       }
     })
     .catch((error) => {
       console.error('Error initializing userProfile:', error)
     })
 
-  await userArticleList(route.params.nickname)
+  userArticleList(route.params.nickname)
     .then((response) => {
       articles.value = response.data
     })
