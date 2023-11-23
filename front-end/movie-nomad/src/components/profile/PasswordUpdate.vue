@@ -12,7 +12,6 @@
           <input id="password1" class="form-control" type="password" placeholder="비밀번호(최소 8자리)" v-model="new_password1">
           <label class="form-label" for="password2">비밀번호 확인</label>
           <input id="password2" class="form-control" type="password" placeholder="비밀번호 확인" v-model="new_password2" aria-describedby="passwordHelpBlock">
-          <div v-show="wrong">비밀번호가 일치하지 않습니다.</div>
           <div class="modal-footer mt-3">
             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">취소</button>
             <input type="submit" class="btn btn-success btn-sm" value="비밀번호 변경" />
@@ -20,6 +19,7 @@
         </form>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

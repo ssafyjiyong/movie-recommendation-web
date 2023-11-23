@@ -1,8 +1,8 @@
 <template>
-  <div class="box col-10 ms-3">
+  <div class="box col-8">
     <div class="collection-name">{{ collection.name }}</div>
     <div
-      class="col-5"
+      class="col-6"
       v-for="movie in movies"
       :key="movie.id"
     >
@@ -53,6 +53,6 @@ onMounted( () => {
 
 .box img{
   justify-content: center;
-  width: 100%;
+  width: 80%;
 }
 </style>
