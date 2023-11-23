@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from movies.models import Movie, Genre, Actor
-from community.models import Article, Comment, Recomment, Image
+from community.models import Article, Comment, Recomment
 
 User = get_user_model()
 
@@ -29,6 +29,17 @@ class ArticleListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# # 게시글 이미지
+# class ArticleImageSerializer(serializers.ModelSerializer):
+#     image = serializers.ImageField(use_url=True)
+
+#     class Meta:
+#         model = Image
+#         fields = [
+#             'image',
+#         ]
+
+
 # 단일 게시글(CommunityDetail)
 class ArticleSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
@@ -54,15 +65,9 @@ class ArticleSerializer(serializers.ModelSerializer):
             model = Recomment
             fields = ('pk', 'content', 'created_at',)
             read_only_fields = ('comment','user',)
-    
-    class ImageSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Image
-            fields = ('pk', 'article_image')
 
     comments = CommentSerializer(read_only=True, many=True)
     recomments = RecommentSerializer(read_only=True, many=True)
-    images = ImageSerializer(read_only=True, many=True)
     like_users = LikeUserSerializer(read_only=True, many=True)
     like_user_count = serializers.IntegerField(
         source='like_users.count', read_only=True

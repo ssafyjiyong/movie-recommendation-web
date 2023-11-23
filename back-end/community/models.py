@@ -25,13 +25,14 @@ class Article(models.Model):
     category = models.CharField(max_length=10, choices=categories)
     title = models.CharField(max_length=100)
     content = models.TextField(null=False)
+    image = models.ImageField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Image(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    article_img = models.ImageField(blank=True)
+# class Image(models.Model):
+#     article = models.ForeignKey(Article, on_delete=models.CASCADE)
+#     article_img = models.ImageField(null=True, blank=True)
 
 
 class Comment(models.Model):

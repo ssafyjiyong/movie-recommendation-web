@@ -23,7 +23,7 @@ def articles(request):
         return Response(serializer.data)
     # 게시글 등록
     elif request.method == 'POST':
-        serializer = ArticleListSerializer(data=request.data)
+        serializer = ArticleSerializer(data=request.data, context={'request': request})
 
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)

@@ -111,11 +111,7 @@ export const userProfile = (userNickname) => {
 
 // 팔로우, 언팔로우
 export const following = ({ token, nickname }) => {
-  const headers = {
-    Authorization: `Token ${token}`
-  }
   return axios
-
     .post(
       `${API_URL}/myblog/${nickname}/following/`,
       {},
@@ -143,6 +139,26 @@ export const profileUpdate = (userPk, payload) => {
     .put(`${API_URL}/profile/${userPk}/profileupdate/`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `Token ${token}`,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error("API 요청 중 에러가 발생했습니다:", error);
+      throw error;
+    });
+};
+
+// 상메변경
+export const changeStatus = (payload, userPk) => {
+  const token = window.localStorage.getItem("token");
+
+  return axios
+    .put(`${API_URL}/myblog/${userPk}/update_status/`, payload,
+      {
+      headers: {
         Authorization: `Token ${token}`,
       },
     })

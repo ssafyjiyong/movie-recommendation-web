@@ -50,6 +50,7 @@ export const useUserStore = defineStore("user", () => {
 
 
 
+
   const loginUser = (payload) => {
     logIn(payload)
       .then((response) => {
@@ -58,6 +59,7 @@ export const useUserStore = defineStore("user", () => {
           isLogin.value = true;
           window.localStorage.setItem("token", token.value);
           fetchCurrentUser();
+          router.push({ name: "home" });
         } else {
           Swal.fire({
             title: "로그인에 실패했습니다. \n 아이디와 비밀번호를 확인하세요",
@@ -77,16 +79,16 @@ export const useUserStore = defineStore("user", () => {
       });
   };
 
-  const fetchCurrentUser = () => {
-    if (isLogin.value) {
-      whoIsCurrentUser(token.value)
-        .then((res) => {
-          setCurrentUser(res.data);
-          window.localStorage.setItem("userPk", res.data.pk);
-          router.push({ name: "home" });
-        })
-        .then(() => {
-          getCurrentUserInfo(userData.value['username'])
+
+    const fetchCurrentUser = () => {
+      if (isLogin.value) {
+        whoIsCurrentUser(token.value)
+          .then((res) => {
+            setCurrentUser(res.data);
+            window.localStorage.setItem("userPk", res.data.pk);
+          })
+          .then(() => {
+            getCurrentUserInfo(userData.value['username'])
             .then((res) => {
               userInfo.value = res.data
               return userInfo
