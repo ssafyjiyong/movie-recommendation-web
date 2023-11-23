@@ -21,14 +21,14 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
 import { updatePassword } from '@/apis/userApi';
 import { useUserStore } from '@/stores/userStore';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Swal from 'sweetalert2';
+import MovieDetailView from '../../views/MovieDetailView.vue';
 
 const userStore = useUserStore()
 
@@ -69,7 +69,7 @@ const submitPassword = () => {
     new_password1: new_password1.value,
     new_password2: new_password2.value,
   };
-  
+
   updatePassword(payload)
     .then((response) => {
       Swal.fire({
@@ -90,6 +90,4 @@ const submitPassword = () => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

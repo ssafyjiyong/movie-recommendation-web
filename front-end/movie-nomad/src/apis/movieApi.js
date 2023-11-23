@@ -303,6 +303,7 @@ export const updateArticleAPI = (articlePk, payload) => {
   return axios
     .put(`${API_URL}/community/article_detail/${articlePk}/`, payload, {
       headers: {
+        "Content-Type": "multipart/form-data",
         Authorization: `Token ${token}`
       }
     })
