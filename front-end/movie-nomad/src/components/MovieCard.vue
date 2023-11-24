@@ -1,5 +1,5 @@
 <template>
-  <div class="cardBox">
+  <div :class="isDarkMode? 'cardBox-dark':'cardBox'">
     <div class="cardInnerBox d-flex">
       <!-- 그림 -->
       <div class="flex-grow-1 text-center">
@@ -52,6 +52,7 @@ const router = useRouter()
 
 const props = defineProps({
   searchedMovie: Object,
+  isDarkMode:Boolean,
 })
 
 const movieContent = computed(() => {
@@ -105,6 +106,11 @@ const formatVoteCount = (voteCount) => {
 .cardBox {
   margin: 5px;
   background-color: white;
+}
+.cardBox-dark {
+  margin: 5px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
 
 .cardInnerBox {

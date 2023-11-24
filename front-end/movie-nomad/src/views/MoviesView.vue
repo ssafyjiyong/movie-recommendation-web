@@ -29,7 +29,9 @@
 
             <div v-if="paginatedMovies.length">
               <div v-for="(searchedMovie, idx) in paginatedMovies" :key="idx">
-                <MovieCard :searchedMovie="searchedMovie" />
+                <MovieCard 
+                :searchedMovie="searchedMovie" 
+                :isDarkMode="isDarkMode"/>
                 <hr class="m-0">
               </div>
             </div>
@@ -96,7 +98,7 @@
     <div class="spinner-border text-success d-inline" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-    <h3 class="m-3">{{ randomMessage }}</h3>
+    <h3 class="m-3 fw-bold">{{ randomMessage }}</h3>
   </div>
 </template>
 
@@ -107,6 +109,10 @@ import { ref, onMounted, computed } from 'vue';
 import { useMovieStore } from '@/stores/movieStore';
 import { debounce } from 'lodash';
 import { getGenres } from '@/apis/movieApi'
+
+defineProps({
+  isDarkMode:Boolean,
+})
 
 const movieStore = useMovieStore()
 const movieKeyword = ref('')
@@ -286,6 +292,10 @@ onMounted(() => {
 
 
 <style scoped>
+button:focus {
+  background-color: #198754;
+  color: white;
+}
 .btn-custom {
   background-color: #83C442;
   color: white;

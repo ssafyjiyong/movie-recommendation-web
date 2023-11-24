@@ -1,9 +1,9 @@
 <template>
   <router-view :key="route.fullPath" />
-  <div class="d-flex justify-content-center superTop">
+  <div class="d-flex justify-content-start superTop">
     <div class="topContainer d-flex">
       <!-- 프로필 사진 및 상태 -->
-      <div class="col-4 leftSide">
+      <div class="col-4 leftSide text-center">
         <!-- 프로필 사진과 이름, 닉네임 -->
         <div class="text-center">
           <div v-show="!profileExist">
@@ -29,15 +29,15 @@
         </div>
 
         <!-- 팔로우 현황(완료) -->
-        <div class="followBox p-2">
+        <div class="followBox p-2 mt-2 mb-3">
           <small class="m-0"><i class="fa-solid fa-users"></i> {{ userInfo.follower_count }} followers · </small>
           <small class="m-0">{{ userInfo.following_count }} followings</small>
         </div>
 
         <!-- 상태메세지(완료) -->
-        <div class="radiusBox">
+        <div class="border rounded-3 p-3">
           <div v-show="!updateStatus">
-            <p>{{ userInfo.status }}</p>
+            <p class="m-0">{{ userInfo.status }}</p>
             <div v-if="isMyProfile">
               <div class="d-flex justify-content-end">
                 <button @click="statusUpdate" class="btn btn-link text-secondary p-0">
@@ -57,31 +57,34 @@
         </div>
 
         <!-- 총 영화 본 시간 -->
-        <div class="radiusBox text-center">
-          <p>와우! <strong>{{ userInfo['total_watch'] }}시간</strong> 보았다 영화를!</p>
+        <div class="border rounded-3 p-4 mt-2">
+          <p class="m-0">와우! <strong>{{ userInfo['total_watch'] }}시간</strong> 보았다 영화를!</p>
+          <hr class="m-2">
+          <small>좋아해, 너, 영화?</small>
         </div>
       </div>
 
       <!-- 블로그 형식 -->
-      <div class="d-flex flex-column rounded-4 mx-2 myBlogBox flex-grow-1 p-3">
+      <div class="d-flex flex-column rounded-4 mx-2 myBlogBox flex-grow-1 p-3 borderCustom text-black">
         <!-- 컬렉션과 내 영화 정보(좋아하는 장르 등) -->
         <div class="d-flex justify-content-around mb-2">
           <!-- 컬렉션 -->
-          <div class="minimumBox border col-5 bg-white rounded-3">
+        <div :class="['minimumBox', 'border', 'col-5', 'rounded-3', isDarkMode ? 'bgCustom-dark' : 'bgCustom']">
 
-            <div v-if="collections.length > 0" class="border">
-              <div class="collection-box" v-for="collection in collections.slice(0, 1)" :key="collection.id">
-                <ProfileCollection :collection="collection" />
-                <button class="btn btn-success btn-sm" @click="moreCollections">컬렉션 더보기</button>
-              </div>
-            </div>
-
-            <div class="text-center">
+            <div class="text-center minLimit">
               <div class="p-1">
-                <p>나의 컬렉션</p>
+                <p class="fw-bold">나의 대표 컬렉션</p>
               </div>
               <hr class="m-0">
-              <div class="p-1">
+
+              <div v-if="collections.length > 0">
+                <div v-for="collection in collections.slice(0, 1)" :key="collection.id">
+                  <ProfileCollection :collection="collection" />
+                  <button class="btn btn-success btn-sm mb-3" @click="moreCollections">컬렉션 더보기</button>
+                </div>
+              </div>
+
+              <div v-else class="p-1">
                 <p class="m-0">컬렉션이 아직 없습니다.</p>
               </div>
             </div>
@@ -89,12 +92,25 @@
           </div>
 
           <!-- 나의 영화 정보 -->
-          <div class="text-center border minimumBox col-5  bg-white rounded-3">
+        <div :class="['text-center', 'border', 'col-5', 'rounded-3','minLimit', 'minimumBox', isDarkMode ? 'bgCustom-dark' : 'bgCustom']">
             <div class="p-1">
-              <p>나의 추천 영화</p>
+              <p class="fw-bold">나의 추천 영화</p>
             </div>
             <hr class="m-0">
-            <div class="p-1">
+
+            <div v-if="likeMovies.length > 0">
+              <div class="likemovie-box" v-for="likeMovie in likeMovies" :key="likeMovie.id">
+                <div class="d-flex justify-content-center">
+                  <div class="border w-75 rounded-3 my-1 minLimit">
+                    <p class="m-0 p-0">{{ likeMovie.title }}</p>
+                    <small>({{ likeMovie.release_date }} 개봉)</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div v-else class="p-1">
               <p class="m-0">좋아요한 영화가 아직 없습니다.</p>
             </div>
           </div>
@@ -102,33 +118,35 @@
 
         <!-- 내가 쓴 게시글(완료) -->
         <div class="d-flex justify-content-center">
-          <div class="articleBox border bg-white rounded-3 text-center">
+        <div :class="['articleBox', 'border', 'rounded-3', 'text-center', isDarkMode ? 'bgCustom-dark' : 'bgCustom']">
 
-          <div class="p-1">
-              <p>내가 쓴 게시글</p>
+            <div class="p-1">
+              <p class="fw-bold">내가 쓴 게시글</p>
             </div>
             <hr class="m-0">
-            <div class="p-1">
+            <div v-if="articles.length < 1" class="p-1">
               <p class="m-0">작성한 글이 아직 없습니다.</p>
             </div>
 
-            <ProfileArticle v-for="article in articles" :key="article.id" :article="article" />
+            <div v-else>
+              <ProfileArticle v-for="article in articles" :key="article.id" :article="article" />
+            </div>
 
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- 회원정보 변경 및 탈퇴 기능 -->
-    <div v-if="isMyProfile" class="d-flex m-2 justify-content-end">
-      <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#updatePassword">
-        비밀번호 변경
-      </button>
-      <PasswordUpdate />
-      <button type="button" data-bs-toggle="modal" data-bs-target="#signOut"
-        class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
-      <SignOut />
-    </div>
+  <!-- 회원정보 변경 및 탈퇴 기능 -->
+  <div v-if="isMyProfile" class="d-flex m-2 justify-content-end">
+    <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#updatePassword">
+      비밀번호 변경
+    </button>
+    <PasswordUpdate />
+    <button type="button" data-bs-toggle="modal" data-bs-target="#signOut"
+      class="btn btn-danger btn-sm mx-1">회원탈퇴</button>
+    <SignOut />
   </div>
 </template>
 
@@ -160,6 +178,7 @@ const status = ref()
 const articles = ref([])
 const userInfo = ref([])
 const collections = ref([])
+const likeMovies = ref([])
 
 const profileExist = computed(() => {
   return profile_image.value
@@ -167,6 +186,14 @@ const profileExist = computed(() => {
 
 // 컬렉션 더보기
 const moreCollections = () => {
+  router.push({
+    name: 'userCollection',
+    params: { nickname: userStore.nickname },
+  })
+}
+
+// 좋아요 영화 더보기
+const moreMovies = () => {
   router.push({
     name: 'userCollection',
     params: { nickname: userStore.nickname },
@@ -206,6 +233,10 @@ const submitStauts = () => {
     })
 }
 
+defineProps({
+  isDarkMode:Boolean,
+})
+
 const cancleStatus = () => {
   status.value = userStore.userInfo.status
   updateStatus.value = false
@@ -218,6 +249,7 @@ onMounted(() => {
       console.log(response.data)
       userInfo.value = response.data
       collections.value = response.data.collections
+      likeMovies.value = response.data.like_movies
       status.value = userStore.userInfo.status
     })
     .then(() => {
@@ -258,13 +290,29 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.bgCustom {
+  background-color: white;
+}
+.bgCustom-dark {
+  background-color: #F6FFE8;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+}
+/* .borderCustom {
+  border: 5px solid #06bb1e;
+} */
+p {
+  margin: 0;
+  padding: 5px 0px;
+}
+
 .articleBox {
   width: 92%;
   min-height: 40vh;
 }
 
 .myBlogBox {
-  min-width: 100%;
+  min-width: 70vw;
   background-color: #f6ffe8;
 }
 
@@ -290,5 +338,6 @@ onMounted(() => {
 
 .minimumBox {
   min-height: 15vw;
+  min-width: 220px;
 }
 </style>
