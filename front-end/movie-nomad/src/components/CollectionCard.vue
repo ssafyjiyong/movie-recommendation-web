@@ -1,20 +1,30 @@
 <template>
   <div>
     <div class="collection-name">
-      <h3>{{ collection.name }}</h3>
+      <h3 class="fw-bold">{{ collection.name }}</h3>
       <div v-show="myCollection">
         <button @click="deleteCollection" class="btn btn-danger btn-sm">컬렉션 삭제</button>
       </div>
     </div>
     <div class="movie-list row row-cols-auto">
-      <div class="col-sm-4 col-md-3 col-lg-2" v-for="movie in movies" :key="movie.id">
-        <RouterLink class="movie-poster" :to="{ name: 'moviedetail', params: { movieId: movie.pk } }">
-          <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" alt="poster">
-          <div class="title-box">
-            <h6 class="movie-title">{{ movie.title }}</h6>
-          </div>
-        </RouterLink>
+
+
+        <div v-if="!loading" class="col-sm-4 col-md-3 col-lg-2" v-for="movie in movies" :key="movie.id">
+          <RouterLink class="movie-poster" :to="{ name: 'moviedetail', params: { movieId: movie.pk } }">
+            <img class="rounded-3" :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" alt="poster">
+            <div class="title-box">
+              <h6 class="movie-title">{{ movie.title }}</h6>
+            </div>
+          </RouterLink>
+        </div>
+
+      <div v-else class="m-0 d-flex justify-content-center">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> 
+        <p class="m-0 fs-4 fw-bold text-success">　자랑하고 싶은 영화가 너무 많아요, 잠시만요!</p>
       </div>
+
     </div>
   </div>
 </template>
@@ -25,6 +35,7 @@ import { useUserStore } from '@/stores/userStore';
 import { getMoviesList, deleteCollectionApi } from '@/apis/movieApi';
 
 const userStore = useUserStore()
+const loading = ref(true)
 
 const props = defineProps({
   collection: Object
@@ -63,6 +74,7 @@ onMounted(() => {
       });
     })
     .then(() => {
+      loading.value = false
       mine()
     })
 })
@@ -82,6 +94,7 @@ a {
   border-top-right-radius: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .movie-list {
@@ -104,6 +117,6 @@ a {
 }
 
 .movie-title {
-  color: #83C442;
+  color: #6aa52f;
 }
 </style>

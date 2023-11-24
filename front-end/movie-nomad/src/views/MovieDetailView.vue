@@ -12,12 +12,12 @@
       <!-- Detail의 상단 부분 -->
       <div class="row">
         <!-- Poster -->
-        <div class="radiusBox col-3 p-1 m-2 mb-0">
+        <div :class="['col-3', 'p-1', 'm-2', 'mb-0', isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
           <div class="text-center py-2">
             <img :src="imageFromStore" alt="movie_poster" class="posterImage rounded">
           </div>
 
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column p-1">
             <small>개봉일: {{ formatDate(currentMovie.release_date) }}</small>
             <small>감독: {{ formatDirector(directors) }}</small>
             <small>장르: {{ formatGenre(genres) }}</small>
@@ -29,41 +29,42 @@
 
         <!-- 좋아요 및 영화 내용 -->
         <div class="col  d-flex flex-column ps-0">
-<!-- 좋아요 및 컬렉션 추가 버튼 등 -->
-<div class="radiusBox d-flex flex-column">
+          <!-- 좋아요 및 컬렉션 추가 버튼 등 -->
+          <div :class="['d-flex', 'flex-column', isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
 
-<div class="d-flex justify-content-around">
-  <span class="text-primary p-1 cursorEffect" @click="likeMovie">
-    <i class="fa-regular fa-thumbs-up"></i> 좋아요</span>
-  <span class="text-secondary p-1 mb-2 cursorEffect" @click="sosoMovie">
-    <i class="fa-solid fa-face-meh"></i>
-    그저그래요</span>
-  <span class="text-danger p-1 cursorEffect" @click="hateMovie">
-    <i class="fa-regular fa-thumbs-down"></i>
-    별로예요</span>
-</div>
 
-<!-- 컬렉션 모달 띄우기 -->
-<div class="d-flex justify-content-around">
-  <span class="text-warning p-1 cursorEffect" data-bs-toggle="modal" data-bs-target="#collection">
-    <i class="fa-regular fa-bookmark"></i>
-    컬렉션 저장
-  </span>
-  <MovieCollectionModal :moviePk="moviePk" />
-  <span class="text-info p-1 cursorEffect"><i class="fa-regular fa-pen-to-square"></i>게시글작성</span>
-</div>
-</div>
+            <div class="d-flex justify-content-around">
+              <span class="text-primary p-1 cursorEffect" @click="likeMovie">
+                <i class="fa-regular fa-thumbs-up"></i> 좋아요</span>
+              <span class="text-secondary p-1 mb-2 cursorEffect" @click="sosoMovie">
+                <i class="fa-solid fa-face-meh"></i>
+                그저그래요</span>
+              <span class="text-danger p-1 cursorEffect" @click="hateMovie">
+                <i class="fa-regular fa-thumbs-down"></i>
+                별로예요</span>
+            </div>
+
+            <!-- 컬렉션 모달 띄우기 -->
+            <div class="d-flex justify-content-around">
+              <span class="text-warning p-1 cursorEffect" data-bs-toggle="modal" data-bs-target="#collection">
+                <i class="fa-regular fa-bookmark"></i>
+                컬렉션 저장
+              </span>
+              <MovieCollectionModal :moviePk="moviePk" />
+              <span class="text-info p-1 cursorEffect"><i class="fa-regular fa-pen-to-square"></i>게시글작성</span>
+            </div>
+          </div>
 
 
           <!-- 영화 내용  -->
-          <div class="contentBox flex-grow-1 my-0">
+          <div :class="['contentBox', 'flex-grow-1', 'my-0', isDarkMode ? 'contentBox-dark' : 'contentBox']">
             <p>{{ currentMovie.overview }}</p>
           </div>
         </div>
       </div>
-      
+
       <!-- 배우 정보 -->
-      <div class="radiusBox">
+      <div :class="[isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
         <h3>출연진</h3>
         <div class="d-flex justify-content-around">
           <MovieCredit v-for="actor in actors" :key="actor.id" :actor="actor" />
@@ -71,7 +72,7 @@
       </div>
 
       <!-- 관련 OST 정보 -->
-      <div class="radiusBox">
+      <div :class="[isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
         <div>
           <h3>{{ currentMovie.title }} OST</h3>
         </div>
@@ -85,7 +86,7 @@
 
 
       <!-- 컬렉션 정보 -->
-      <div class="radiusBox">
+      <div :class="[isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
         <h3>{{ currentMovie.title }}를 좋아하는 메이트</h3>
         <MovieMate v-for="mate in movieMates" :key="mate.id" :mate="mate" />
         <div v-if="movieMates.length === 0">
@@ -99,7 +100,7 @@
       </div>
 
       <!-- 게시글 정보 -->
-      <div class="radiusBox">
+      <div :class="[isDarkMode ? 'radiusBox-dark' : 'radiusBox']">
         <h3>관련게시글</h3>
         <div class="topArticleBox">
           <div class="latest-article">
@@ -132,7 +133,7 @@
       <div class="spinner-border text-success d-inline" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <h3 class="m-3">{{ randomMessage }}</h3>
+      <h3 class="m-3 fw-bold">{{ randomMessage }}</h3>
     </div>
   </div>
 </template>
@@ -148,6 +149,9 @@ import { useRoute } from 'vue-router';
 import { useMovieStore } from '@/stores/movieStore';
 import { useUserStore } from '@/stores/userStore';
 
+defineProps({
+  isDarkMode: Boolean,
+})
 
 const userStore = useUserStore()
 const movieStore = useMovieStore()
@@ -290,9 +294,11 @@ onMounted(() => {
 .cursorEffect {
   cursor: pointer;
 }
+
 .cursorEffect:hover {
   font-weight: bold;
 }
+
 .topBox {
   min-width: 518px;
   width: 90%;
@@ -314,9 +320,27 @@ onMounted(() => {
   margin: 10px 0px;
 }
 
+.radiusBox-dark {
+  background-color: #F6FFE8;
+  border: 1px solid lightgray;
+  height: auto;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0px;
+}
+
 .contentBox {
   height: auto;
   background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0px;
+}
+
+.contentBox-dark {
+  height: auto;
+  background-color: #F6FFE8;
+  border: 1px solid lightgray;
   border-radius: 10px;
   padding: 20px;
   margin: 10px 0px;
@@ -327,5 +351,4 @@ onMounted(() => {
   height: 20vw;
   border-radius: 5px;
   margin-bottom: 2vh;
-}
-</style>
+}</style>

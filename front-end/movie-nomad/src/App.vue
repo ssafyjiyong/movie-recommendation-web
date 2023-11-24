@@ -87,7 +87,8 @@
       </div>
     </nav>
 
-    <router-view />
+    <router-view 
+    :isDarkMode="isDarkMode"/>
 
   </header>
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <h1 class="title">{{ route.params.nickname }}'S Movie Collection</h1>
+  <div class="container mt-3">
+    <h1 class="title fw-bold">{{ route.params.nickname }}의 영화컬렉션</h1>
     <hr>
     <CollectionCard
       v-for="collection in collections"
