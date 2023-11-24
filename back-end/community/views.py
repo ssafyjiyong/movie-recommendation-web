@@ -128,7 +128,8 @@ def comment_delete(request, comment_pk):
             comment.like_users.remove(request.user)
         else:
             comment.like_users.add(request.user)
-        return Response(CommentSerializer(comment).data)
+        return Response("성공")
+
     if request.method == 'DELETE':
         if comment.user == request.user:
             comment.delete()
@@ -137,7 +138,7 @@ def comment_delete(request, comment_pk):
 
 
 @api_view(['GET', 'POST'])
-def recomment(request, article_pk, comment_pk):
+def recomment(request, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)
 
     if request.method == 'GET':
@@ -146,11 +147,11 @@ def recomment(request, article_pk, comment_pk):
 
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    if request.method == 'POST':
         serializer = RecommentSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            serializer.save(comment=comment)
+            serializer.save(comment=comment, user=request.user)
 
             return Response(serializer.data)
         

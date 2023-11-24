@@ -394,10 +394,10 @@ export const createCommentAPI = (articlePk, payload) => {
 }
 
 // comment 삭제
-export const deleteCommentAPI = (articlePk, commentPk) => {
+export const deleteCommentAPI = (commentPk) => {
   const token = window.localStorage.getItem('token')
   return axios
-    .delete(`${API_URL}/community/article_detail/${articlePk}/comment/${commentPk}/`, {
+    .delete(`${API_URL}/community/comment/${commentPk}/`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -441,3 +441,19 @@ export const getCommentAPI = (commentPk) => {
       throw error
     })
 }
+
+export const createRecommentAPI = (commentPk, payload) => {
+  const token = window.localStorage.getItem('token')
+  return axios
+    .post(`${API_URL}/community/comment/${commentPk}/recomment/`, payload, {
+      headers:{
+        Authorization: `Token ${token}`
+    }
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }

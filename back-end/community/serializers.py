@@ -91,6 +91,13 @@ class CommentSerializer(serializers.ModelSerializer):
             model = User
             fields = ('pk',)
 
+    class RecommentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Recomment
+            fields = '__all__'
+
+    recomment = RecommentSerializer(read_only=True)
+
     like_users = LikeUserSerializer(read_only=True, many=True)
     like_user_count = serializers.IntegerField(
         source='like_users.count', read_only=True
@@ -98,7 +105,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('__all__')
         read_only_fields = ('article','user',)
 
 
@@ -112,5 +119,5 @@ class RecommentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Recomment
-        fields = ('pk', 'content', 'created_at',)
-        read_only_fields = ('comment','user',)
+        fields = ('pk', 'content', 'created_at', 'user')
+        read_only_fields = ('comment',)

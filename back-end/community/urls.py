@@ -10,6 +10,6 @@ urlpatterns = [
     path('article_detail/<int:article_pk>/article_like/', views.article_like),
     path('article_detail/<int:article_pk>/comment/', views.comment),
     path('comment/<int:comment_pk>/', views.comment_delete),
-    path('article_detail/<int:article_pk>/comment/<int:comment_pk>/recomment/', views.recomment),
+    path('comment/<int:comment_pk>/recomment/', views.recomment),
     path('article_detail/<int:article_pk>/comment/<int:comment_pk>/recomment/<int:recomment_pk>/', views.recomment_delete),
 ]
